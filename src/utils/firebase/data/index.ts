@@ -8,7 +8,6 @@ import { CommentInfo, Inputs, PersonalDataProps, Shipping } from "@/interfaces"
 
 export const updateInformation = async (values: PersonalDataProps, uid: string): Promise<void | FirebaseError> => {
     const { name, fatherSurname, motherSurname } = values
-
     try {
         const userRef = doc(db, `/users/${uid}`)
 
@@ -79,7 +78,15 @@ export const updateProfilePicture = async (fileRef: File, uid: string): Promise<
 export const queryUser = async (uid: string): Promise<DocumentData | undefined> => {
     try {
         const queriedUser = await getDoc(doc(db, 'users', uid))
+        return queriedUser && queriedUser.data()
+    } catch (error) {
+        if (error instanceof FirebaseError) throw error
+    }
+}
 
+export const queryDirections = async (uid: string): Promise<DocumentData | undefined> => {
+    try {
+        const queriedUser = await getDoc(doc(db, 'directions', uid))
         return queriedUser && queriedUser.data()
     } catch (error) {
         if (error instanceof FirebaseError) throw error
@@ -287,3 +294,13 @@ export const deleteProduct = async (id: string, image: string): Promise<void | F
         return error as FirebaseError
     }
 }
+
+export const guardarDireccion = async (userId: string, direction: any) => {
+    try {
+        const direccionRef = doc(db, "directions", userId);
+        await setDoc(direccionRef, direction);
+        console.log("Address saved successfully");
+    } catch (error) {
+        console.error("Error saving address:", error);
+    }
+};
