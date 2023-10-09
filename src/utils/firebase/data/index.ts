@@ -304,3 +304,31 @@ export const guardarDireccion = async (userId: string, direction: any) => {
         console.error("Error saving address:", error);
     }
 };
+
+export const getCategorias = async () => {
+    try {
+        const { docs } = await getDocs(collection(db, 'categorias'))
+        const categorias: any = {}
+        const categoriasArray: any = []
+        docs.map((doc: any) => (console.log(doc.id)))
+        docs.forEach((doc) => {
+            categorias[doc.id] = doc.data();
+            categoriasArray.push(doc.id);
+        });
+        categorias['categorias'] = categoriasArray;
+        return categorias
+    } catch (error) {
+        return error as FirebaseError
+    }
+}
+
+export const saveCategoriasToFirebase = async (data: any) => {
+    console.log(data)
+    try {
+        const categoriasRef = doc(db, "categorias", "categorias");
+        await setDoc(categoriasRef, data);
+        console.log("Datos guardados en Firebase correctamente.");
+    } catch (error) {
+        console.error("Error al guardar los datos en Firebase:", error as FirebaseError);
+    }
+};
