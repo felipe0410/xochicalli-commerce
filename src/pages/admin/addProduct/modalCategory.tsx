@@ -3,6 +3,7 @@ import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
+  CircularProgress,
   FormControl,
   FormLabel,
   Input,
@@ -18,27 +19,13 @@ import {
 import React, { useState } from "react";
 import TagsInput from "react-tagsinput";
 import "react-tagsinput/react-tagsinput.css";
+import { CreateCategoryState } from "./interface";
+import { SnackbarProvider, enqueueSnackbar } from "notistack";
+import PopoverDeleteCategory from "./DeleteCategory";
 
-interface CreateCategoryState {
-  categoria: string;
-  finalCategory: boolean;
-  numSubcategorys: number;
-  subCategorys: {
-    [key: string]: {
-      nameCategory: string;
-      subCategorys: {
-        numItems: number;
-        [key: number]: {
-          name: string;
-          value: string[];
-          finalCategory: boolean;
-        };
-      };
-    };
-  };
-}
-
-const ModalCategory = () => {
+const ModalCategory = ({ propCategory }: { propCategory: any }) => {
+  const [success, setSuccess] = useState(false);
+  const [deleteCategory, setDeleteCategory] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [createCategory, setCreateCategory] = useState<CreateCategoryState>({
     categoria: "",
@@ -46,18 +33,19 @@ const ModalCategory = () => {
     numSubcategorys: 0,
     subCategorys: {},
   });
-  console.log("createCategory::>", "color:green", createCategory);
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
   const subCategory = (subcategory: any, index: any) => {
     const validation =
       createCategory?.subCategorys[subcategory]?.subCategorys?.numItems > 0;
-
     return (
       <Box>
         <FormLabel>Subcategoria-{index + 1}</FormLabel>
         <Box display={"flex"}>
           <Input
+            value={
+              createCategory?.subCategorys[subcategory]?.nameCategory ?? ""
+            }
             onChange={(event) => {
               setCreateCategory((prevCreateCategory) => {
                 const updatedCategory = { ...prevCreateCategory };
@@ -83,10 +71,9 @@ const ModalCategory = () => {
         {validation ? (
           <TagsInput
             value={
-              createCategory?.subCategorys[subcategory]?.subCategorys[0].value
+              createCategory?.subCategorys[subcategory]?.subCategorys[0]?.value
             }
             onChange={(event) => {
-              console.log("%ctags", "color:red", event);
               setCreateCategory((tags) => {
                 const updatedCategory = { ...createCategory };
                 tags.subCategorys[subcategory].subCategorys[0].value = event;
@@ -98,9 +85,6 @@ const ModalCategory = () => {
       </Box>
     );
   };
-  //   const handleChange = (tags: any) => {
-  //     setTags({ tags });
-  //   };
 
   const addCategory = () => {
     const num = createCategory.numSubcategorys;
@@ -131,7 +115,7 @@ const ModalCategory = () => {
           indexSubcategory2
         ] = {
           name: "",
-          value: [""],
+          value: [],
           finalCategory: false,
         };
       }
@@ -149,12 +133,55 @@ const ModalCategory = () => {
     });
   };
 
+  const saveCategory = async () => {
+    setSuccess(true);
+    const save = await saveCategoriasToFirebase(createCategory);
+    setCreateCategory({
+      categoria: "",
+      finalCategory: false,
+      numSubcategorys: 0,
+      subCategorys: {},
+    });
+    enqueueSnackbar(
+      save ? "Categoria agregada con exito" : "Error al agregar categoria",
+      {
+        variant: save ? "success" : "error",
+        preventDuplicate: true,
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "right",
+        },
+      }
+    );
+    setSuccess(false);
+    onClose();
+  };
+
   return (
     <>
-      <Button onClick={onOpen}>
+      <SnackbarProvider />
+      <Button
+        onClick={() => {
+          onOpen();
+          setCreateCategory({
+            categoria: "",
+            finalCategory: false,
+            numSubcategorys: 0,
+            subCategorys: {},
+          });
+        }}
+      >
         <AddIcon />
       </Button>
-      <Button ml={4} ref={finalRef}>
+      <Button
+        ml={4}
+        onClick={() => {
+          setDeleteCategory(true);
+          onOpen();
+          setCreateCategory(propCategory);
+        }}
+        ref={finalRef}
+      >
         <EditIcon />
       </Button>
       <Modal
@@ -172,6 +199,7 @@ const ModalCategory = () => {
               <FormLabel>Categoria</FormLabel>
               <Box display={"flex"}>
                 <Input
+                  value={createCategory.categoria}
                   onChange={(event) =>
                     setCreateCategory({
                       ...createCategory,
@@ -184,6 +212,9 @@ const ModalCategory = () => {
                 <Button onClick={addCategory}>
                   <AddIcon />
                 </Button>
+                {deleteCategory ? (
+                  <PopoverDeleteCategory category={createCategory.categoria} />
+                ) : null}
               </Box>
             </FormControl>
             {Object.keys(createCategory.subCategorys).map(
@@ -193,8 +224,16 @@ const ModalCategory = () => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button onClick={()=>saveCategoriasToFirebase(createCategory)} colorScheme="blue" mr={3}>
-              Save
+            <Button onClick={saveCategory} colorScheme="blue" mr={3}>
+              {!success ? (
+                "Save"
+              ) : (
+                <CircularProgress
+                  size={"25px"}
+                  isIndeterminate
+                  color="#ffffff"
+                />
+              )}
             </Button>
             <Button onClick={onClose}>Cancel</Button>
           </ModalFooter>

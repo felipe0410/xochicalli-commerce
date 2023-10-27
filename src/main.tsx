@@ -1,19 +1,19 @@
-import { StrictMode, Suspense } from 'react'
-import { createRoot } from 'react-dom/client'
+import { StrictMode, Suspense } from "react";
+import { createRoot } from "react-dom/client";
 
-import { ChakraProvider } from '@chakra-ui/react'
-import { BrowserRouter } from 'react-router-dom'
-import { HelmetProvider } from 'react-helmet-async'
+import { Box, ChakraProvider } from "@chakra-ui/react";
+import { BrowserRouter } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 
-import { App } from '@/App'
-import { UserProvider } from '@/context/auth'
-import { CartProvider } from '@/context/cart'
-import { ErrorBoundaryComponent, ErrorBoundary } from '@/components/errors'
-import { Spinner } from '@/components/loading'
+import { App } from "@/App";
+import { UserProvider } from "@/context/auth";
+import { CartProvider } from "@/context/cart";
+import { ErrorBoundaryComponent, ErrorBoundary } from "@/components/errors";
+import { Spinner } from "@/components/loading";
 
-import 'react-lazy-load-image-component/src/effects/blur.css';
+import "react-lazy-load-image-component/src/effects/blur.css";
 
-createRoot(document.getElementById('root') as HTMLElement).render(
+createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>
     <ChakraProvider>
       <Suspense fallback={<Spinner />}>
@@ -22,7 +22,9 @@ createRoot(document.getElementById('root') as HTMLElement).render(
             <UserProvider>
               <CartProvider>
                 <BrowserRouter>
-                  <App />
+                  <Box id="principal">
+                    <App />
+                  </Box>
                 </BrowserRouter>
               </CartProvider>
             </UserProvider>
@@ -31,4 +33,4 @@ createRoot(document.getElementById('root') as HTMLElement).render(
       </Suspense>
     </ChakraProvider>
   </StrictMode>
-)
+);

@@ -203,29 +203,6 @@ export const queryData = async (col: string): Promise<any | FirebaseError> => {
     }
 }
 
-// export const getComments = async (product: string): Promise<CommentInfo[] | undefined> => {
-//     try {
-//         const commentsRef = collection(db, 'comments')
-
-//         if (product) {
-//             const _query = query(commentsRef, where('product', '==', product), limit(3))
-
-//             onSnapshot(_query, (snapshot) => {
-//                 return snapshot.docs.map((doc) => ({
-//                     ...doc.data(),
-//                     id: doc.id
-//                 })) as CommentInfo[]
-//             })
-//         } else {
-//             return [] as CommentInfo[]
-//         }
-//     } catch (error) {
-//         if (error instanceof FirebaseError) {
-//             throw new Error(error.message)
-//         }
-//     }
-// }
-
 export const uploadImage = async (fileRef: any): Promise<string | undefined | null | FirebaseError> => {
     try {
         const file = fileRef.current?.files?.[0] ?? new Blob();
@@ -323,12 +300,25 @@ export const getCategorias = async () => {
 }
 
 export const saveCategoriasToFirebase = async (data: any) => {
-    console.log(data)
     try {
-        const categoriasRef = doc(db, "categorias", "categorias");
+        const categoriasRef = doc(db, "categorias", data.categoria);
         await setDoc(categoriasRef, data);
         console.log("Datos guardados en Firebase correctamente.");
+        return true
     } catch (error) {
         console.error("Error al guardar los datos en Firebase:", error as FirebaseError);
+        return false
     }
 };
+
+export const deleteCategoria = async (categoriaId: string) => {
+    try {
+        const categoriaRef = doc(db, "categorias", categoriaId);
+        await deleteDoc(categoriaRef);
+        console.log(`Categoría con ID ${categoriaId} eliminada correctamente.`);
+        return true;
+    } catch (error) {
+        console.error("Error al eliminar la categoría:", error);
+        return false;
+    }
+}

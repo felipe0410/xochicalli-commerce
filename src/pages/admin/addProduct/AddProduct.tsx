@@ -15,6 +15,7 @@ import {
   Select,
   Textarea,
   useToast,
+  VisuallyHiddenInput,
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
@@ -25,14 +26,16 @@ import { v4 } from "uuid";
 import { Inputs } from "@/interfaces";
 import { addProduct, getCategorias } from "@/utils";
 import { storage } from "@/firebase";
-import React from "react";
 import ModalCategory from "./modalCategory";
+import { FaCloudUploadAlt } from "react-icons/fa";
 
 const AddProduct: FC = (): JSX.Element => {
+  const [upload, setUpload] = useState(false);
+  const [imageBase64, setImageBase64] = useState("");
+  const [category, setCategory] = useState("");
   const [imageUrl, setImageUrl] = useState<string>("");
   const fileRef = useRef<HTMLInputElement>(null);
   const [dataCategorias, setDataCategorias] = useState<any>({});
-
   const {
     handleSubmit,
     register,
@@ -41,7 +44,6 @@ const AddProduct: FC = (): JSX.Element => {
   } = useForm<Inputs>();
 
   const toast = useToast();
-
   const navigate = useNavigate();
   const handleGoProducts = () => navigate("/admin/products");
 
@@ -50,41 +52,50 @@ const AddProduct: FC = (): JSX.Element => {
       const file = fileRef.current?.files?.[0] ?? new Blob();
       const fileName = file?.name;
       const imgRef = ref(storage, `products/${v4() + fileName}`);
-      const imgUpload = uploadBytesResumable(imgRef, file);
-
+      if (file && !upload) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const base64String: any = event?.target?.result;
+          if (base64String) setImageBase64(base64String);
+        };
+        reader.readAsDataURL(file);
+      }
       if (!file) {
         console.error("No file selected");
         return;
       }
-
-      imgUpload.on(
-        "state_changed",
-        ({ state }) => {
-          switch (state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-            default:
-              break;
+      if (upload) {
+        const imgUpload = uploadBytesResumable(imgRef, file);
+        imgUpload.on(
+          "state_changed",
+          ({ state }) => {
+            switch (state) {
+              case "paused":
+                console.log("Upload is paused");
+                break;
+              case "running":
+                console.log("Upload is running");
+                break;
+              default:
+                break;
+            }
+          },
+          (err) => {
+            console.error(err);
+          },
+          async () => {
+            const url = await getDownloadURL(imgUpload.snapshot.ref);
+            setImageUrl(url);
           }
-        },
-        (err) => {
-          console.error(err);
-        },
-        async () => {
-          const url = await getDownloadURL(imgUpload.snapshot.ref);
-          setImageUrl(url);
-        }
-      );
+        );
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
   const onSubmit: SubmitHandler<Inputs> = async (values: Inputs) => {
+    console.log("values::>", values);
     await addProduct(values, imageUrl)
       .then(() => {
         toast({
@@ -104,16 +115,21 @@ const AddProduct: FC = (): JSX.Element => {
         });
       });
   };
+  const handleSelectChange = (event: any) => {
+    const category = event.target.value;
+    setCategory(category);
+  };
   useEffect(() => {
     const getDataCategorias = async () => {
       const dataCategorias = await getCategorias();
       setDataCategorias(dataCategorias);
+      setCategory(Object.keys(dataCategorias)[0]);
     };
     getDataCategorias();
   }, []);
 
   return (
-    <VStack h="calc(100vh - 64px)" bgColor="gray.200" gap={4}>
+    <VStack h="auto" paddingBottom={"2%"} bgColor="gray.200" gap={4}>
       <Helmet>
         <title>Agregar producto</title>
       </Helmet>
@@ -169,6 +185,7 @@ const AddProduct: FC = (): JSX.Element => {
                   {...register("category", {
                     required: true,
                   })}
+                  onChange={(e) => handleSelectChange(e)}
                 >
                   {dataCategorias?.categorias?.map((categoria: string) => (
                     <option key={categoria} value={categoria}>
@@ -176,8 +193,30 @@ const AddProduct: FC = (): JSX.Element => {
                     </option>
                   ))}
                 </Select>
-                <ModalCategory />
+                <ModalCategory propCategory={dataCategorias[category]} />
               </Box>
+              {/* _____________________________________________ */}
+              <Select
+              // defaultValue="Plantas"
+              // {...register("category", {
+              //   required: true,
+              // })}
+              // onChange={(e) => handleSelectChange(e)}
+              >
+                {Object.keys(dataCategorias[category]?.subCategorys ?? "").map(
+                  (sybcategory: string) => {
+                    const nameSubCategory =
+                      dataCategorias[category]?.subCategorys[sybcategory]
+                        ?.nameCategory ?? "";
+                    return (
+                      <option key={nameSubCategory} value={nameSubCategory}>
+                        {nameSubCategory}
+                      </option>
+                    );
+                  }
+                )}
+              </Select>
+              {/* _____________________________________________ */}
               {errors.category && (
                 <FormErrorMessage>La categoría es requerida</FormErrorMessage>
               )}
@@ -226,17 +265,68 @@ const AddProduct: FC = (): JSX.Element => {
 
           <FormControl isInvalid={!!errors.image} mb={4}>
             <FormLabel htmlFor="image">Imagen</FormLabel>
-            <input
-              type="file"
-              id="image"
-              ref={fileRef}
-              onChange={() => uploadImage(fileRef)}
-            />
+            <Box
+              style={{
+                padding: "20%",
+                textAlign: "center",
+                border: "#00000040 dashed",
+                display: upload ? "none" : "block",
+              }}
+            >
+              <Button
+                as="label"
+                background={"blue.100"}
+                rightIcon={<FaCloudUploadAlt />}
+              >
+                Upload IMG
+                <VisuallyHiddenInput
+                  accept="image/*"
+                  ref={fileRef}
+                  onChange={() => {
+                    uploadImage(fileRef);
+                    setUpload(true);
+                  }}
+                  type="file"
+                />
+              </Button>
+            </Box>
+            {imageBase64 && (
+              <Box
+                id="contianer_img"
+                sx={{
+                  justifyContent: "center",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <img style={{ width: "90%" }} src={imageBase64} alt="Preview" />
+                <Box
+                  sx={{
+                    width: "90%",
+                    display: "flex",
+                    justifyContent: "space-evenly",
+                    marginY: "10px",
+                  }}
+                >
+                  <Button
+                    colorScheme="blue"
+                    onClick={() => {
+                      uploadImage(fileRef)
+                    }}
+                  >
+                    Aceptar imagen
+                  </Button>
+                  <Button colorScheme="red" onClick={() => {}}>
+                    Cancelar
+                  </Button>
+                </Box>
+              </Box>
+            )}
             {errors.price && (
               <FormErrorMessage>La imagen es requerida</FormErrorMessage>
             )}
           </FormControl>
-
           <Button
             isLoading={isSubmitting}
             loadingText="Agregando producto..."
