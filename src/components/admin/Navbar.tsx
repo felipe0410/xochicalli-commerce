@@ -74,20 +74,20 @@ const Navbar: FC<ActiveUser> = ({ isUser }): JSX.Element => {
 
   return (
     <HStack
-      justifyContent="space-between"
-      alignItems="center"
-      bgColor="green.400"
-      textAlign="center"
-      h="64px"
+      justifyContent='space-between'
+      alignItems='center'
+      bgColor='green.400'
+      textAlign='center'
+      h='64px'
       px={[4, 8, 12]}
-      width="100%"
+      width='100%'
     >
-      <Heading color="white" fontSize={["xl", "2xl"]}>
+      <Heading color='white' fontSize={["xl", "2xl"]}>
         Panel de administrador
       </Heading>
       {isLargerThan800 ? (
         <>
-          <HStack justifyContent="space-between">
+          <HStack justifyContent='space-between'>
             <HStack>
               {links.map(({ path, id, text }: NavbarItems) => (
                 <NavLink
@@ -105,16 +105,16 @@ const Navbar: FC<ActiveUser> = ({ isUser }): JSX.Element => {
                   to={path}
                   key={id}
                 >
-                  <Text fontWeight="semibold" mx={[1, 1, 1, 4, 8]}>
+                  <Text fontWeight='semibold' mx={[1, 1, 1, 4, 8]}>
                     {text}
                   </Text>
                 </NavLink>
               ))}
               <Select
-                iconColor="#fff"
+                iconColor='#fff'
                 onChange={handleSelectChange}
-                variant="unstyled"
-                placeholder="Select option"
+                variant='unstyled'
+                placeholder='Select option'
                 style={{
                   color: "#fff",
                   transition: "all 300ms ease",
@@ -130,8 +130,8 @@ const Navbar: FC<ActiveUser> = ({ isUser }): JSX.Element => {
             </HStack>
             {isUser && (
               <IconButton
-                aria-label="logout"
-                colorScheme="red"
+                aria-label='logout'
+                colorScheme='red'
                 icon={<FiLogOut />}
                 onClick={onLogout}
               />

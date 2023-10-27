@@ -55,12 +55,12 @@ const ModalCategory = ({ propCategory }: { propCategory: any }) => {
               });
             }}
             ref={initialRef}
-            placeholder="Abono"
+            placeholder='Abono'
           />
           <Button
             display={validation ? "none" : "block"}
             onClick={() => addCategory2(subcategory)}
-            name="addSubcateogry"
+            name='addSubcateogry'
           >
             <AddIcon />
           </Button>
@@ -207,7 +207,7 @@ const ModalCategory = ({ propCategory }: { propCategory: any }) => {
                     })
                   }
                   ref={initialRef}
-                  placeholder="Abono"
+                  placeholder='Abono'
                 />
                 <Button onClick={addCategory}>
                   <AddIcon />
@@ -224,14 +224,14 @@ const ModalCategory = ({ propCategory }: { propCategory: any }) => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button onClick={saveCategory} colorScheme="blue" mr={3}>
+            <Button onClick={saveCategory} colorScheme='blue' mr={3}>
               {!success ? (
                 "Save"
               ) : (
                 <CircularProgress
                   size={"25px"}
                   isIndeterminate
-                  color="#ffffff"
+                  color='#ffffff'
                 />
               )}
             </Button>
