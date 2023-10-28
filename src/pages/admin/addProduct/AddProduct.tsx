@@ -168,6 +168,10 @@ const AddProduct: FC = (): JSX.Element => {
 
   const tags = (subCategoryForm: string) => {
     for (const tags in dataCategorias[category]?.subCategorys) {
+      console.log("category::>", category);
+      console.log("tags::>", tags);
+      console.log(dataCategorias[category]?.subCategorys[tags].nameCategory);
+      console.log("subCategoryForm::>", subCategoryForm);
       if (
         dataCategorias[category]?.subCategorys[tags].nameCategory ===
         subCategoryForm

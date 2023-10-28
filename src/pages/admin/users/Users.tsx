@@ -1,4 +1,4 @@
-import { getUsers } from "@/hooks/getDataFirebase";
+import { getUserss } from "@/hooks/getDataFirebase";
 import {
   Box,
   Checkbox,
@@ -14,7 +14,7 @@ import {
   Tr,
   Container,
   Stack,
-  // useBreakpointValue,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { IoArrowDown } from "react-icons/io5";
@@ -22,18 +22,17 @@ import ManualClose from "./deleteModal";
 import EditUserModal from "./editUserModal";
 import { User } from "firebase/auth";
 
-
 const Users = (props: TableProps) => {
-  // const isMobile = useBreakpointValue({ base: true, md: false });
+  const isMobile = useBreakpointValue({ base: true, lg: false });
+  console.log(isMobile);
   const [users, setUsers] = useState<User[]>([]);
   useEffect(() => {
-    const getFirebaseUser = async () => {
-      const arrayUsers = await getUsers();
+    const getFirebaseUser = (arrayUsers: any) => {
+      console.log("escuchar continuamente", arrayUsers);
       setUsers(arrayUsers);
     };
-    getFirebaseUser();
+    getUserss(getFirebaseUser);
   }, []);
-  console.log("users::>", users);
   const colums = [
     {
       colum: (
@@ -55,7 +54,6 @@ const Users = (props: TableProps) => {
   ];
   return (
     <Container py={{ base: "4", md: "8" }} px={{ base: "0", md: 8 }}>
-
       <Box
         bg="bg-surface"
         boxShadow={{ base: "none", md: "sm" }}
@@ -73,11 +71,13 @@ const Users = (props: TableProps) => {
             </Stack>
           </Box>
           <Box>
-            <Table {...props}>
-              <Thead>
+            <Table>
+              <Thead display={isMobile ? "contents" : "block"}>
                 <Tr>
                   {colums.map((colum, index) => (
-                    <Th key={index}>{colum.colum}</Th>
+                    <Th key={index}>
+                      {colum.colum === "Email" && isMobile ? "" : colum.colum}
+                    </Th>
                   ))}
                 </Tr>
               </Thead>
@@ -86,13 +86,12 @@ const Users = (props: TableProps) => {
                   <Tr key={member.id}>
                     <Td>
                       <HStack spacing="3">
-                        <Checkbox />
                         <Box>
                           <Text fontWeight="medium">{member.name}</Text>
                         </Box>
                       </HStack>
                     </Td>
-                    <Td>
+                    <Td display={isMobile ? "none" : "block"}>
                       <Text color="muted">{member.email}</Text>
                     </Td>
                     <Td>
@@ -100,7 +99,7 @@ const Users = (props: TableProps) => {
                     </Td>
                     <Td>
                       <HStack spacing="1">
-                        <ManualClose />
+                        <ManualClose dataUser={member} />
                         <EditUserModal dataUser={member} />
                       </HStack>
                     </Td>

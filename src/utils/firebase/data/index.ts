@@ -112,6 +112,20 @@ export const queryUser = async (
   }
 };
 
+export const deleteUser = async (uid: string): Promise<any> => {
+  try {
+    const userRef = doc(db, "users", uid);
+    await deleteDoc(userRef);
+    return true
+  } catch (error) {
+    if (error instanceof FirebaseError) {
+      throw error;
+    }
+    return false
+  }
+};
+
+
 export const queryDirections = async (
   uid: string
 ): Promise<DocumentData | undefined> => {
