@@ -157,8 +157,6 @@ const AddProduct: FC = (): JSX.Element => {
 
   const tags = (subCategoryForm: string) => {
     for (const tags in dataCategorias[category]?.subCategorys) {
-      //FLORES.subCategorys.subcateogory0.subCategorys[0].value
-      //INSUMOS.subCategorys.subcateogory3.subCategorys[0].value
       console.log("category::>", category);
       console.log("tags::>", tags);
       console.log(dataCategorias[category]?.subCategorys[tags].nameCategory);
