@@ -1,4 +1,3 @@
-
 import { StackProps } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 
@@ -9,13 +8,13 @@ export interface UserHeaderCardProps {
 }
 
 export interface Shipping {
-  names: string,
-  address: string,
-  zip: string,
-  state: string,
-  city: string,
-  colony: string[] | string,
-  email: string,
+  names: string;
+  address: string;
+  zip: string;
+  state: string;
+  city: string;
+  colony: string[] | string;
+  email: string;
 }
 
 export interface PersonalDataProps {
@@ -134,13 +133,11 @@ export interface FirebaseUser {
   address: null | Shipping[];
 }
 
-
 export interface UserContextProps {
   user: User | null;
   userRole: string | null;
   userInformation: FirebaseUser | null;
 }
-
 
 export interface Product {
   description?: string;
@@ -163,19 +160,19 @@ export interface CartProduct {
 }
 
 export interface RatingProps {
-  defaultValue?: number
-  max?: number
-  size?: 'sm' | 'md' | 'lg' | 'xl'
-  rootProps?: StackProps
+  defaultValue?: number;
+  max?: number;
+  size?: "sm" | "md" | "lg" | "xl";
+  rootProps?: StackProps;
 }
 
 export interface DeleteItems {
-  title: string
-  id: string
+  title: string;
+  id: string;
 }
 
 export interface ActiveUser {
-  isUser: User
+  isUser: User;
 }
 
 export interface PaymentInformation {
@@ -187,7 +184,6 @@ export interface PaymentInformation {
   };
   cvv: string;
 }
-
 
 export interface MXZip {
   state: State;
@@ -230,7 +226,6 @@ export enum State {
   Yucatán = "Yucatán",
   Zacatecas = "Zacatecas",
 }
-
 
 export interface Place {
   "place name": string;
