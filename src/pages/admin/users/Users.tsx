@@ -14,9 +14,7 @@ import {
   Tr,
   Container,
   Stack,
-  ButtonGroup,
-  Button,
-  useBreakpointValue,
+  // useBreakpointValue,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { IoArrowDown } from "react-icons/io5";
@@ -24,8 +22,9 @@ import ManualClose from "./deleteModal";
 import EditUserModal from "./editUserModal";
 import { User } from "firebase/auth";
 
+
 const Users = (props: TableProps) => {
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  // const isMobile = useBreakpointValue({ base: true, md: false });
   const [users, setUsers] = useState<User[]>([]);
   useEffect(() => {
     const getFirebaseUser = async () => {
@@ -56,6 +55,7 @@ const Users = (props: TableProps) => {
   ];
   return (
     <Container py={{ base: "4", md: "8" }} px={{ base: "0", md: 8 }}>
+
       <Box
         bg="bg-surface"
         boxShadow={{ base: "none", md: "sm" }}
@@ -108,25 +108,6 @@ const Users = (props: TableProps) => {
                 ))}
               </Tbody>
             </Table>
-          </Box>
-          {/* ____________________pagination________________________-_ */}
-          <Box px={{ base: "4", md: "6" }} pb="5">
-            <HStack spacing="3" justify="space-between">
-              {!isMobile && (
-                <Text color="muted" fontSize="sm">
-                  Showing 1 to 5 of 42 results
-                </Text>
-              )}
-              <ButtonGroup
-                spacing="3"
-                justifyContent="space-between"
-                width={{ base: "full", md: "auto" }}
-                variant="secondary"
-              >
-                <Button>Previous</Button>
-                <Button>Next</Button>
-              </ButtonGroup>
-            </HStack>
           </Box>
         </Stack>
       </Box>

@@ -12,17 +12,22 @@ import {
   ModalOverlay,
   useDisclosure,
   Text,
+  CircularProgress,
 } from "@chakra-ui/react";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FiEdit2 } from "react-icons/fi";
 import { User } from "./interface";
+import { updateUser } from "@/hooks/getDataFirebase";
+import { SnackbarProvider, enqueueSnackbar } from "notistack";
 
 const EditUserModal = ({ dataUser }: { dataUser: User }) => {
+  const [updatee, setUpdatee] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [updateData, setUpdateData] = useState({
     name: dataUser.name,
     email: dataUser.email,
     role: dataUser.role,
+    uid: dataUser.uid,
   });
   const display =
     !(updateData.name === dataUser.name) &&
@@ -58,6 +63,7 @@ const EditUserModal = ({ dataUser }: { dataUser: User }) => {
 
   return (
     <>
+      <SnackbarProvider />
       <Button onClick={onOpen}>
         <FiEdit2 fontSize="1.25rem" />
       </Button>
@@ -104,9 +110,36 @@ const EditUserModal = ({ dataUser }: { dataUser: User }) => {
               id={"Actualizar-Button"}
               isDisabled={!display}
               mr={3}
+              onClick={async () => {
+                setUpdatee(true);
+                const update = await updateUser(updateData.uid, updateData);
+                enqueueSnackbar(
+                  update
+                    ? "usuario actualizado con exito"
+                    : "Error al actualizar el usuario",
+                  {
+                    variant: update ? "success" : "error",
+                    preventDuplicate: true,
+                    anchorOrigin: {
+                      vertical: "bottom",
+                      horizontal: "right",
+                    },
+                  }
+                );
+                setUpdatee(false);
+                update && onClose();
+              }}
               colorScheme="blue"
             >
-              Actualizar
+              {!updatee ? (
+                "Actualizar"
+              ) : (
+                <CircularProgress
+                  size={"25px"}
+                  isIndeterminate
+                  color="#ffffff"
+                />
+              )}
             </Button>
             <Button onClick={onClose}>Cancel</Button>
           </ModalFooter>
