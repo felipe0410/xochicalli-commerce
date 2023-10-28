@@ -256,19 +256,41 @@ const AddProduct: FC = (): JSX.Element => {
               <Box style={{ marginTop: "6px", display: "flex", gap: "5px" }}>
                 <em>Tags: </em>
                 {Object.keys(dataCategorias[category]?.subCategorys ?? "").map(
-                  (sybcategory: string, index) => {
+                  (sybcategory: string) => {
                     const tagsSubCategory =
                       dataCategorias[category]?.subCategorys[sybcategory]
-                        ?.subCategorys[index]?.value;
-
-                    console.log(
-                      dataCategorias[category]?.subCategorys[sybcategory]
-                        ?.subCategorys[index]?.value
-                    );
+                        ?.subCategorys[0]?.value;
+                    //FLORES.subCategorys.subcateogory0.subCategorys[0].value
+                    //INSUMOS.subCategorys.subcateogory3.subCategorys[0].value
+                    console.log("%c test", "color: blue", tagsSubCategory);
+                    // let objetoEncontrado = null;
+                    // for (const clave in miObjeto) {
+                    //     if (miObjeto[clave].category === categoryBuscada) {
+                    //         objetoEncontrado = miObjeto[clave];
+                    //         break; // Termina el bucle una vez que se encuentra el objeto
+                    //     }
+                    // }
                     return (
-                      <Box key={crypto.randomUUID()}>
-                        <AddTagsSubCategory elements={tagsSubCategory} />
-                      </Box>
+                      //   <Box key={crypto.randomUUID()}>
+                      //     <AddTagsSubCategory elements={tagsSubCategory} />
+                      //   </Box>
+                      // );
+
+                      <Select
+                        // {...register("tags", {
+                        //   required: true,
+                        // })}
+                        // value={subCategoryForm}
+                        // onChange={(e) => handleSelectChangeSubCategory(e)}
+                        key={crypto.randomUUID()}
+                        display={tagsSubCategory?.length > 0 ? "block" : "none"}
+                      >
+                        {tagsSubCategory?.map((sybcategory: string) => (
+                          <option key={sybcategory} value={sybcategory}>
+                            {sybcategory}
+                          </option>
+                        ))}
+                      </Select>
                     );
                   }
                 )}
