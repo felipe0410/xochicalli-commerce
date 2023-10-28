@@ -11,6 +11,7 @@ export const useProducts = () => {
       id: "",
       title: "",
       subcategory: "",
+      tags: "",
       price: 0,
       description: "",
       image: "",

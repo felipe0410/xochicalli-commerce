@@ -23,6 +23,7 @@ const ProductView: FC<Product> = ({
   image,
   description,
   category,
+  tags,
   subcategory,
   id,
   stock,
@@ -99,9 +100,9 @@ const ProductView: FC<Product> = ({
           <Tag mb={4} marginRight={"15px"}>
             Subcategoría: {subcategory !== undefined ? subcategory : "Otros"}
           </Tag>
-          {/* <Tag mb={4} marginRight={"15px"}>
-            Tags: {category}
-          </Tag> */}
+          <Tag mb={4} marginRight={"15px"}>
+            Tags: {tags !== undefined ? tags : "Otros"}
+          </Tag>
           <Text>{description}</Text>
           <Text fontWeight={500} fontSize='lg' mt={4}>
             En stock: {stock && stock > 1 ? "\u2705" : "\u274C"}

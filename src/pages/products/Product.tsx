@@ -165,6 +165,7 @@ const Product: FC = (): JSX.Element => {
                   price={product?.price as number}
                   title={product?.title as string}
                   subcategory={product?.subcategory as string}
+                  tags={product?.tags as string}
                   stock={product?.stock as number}
                 />
               </Suspense>
