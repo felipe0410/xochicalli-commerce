@@ -1,22 +1,19 @@
-import { FC } from 'react'
-
-import { Box, IconButton, Tooltip } from '@chakra-ui/react'
-import { FaWhatsapp } from 'react-icons/fa'
+import { FC } from "react";
+import { FloatingWhatsApp } from "react-floating-whatsapp";
 
 const WhatsAppButton: FC = (): JSX.Element => (
-    <Box position='fixed' bottom={6} right={6}>
-        <Tooltip label='Hablar en nuestro WhatsApp' placement='left' hasArrow rounded='sm'>
-            <IconButton
-                colorScheme='whatsapp'
-                aria-label='whatsapp-btn'
-                isRound
-                size='lg'
-                fontSize='32px'
-                icon={<FaWhatsapp />}
-                onClick={() => window.location.assign(`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER}`)}
-            />
-        </Tooltip>
-    </Box>
-)
+  <FloatingWhatsApp
+    phoneNumber="+573144098591"
+    accountName={"xochicallicommerce"}
+    avatar={
+      "https://firebasestorage.googleapis.com/v0/b/xochicalli-commerce.appspot.com/o/assets%2Flogo.png?alt=media&token=b5a9e3c5-d9f1-469c-9c9d-9af0c5f1cfd9"
+    }
+    statusMessage={"xochicalli"}
+    chatMessage={
+      "¡Hola! 👋 Somos xochicallicommerce, en que te podemos colaborar? 🏡🌟"
+    }
+    darkMode={true}
+  />
+);
 
-export default WhatsAppButton
+export default WhatsAppButton;
