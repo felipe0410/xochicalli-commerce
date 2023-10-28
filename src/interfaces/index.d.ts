@@ -109,6 +109,7 @@ export interface ContactInputs {
 export interface Inputs {
   title: string;
   description: string;
+  subcategory: string;
   price: number;
   stock: number;
   category: string;
@@ -143,6 +144,7 @@ export interface Product {
   description?: string;
   image: string;
   category: string;
+  subcategory: string;
   title: string;
   price: number;
   sold?: number;

@@ -225,9 +225,9 @@ const AddProduct: FC = (): JSX.Element => {
                 Subcategoría
               </FormLabel>
               <Select
-                // {...register("category", {
-                //   required: true,
-                // })}
+                {...register("subcategory", {
+                  required: true,
+                })}
                 value={subCategoryForm}
                 onChange={(e) => handleSelectChangeSubCategory(e)}
               >
