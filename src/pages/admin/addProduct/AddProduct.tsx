@@ -45,7 +45,6 @@ const AddProduct: FC = (): JSX.Element => {
     formState: { errors, isSubmitting },
     reset,
   } = useForm<Inputs>();
-  console.log("%carrayTags::>", "color:red", arrayTags);
   const toast = useToast();
   const navigate = useNavigate();
   const handleGoProducts = () => navigate("/admin/products");
@@ -157,10 +156,14 @@ const AddProduct: FC = (): JSX.Element => {
       const subCaregoryy =
         dataCategorias[Object.keys(dataCategorias)[0]].subCategorys
           .subcateogory0.nameCategory;
+      const etiquetas =
+        dataCategorias[Object.keys(dataCategorias)[0]].subCategorys
+          .subcateogory0.subCategorys[0].value;
       setDataCategorias(dataCategorias);
       setCategory(Object.keys(dataCategorias)[0]);
       tags(subCategoryForm);
       setSubCategoryForm(subCaregoryy);
+      setArrayTags(etiquetas);
     };
     getDataCategorias();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -168,10 +171,6 @@ const AddProduct: FC = (): JSX.Element => {
 
   const tags = (subCategoryForm: string) => {
     for (const tags in dataCategorias[category]?.subCategorys) {
-      console.log("category::>", category);
-      console.log("tags::>", tags);
-      console.log(dataCategorias[category]?.subCategorys[tags].nameCategory);
-      console.log("subCategoryForm::>", subCategoryForm);
       if (
         dataCategorias[category]?.subCategorys[tags].nameCategory ===
         subCategoryForm

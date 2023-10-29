@@ -116,15 +116,14 @@ export const deleteUser = async (uid: string): Promise<any> => {
   try {
     const userRef = doc(db, "users", uid);
     await deleteDoc(userRef);
-    return true
+    return true;
   } catch (error) {
     if (error instanceof FirebaseError) {
       throw error;
     }
-    return false
+    return false;
   }
 };
-
 
 export const queryDirections = async (
   uid: string
@@ -311,7 +310,7 @@ export const uploadImage = async (
 };
 
 export const addProduct = async (
-  { title, description, subcategory, price, category, stock }: Inputs,
+  { title, description, subcategory, price, category, stock, tags }: Inputs,
   image: string | null
 ): Promise<void | FirebaseError> => {
   try {
@@ -319,6 +318,7 @@ export const addProduct = async (
       category,
       description,
       subcategory,
+      tags,
       image,
       price,
       sold: 0,
