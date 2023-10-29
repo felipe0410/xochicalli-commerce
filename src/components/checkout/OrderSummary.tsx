@@ -25,6 +25,8 @@ const OrderSummary: FC = () => {
                                 price={product.price}
                                 title={product.title}
                                 category={product.category}
+                                subcategory={product.subcategory}
+                                tags={product.tags}
                             />
                             <Divider />
                         </>
