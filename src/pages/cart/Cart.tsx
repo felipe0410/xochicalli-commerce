@@ -49,8 +49,9 @@ const Cart: FC = (): JSX.Element => {
                       image={item.image}
                       price={item.price}
                       title={item.title}
-                      category={item.category}
-                    />
+                      category={item.category} 
+                      subcategory={''} 
+                      tags={''} />
                     <Divider my={6} />
                   </>
                 )
