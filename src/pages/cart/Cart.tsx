@@ -12,7 +12,6 @@ const Cart: FC = (): JSX.Element => {
   const id = useId();
 
   const { cart, clearCart, total } = useContext(CartContext)
-
   const navigate = useNavigate()
 
   const onCheckout = () => navigate('/checkout')
@@ -50,7 +49,8 @@ const Cart: FC = (): JSX.Element => {
                       price={item.price}
                       title={item.title}
                       category={item.category}
-                    />
+                      subcategory={item?.subcategory ?? ''}
+                      tags={item?.tags ?? ''} />
                     <Divider my={6} />
                   </>
                 )

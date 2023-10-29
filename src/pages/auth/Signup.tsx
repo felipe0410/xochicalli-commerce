@@ -7,15 +7,14 @@ import {
     Select, Stack, Text, useMediaQuery, useToast,
 } from '@chakra-ui/react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Link, useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { FiEye, FiEyeOff, FiPhone } from 'react-icons/fi'
 
 import { RegisterInputs } from '@/interfaces'
-import { signUpWithEmail } from '@/utils'
 import { ProviderButtons } from '@/components'
+import { validationSchema } from './data'
 
 const Signup: FC = (): JSX.Element => {
 
@@ -23,7 +22,7 @@ const Signup: FC = (): JSX.Element => {
     const [showTwo, setShowTwo] = useState<boolean>(true)
     const [formState, setFormState] = useState<number>(1)
     const [securityQuestion, setSecurityQuestion] = useState<string>('¿Cuál es tu color favorito?')
-
+    console.log(securityQuestion)
     const toast = useToast();
     const [isLargerThan800] = useMediaQuery('(min-width: 800px)')
 
@@ -34,54 +33,6 @@ const Signup: FC = (): JSX.Element => {
 
     const setQuestionValue = ({ target }: ChangeEvent<HTMLSelectElement>) => setSecurityQuestion(target.value)
 
-    const validationSchema = yup.object().shape({
-        email: yup
-            .string()
-            .required('El correo no puede estar vacío')
-            .email('Debe ser un correo válido'),
-        password: yup
-            .string()
-            .required('La contraseña no puede estar vacía')
-            .matches(
-                // eslint-disable-next-line no-useless-escape
-                /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/,
-                'La contraseña debe contener al menos 1 letra minúscula, 1 letra mayúscula, 1 número y 1 caracter especial'
-            )
-            .min(6, 'La contraseña debe tener mínimo 6 caracteres'),
-        confirmPassword: yup
-            .string()
-            .oneOf([yup.ref('password')], 'Las contraseñas deben ser idénticas')
-            .required('Debes confirmar la contraseña'),
-        name: yup
-            .string()
-            .required('El nombre no puede estar vacío')
-            .min(4, 'El nombre debe tener mínimo 4 caracteres'),
-        fatherSurname: yup
-            .string()
-            .required('El apellido paterno no puede estar vacío')
-            .min(4, 'El apellido paterno debe tener mínimo 4 caracteres'),
-        motherSurname: yup
-            .string()
-            .required('El apellido materno no puede estar vacío')
-            .min(4, 'El apellido materno debe tener mínimo 4 caracteres'),
-        birthday: yup
-            .date()
-            .required('La fecha de nacimiento es requerida')
-            .max(new Date(), 'La fecha de nacimiento debe ser antes de hoy'),
-        gender: yup
-            .string()
-            .required('Debes seleccionar un género')
-            .oneOf(['Masculino', 'Femenino'], `El género debe ser "Masculino" o "Femenino"`),
-        phoneNumber: yup
-            .string()
-            .required('El número de teléfono no puede estar vacío')
-            .min(10, 'El número de teléfono debe ser de 10 dígitos')
-            .max(10, 'El número de teléfono no puede tener más de 10 dígitos'),
-        securitySelect: yup
-            .string()
-            .required('La pregunta de seguridad es requerida')
-            .min(4, 'La respuesta es de mínimo 4 caracteres')
-    });
 
     const {
         handleSubmit,
@@ -92,21 +43,11 @@ const Signup: FC = (): JSX.Element => {
         },
         reset
     } = useForm<RegisterInputs>({ resolver: yupResolver(validationSchema) });
+    console.log(errors)
 
-    const onSubmit: SubmitHandler<RegisterInputs> = async (values: RegisterInputs) => {
-        const { birthday, fatherSurname, motherSurname, gender, name, phoneNumber, securitySelect } = values;
-
+    const onSubmitt: SubmitHandler<RegisterInputs> = async (values: RegisterInputs) => {
+        console.log('values:::>', values)
         try {
-            const user = await signUpWithEmail(values.email, values.password, {
-                birthday,
-                fatherSurname,
-                motherSurname,
-                gender,
-                name,
-                phoneNumber,
-                securitySelect,
-                securityQuestion
-            })
             toast({
                 status: 'success',
                 duration: 1500,
@@ -116,18 +57,19 @@ const Signup: FC = (): JSX.Element => {
                 description: `¡Hola, ${values.name}! Revisa tu email para verificar la cuenta.`
             })
             reset()
-            navigate(`/user/profile/${user?.uid}`)
-        } catch ({ message }) {
+            navigate(`/products`)
+        } catch (message: any) {
             toast({
                 status: 'error',
                 duration: 1500,
                 isClosable: false,
                 title: 'Error de registro',
                 position: isLargerThan800 ? 'bottom' : 'top-right',
-                description: message as string
+                description: message.messsage as string
             })
         }
     }
+
 
     return (
         <Box bgColor='gray.100' minHeight='100vh'>
@@ -166,7 +108,7 @@ const Signup: FC = (): JSX.Element => {
                         borderRadius={{ base: 'none', sm: 'xl' }} id='register-form' w={['sm', 'md', 'xl']}
                     >
                         <Stack spacing="6">
-                            <form onSubmit={handleSubmit(onSubmit)}>
+                            <form onSubmit={handleSubmit(onSubmitt)}>
                                 {
                                     formState === 1
                                     &&
@@ -182,6 +124,9 @@ const Signup: FC = (): JSX.Element => {
                                                     borderColor='gray.200'
                                                     placeholder='Antonio'
                                                     {...register('name')}
+                                                    onChange={(e) => {
+
+                                                    }}
                                                 />
                                                 {errors.name && <FormErrorMessage>{errors.name.message}</FormErrorMessage>}
                                             </FormControl>
@@ -367,7 +312,7 @@ const Signup: FC = (): JSX.Element => {
                                     <Button mt={8} width='100%' colorScheme='red' type='button' onClick={prevForm} isDisabled={formState === 1}>
                                         Anterior
                                     </Button>
-                                    <Button mt={8} width='100%' colorScheme='blue' type='button' onClick={nextForm} isDisabled={formState === 3}>
+                                    <Button type='submit' mt={8} width='100%' colorScheme='blue' onClick={nextForm} isDisabled={formState === 3}>
                                         Siguiente
                                     </Button>
                                 </ButtonGroup>
