@@ -28,7 +28,6 @@ import { addProduct, getCategorias } from "@/utils";
 import { storage } from "@/firebase";
 import ModalCategory from "./modalCategory";
 import { FaCloudUploadAlt } from "react-icons/fa";
-import { AddTagsSubCategory } from "./AddTagsSubCategoy";
 
 const AddProduct: FC = (): JSX.Element => {
   const [arrayTags, setArrayTags] = useState([]);
@@ -36,6 +35,7 @@ const AddProduct: FC = (): JSX.Element => {
   const [imageBase64, setImageBase64] = useState("");
   const [category, setCategory] = useState("");
   const [subCategoryForm, setSubCategoryForm] = useState("");
+  const [etiqueta, setEtiqueta] = useState("");
   const [imageUrl, setImageUrl] = useState<string>("");
   const fileRef = useRef<HTMLInputElement>(null);
   const [dataCategorias, setDataCategorias] = useState<any>({});
@@ -140,6 +140,17 @@ const AddProduct: FC = (): JSX.Element => {
     tags(subCategoryForm);
   };
 
+  const handleSelectChangeTags = (event: any) => {
+    const etiqueta = event.target.value;
+    setEtiqueta(etiqueta);
+  };
+
+  const handleCancel = () => {
+    setImageBase64("");
+    setImageUrl("");
+    setUpload(false);
+  };
+
   useEffect(() => {
     const getDataCategorias = async () => {
       const dataCategorias = await getCategorias();
@@ -157,8 +168,6 @@ const AddProduct: FC = (): JSX.Element => {
 
   const tags = (subCategoryForm: string) => {
     for (const tags in dataCategorias[category]?.subCategorys) {
-      //FLORES.subCategorys.subcateogory0.subCategorys[0].value
-      //INSUMOS.subCategorys.subcateogory3.subCategorys[0].value
       console.log("category::>", category);
       console.log("tags::>", tags);
       console.log(dataCategorias[category]?.subCategorys[tags].nameCategory);
@@ -177,7 +186,7 @@ const AddProduct: FC = (): JSX.Element => {
   };
 
   return (
-    <VStack h="auto" paddingBottom={"2%"} bgColor="gray.200" gap={4}>
+    <VStack h='auto' paddingBottom={"2%"} bgColor='gray.200' gap={4}>
       <Helmet>
         <title>Agregar producto</title>
       </Helmet>
@@ -185,18 +194,18 @@ const AddProduct: FC = (): JSX.Element => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box
           w={[350, 450, 550, 650]}
-          bgColor="white"
+          bgColor='white'
           p={5}
-          borderRadius="xl"
-          boxShadow="xs"
+          borderRadius='xl'
+          boxShadow='xs'
         >
           <FormControl isInvalid={!!errors.title} mb={4}>
-            <FormLabel htmlFor="title">Nombre de producto</FormLabel>
+            <FormLabel htmlFor='title'>Nombre de producto</FormLabel>
             <Input
-              type="text"
-              id="title"
-              borderColor="gray.200"
-              placeholder="Planta medicinal"
+              type='text'
+              id='title'
+              borderColor='gray.200'
+              placeholder='Planta medicinal'
               {...register("title", {
                 required: true,
                 minLength: 4,
@@ -208,13 +217,13 @@ const AddProduct: FC = (): JSX.Element => {
           </FormControl>
 
           <FormControl isInvalid={!!errors.description} mb={4}>
-            <FormLabel htmlFor="description">
+            <FormLabel htmlFor='description'>
               Descripción del producto
             </FormLabel>
             <Textarea
-              id="description"
-              borderColor="gray.200"
-              placeholder="Planta con aroma agradable para curar enfermedades"
+              id='description'
+              borderColor='gray.200'
+              placeholder='Planta con aroma agradable para curar enfermedades'
               {...register("description", {
                 required: true,
                 minLength: 10,
@@ -226,7 +235,7 @@ const AddProduct: FC = (): JSX.Element => {
           </FormControl>
           <Box>
             <FormControl isInvalid={!!errors.category} mb={4}>
-              <FormLabel htmlFor="category">Categoría</FormLabel>
+              <FormLabel htmlFor='category'>Categoría</FormLabel>
               <Box style={{ display: "flex" }}>
                 <Select
                   {...register("category", {
@@ -243,7 +252,7 @@ const AddProduct: FC = (): JSX.Element => {
                 <ModalCategory propCategory={dataCategorias[category]} />
               </Box>
               {/* _____________________________________________ */}
-              <FormLabel htmlFor="subcategory" style={{ marginTop: "7px" }}>
+              <FormLabel htmlFor='subcategory' style={{ marginTop: "7px" }}>
                 Subcategoría
               </FormLabel>
               <Select
@@ -268,16 +277,15 @@ const AddProduct: FC = (): JSX.Element => {
               </Select>
               {
                 <Box display={arrayTags.length > 0 ? "block" : "none"}>
-                  <FormLabel htmlFor="tag" style={{ marginTop: "7px" }}>
+                  <FormLabel htmlFor='tags' style={{ marginTop: "7px" }}>
                     Etiqueta
                   </FormLabel>
                   <Select
-                    // {...register("tags", {
-                    //   required: true,
-                    // })}
-                    // value={subCategoryForm}
-                    // onChange={(e) => handleSelectChangeSubCategory(e)}
-                    key={crypto.randomUUID()}
+                    {...register("tags", {
+                      required: true,
+                    })}
+                    value={etiqueta}
+                    onChange={(e) => handleSelectChangeTags(e)}
                   >
                     {arrayTags?.map((sybcategory: string) => (
                       <option key={sybcategory} value={sybcategory}>
@@ -287,27 +295,6 @@ const AddProduct: FC = (): JSX.Element => {
                   </Select>
                 </Box>
               }
-              {/* <Box style={{ marginTop: "6px", display: "flex", gap: "5px" }}>
-                <em>Tags: </em>
-                {Object.keys(dataCategorias[category]?.subCategorys ?? "").map(
-                  (sybcategory: string) => {
-                    const tagsSubCategory =
-                      dataCategorias[category]?.subCategorys[sybcategory]
-                        ?.subCategorys[0]?.value;
-
-                    // console.log("%c test", "color: blue", tagsSubCategory);
-                    // let objetoEncontrado = null;
-                    return (
-                      //   <Box key={crypto.randomUUID()}>
-                      //     <AddTagsSubCategory elements={tagsSubCategory} />
-                      //   </Box>
-                      // );
-
-                      
-                    );
-                  }
-                )}
-              </Box> */}
               {/* _____________________________________________ */}
               {errors.category && (
                 <FormErrorMessage>La categoría es requerida</FormErrorMessage>
@@ -316,12 +303,12 @@ const AddProduct: FC = (): JSX.Element => {
           </Box>
 
           <FormControl isInvalid={!!errors.stock} mb={4}>
-            <FormLabel htmlFor="stock">Stock</FormLabel>
+            <FormLabel htmlFor='stock'>Stock</FormLabel>
             <Input
-              id="stock"
-              type="number"
-              borderColor="gray.200"
-              placeholder="5"
+              id='stock'
+              type='number'
+              borderColor='gray.200'
+              placeholder='5'
               {...register("stock", {
                 required: true,
                 min: 5,
@@ -335,20 +322,20 @@ const AddProduct: FC = (): JSX.Element => {
           </FormControl>
 
           <FormControl isInvalid={!!errors.price} mb={4}>
-            <FormLabel htmlFor="price">Precio</FormLabel>
+            <FormLabel htmlFor='price'>Precio</FormLabel>
             <InputGroup>
-              <InputLeftAddon children="$" />
+              <InputLeftAddon children='$' />
               <Input
-                id="price"
-                type="number"
-                borderColor="gray.200"
-                placeholder="12345"
+                id='price'
+                type='number'
+                borderColor='gray.200'
+                placeholder='12345'
                 {...register("price", {
                   required: true,
                   min: 20,
                 })}
               />
-              <InputRightAddon children="MXN" />
+              <InputRightAddon children='MXN' />
             </InputGroup>
             {errors.price && (
               <FormErrorMessage>El precio es requerido</FormErrorMessage>
@@ -356,7 +343,7 @@ const AddProduct: FC = (): JSX.Element => {
           </FormControl>
 
           <FormControl isInvalid={!!errors.image} mb={4}>
-            <FormLabel htmlFor="image">Imagen</FormLabel>
+            <FormLabel htmlFor='image'>Imagen</FormLabel>
             <Box
               style={{
                 padding: "20%",
@@ -366,25 +353,25 @@ const AddProduct: FC = (): JSX.Element => {
               }}
             >
               <Button
-                as="label"
+                as='label'
                 background={"blue.100"}
                 rightIcon={<FaCloudUploadAlt />}
               >
                 Upload IMG
                 <VisuallyHiddenInput
-                  accept="image/*"
+                  accept='image/*'
                   ref={fileRef}
                   onChange={() => {
                     setUpload(true);
                     uploadImage(fileRef);
                   }}
-                  type="file"
+                  type='file'
                 />
               </Button>
             </Box>
             {imageBase64 && (
               <Box
-                id="contianer_img"
+                id='contianer_img'
                 sx={{
                   justifyContent: "center",
                   display: "flex",
@@ -392,7 +379,7 @@ const AddProduct: FC = (): JSX.Element => {
                   alignItems: "center",
                 }}
               >
-                <img style={{ width: "90%" }} src={imageBase64} alt="Preview" />
+                <img style={{ width: "90%" }} src={imageBase64} alt='Preview' />
                 <Box
                   sx={{
                     width: "90%",
@@ -402,12 +389,12 @@ const AddProduct: FC = (): JSX.Element => {
                   }}
                 >
                   <Button
-                    colorScheme="blue"
+                    colorScheme='blue'
                     onClick={() => handleAcceptImage(fileRef)}
                   >
                     Aceptar imagen
                   </Button>
-                  <Button colorScheme="red" onClick={() => {}}>
+                  <Button colorScheme='red' onClick={() => handleCancel()}>
                     Cancelar
                   </Button>
                 </Box>
@@ -420,18 +407,18 @@ const AddProduct: FC = (): JSX.Element => {
 
           <Button
             isLoading={isSubmitting}
-            loadingText="Agregando producto..."
-            colorScheme="blue"
-            width="100%"
+            loadingText='Agregando producto...'
+            colorScheme='blue'
+            width='100%'
             isDisabled={imageUrl ? false : true}
-            type="submit"
+            type='submit'
             mb={2}
           >
             Agregar producto
           </Button>
           <Button
-            colorScheme="linkedin"
-            width="100%"
+            colorScheme='linkedin'
+            width='100%'
             onClick={handleGoProducts}
           >
             Ver productos

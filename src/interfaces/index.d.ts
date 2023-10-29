@@ -110,6 +110,7 @@ export interface Inputs {
   title: string;
   description: string;
   subcategory: string;
+  tags: string;
   price: number;
   stock: number;
   category: string;
@@ -145,6 +146,7 @@ export interface Product {
   image: string;
   category: string;
   subcategory: string;
+  tags: string;
   title: string;
   price: number;
   sold?: number;
