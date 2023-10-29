@@ -191,26 +191,17 @@ export const addComment = async (
   }
 };
 
-export const addOrder = async (
-  items: any,
-  total: number,
-  card: string,
-  uid: string
-) => {
+export const addOrder = async (items: any, total: number, card: string, uid: string) => {
   try {
     const trimmedCard = card.slice(-4);
-
     const timeStamp = new Date();
     const formatted = timeStamp.toISOString();
-
     const orderRef = collection(db, `orders/${uid}`, formatted);
-
     await addDoc(orderRef, {
       items,
       total,
       cardUsed: trimmedCard,
     });
-
     return localStorage.removeItem("cart");
   } catch (e) {
     return e as FirebaseError;

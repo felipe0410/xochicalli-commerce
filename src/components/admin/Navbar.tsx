@@ -32,6 +32,11 @@ const links: NavbarItems[] = [
     text: "Backup",
     path: "/admin/backups",
   },
+  {
+    id: 3,
+    text: "comentarios",
+    path: "/admin/comentarios",
+  },
 ];
 
 const selectProducts: NavbarItems[] = [
@@ -94,12 +99,12 @@ const Navbar: FC<ActiveUser> = ({ isUser }): JSX.Element => {
                   style={({ isActive }) =>
                     isActive
                       ? {
-                          backgroundColor: "#fff",
-                          color: "#4A5568",
-                          padding: "4px",
-                          borderRadius: "4px",
-                          transition: "all 300ms ease",
-                        }
+                        backgroundColor: "#fff",
+                        color: "#4A5568",
+                        padding: "4px",
+                        borderRadius: "4px",
+                        transition: "all 300ms ease",
+                      }
                       : { color: "#fff", transition: "all 300ms ease" }
                   }
                   to={path}

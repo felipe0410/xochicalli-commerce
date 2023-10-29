@@ -39,6 +39,7 @@ const Dashboard = lazy(() => import("@/pages/admin/dashboard/Dashboard"));
 const AdminProducts = lazy(() => import("@/pages/admin/products/Products"));
 const Users = lazy(() => import("@/pages/admin/users/Users"));
 const Backups = lazy(() => import("@/pages/admin/backups/Backups"));
+const Comentarios = lazy(() => import("@/pages/admin/comentarios/page"));
 
 const NavbarRenderer: FC = (): JSX.Element => {
   const { user, userRole } = useContext(UserContext);
@@ -112,6 +113,14 @@ export const App: FC = (): JSX.Element => {
               element={
                 <PrivateRoute allowedRoles="admin">
                   <Backups />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="comentarios"
+              element={
+                <PrivateRoute allowedRoles="admin">
+                  <Comentarios />
                 </PrivateRoute>
               }
             />

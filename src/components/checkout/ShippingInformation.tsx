@@ -36,7 +36,7 @@ interface UserProfile {
   uid: string;
   phoneNumber: string;
 }
-interface Address {}
+interface Address { }
 
 const ShippingInformation: FC = (): JSX.Element => {
   const { userInformation } = useContext(UserContext);
@@ -46,14 +46,12 @@ const ShippingInformation: FC = (): JSX.Element => {
     code: "",
     state: "Puebla",
     city: "Acajete",
-    colony: "",
     email: "",
   });
   const uid: string | any = localStorage.getItem("uid");
   const navigate = useNavigate();
   const [data, setData] = useState<any>([]);
   const [payment, setPayment] = useState(false);
-
   useEffect(() => {
     const url =
       "https://raw.githubusercontent.com/martinciscap/json-estados-municipios-mexico/master/estados-municipios.json";
@@ -115,6 +113,14 @@ const ShippingInformation: FC = (): JSX.Element => {
 
   useEffect(() => {
     getCityPostalCodes(dataCard.city);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataCard.city]);
+
+  const validation = () => {
+    const validation = Object.values(dataCard).some(value => value === "")
+    return validation
+  }
+  useEffect(() => {
     const getDataUser = async () => {
       if (uid) {
         const dataUser: UserProfile | any = await queryUser(uid);
@@ -138,7 +144,8 @@ const ShippingInformation: FC = (): JSX.Element => {
     };
     getDataUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataCard.city]);
+  }, [])
+
 
   return (
     <Stack spacing={{ base: "6", md: "8" }}>
@@ -146,7 +153,7 @@ const ShippingInformation: FC = (): JSX.Element => {
         <IconButton
           aria-label="back"
           icon={<ArrowBackIcon />}
-          onClick={() => navigate("/cart")}
+          onClick={() => { payment ? setPayment(false) : navigate("/cart") }}
           w="max-content"
         />
         <Heading size="lg">Información de envío</Heading>
@@ -189,7 +196,7 @@ const ShippingInformation: FC = (): JSX.Element => {
                     />
                     {!input.validation() && (
                       <Text color="tomato">
-                        I'm using a custom font-size value for this text
+                        Este campo no puede estar vacio
                       </Text>
                     )}
                   </FormControl>
@@ -202,6 +209,7 @@ const ShippingInformation: FC = (): JSX.Element => {
                 {"Estado"}
               </FormLabel>
               <Select
+                value={dataCard.state}
                 onChange={(e) =>
                   setDataCard({ ...dataCard, state: e.target.value })
                 }
@@ -221,6 +229,7 @@ const ShippingInformation: FC = (): JSX.Element => {
                 {"ciudad"}
               </FormLabel>
               <Select
+                value={dataCard.city}
                 onChange={(e) => {
                   setDataCard({ ...dataCard, city: e.target.value });
                   getCityPostalCodes(e.target.value);
@@ -250,6 +259,9 @@ const ShippingInformation: FC = (): JSX.Element => {
               </FormControl>
 
               <Button
+                background={validation() ? "gray.300" : "blue.500"}
+                color={validation() ? '' : "#fff"}
+                isDisabled={validation()}
                 onClick={() => {
                   guardarDireccion(uid, dataCard);
                   setPayment(true);
@@ -261,7 +273,10 @@ const ShippingInformation: FC = (): JSX.Element => {
           )}
         </Stack>
       ) : (
-        <PaymentForm />
+        <>
+          <PaymentForm dataCard={dataCard} />
+        </>
+
       )}
     </Stack>
   );

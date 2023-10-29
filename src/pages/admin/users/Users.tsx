@@ -24,7 +24,6 @@ import { User } from "firebase/auth";
 
 const Users = (props: TableProps) => {
   const isMobile = useBreakpointValue({ base: true, lg: false });
-  console.log(isMobile);
   const [users, setUsers] = useState<User[]>([]);
   useEffect(() => {
     const getFirebaseUser = (arrayUsers: any) => {
@@ -72,7 +71,7 @@ const Users = (props: TableProps) => {
           </Box>
           <Box>
             <Table>
-              <Thead display={isMobile ? "contents" : "block"}>
+              <Thead display={isMobile ? "contents" : ""}>
                 <Tr>
                   {colums.map((colum, index) => (
                     <Th key={index}>

@@ -7,9 +7,9 @@ import {
 } from "./utils";
 
 import "react-credit-cards-2/dist/es/styles-compiled.css";
-import { Box, FormControl, Input, Heading } from "@chakra-ui/react";
+import { Box, FormControl, Input, Heading, Button } from "@chakra-ui/react";
 
-const PaymentForm = () => {
+const PaymentForm = ({ dataCard }: { dataCard: any }) => {
   const [data, setData] = useState({
     number: "",
     name: "",
@@ -42,7 +42,6 @@ const PaymentForm = () => {
     } else if (target.name === "cvc") {
       value = formatCVC(value);
     }
-
     setData({
       ...data,
       [target.name]: value,
@@ -64,12 +63,17 @@ const PaymentForm = () => {
     });
   };
 
+
+  const validation = () => {
+    return Object.values(data).some(value => value === "")
+  }
+
   return (
     <Box key="Payment">
       <Box className="App-payment">
         <Heading fontSize="xl">Ingresa tu tarjeta de credito</Heading>
         <Card
-          number={data.number}
+          number={data.number.slice(0, 4)}
           name={data.name}
           expiry={data.expiry}
           cvc={data.cvc}
@@ -84,8 +88,8 @@ const PaymentForm = () => {
               name="number"
               className="form-control"
               placeholder="Card Number"
-              pattern="[\d| ]{16,22}"
               required
+              pattern="^\d{16}$"
               onChange={handleInputChange}
               onFocus={handleInputFocus}
             />
@@ -132,6 +136,17 @@ const PaymentForm = () => {
             </Box>
           </Box>
         </FormControl>
+        <Button
+          background={validation() ? "gray.300" : "blue.500"}
+          color={validation() ? '' : "#fff"}
+          isDisabled={validation()}
+          width={'100%'}
+          onClick={() => {
+
+          }}
+        >
+          Finalizar compra
+        </Button>
       </Box>
     </Box>
   );
