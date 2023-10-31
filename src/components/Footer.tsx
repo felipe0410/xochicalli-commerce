@@ -1,6 +1,7 @@
 import { FC } from "react";
 
 import {
+  Button,
   ButtonGroup,
   Center,
   HStack,
@@ -16,8 +17,17 @@ import {
   TwitterIcon,
   VisaLogo,
 } from "./checkout";
+import { useNavigate } from "react-router-dom";
 
-const Footer: FC = (): JSX.Element => (
+
+
+
+const Footer: FC = (): JSX.Element => {
+  
+  const navigate = useNavigate();
+  
+  return (
+  
   <Stack
     as="footer"
     role="contentinfo"
@@ -45,6 +55,9 @@ const Footer: FC = (): JSX.Element => (
             borderRadius="lg"
           />
         </HStack>
+        <Button sx={{ color: 'black' }} variant='link' onClick={() => navigate("/faqs")}>
+          Preguntas frecuentes
+        </Button>
         <HStack>
           <Text fontWeight={600}>Síguenos en:</Text>
           <ButtonGroup variant="ghost" spacing={["2", "3"]}>
@@ -90,5 +103,6 @@ const Footer: FC = (): JSX.Element => (
     </Stack>
   </Stack>
 );
+}
 
 export default Footer;
