@@ -33,9 +33,14 @@ const links: NavbarItems[] = [
     path: "/admin/backups",
   },
   {
-    id: 3,
+    id: 4,
     text: "comentarios",
     path: "/admin/comentarios",
+  },
+  {
+    id: 5,
+    text: "Encuestas",
+    path: "/admin/encuestas",
   },
 ];
 
