@@ -1,11 +1,13 @@
 import { FC, useState } from 'react'
 
-import { Box, Center, Heading, Select, Stack, Text, VStack } from '@chakra-ui/react'
+import { Box, Center, Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Spinner, Stack, Text, VStack, useDisclosure } from '@chakra-ui/react'
 
 import { Button, FormControl, FormLabel, Textarea, } from "@chakra-ui/react";
-
+import { db } from '@/firebase';
+import { addDoc, collection } from 'firebase/firestore';
 
 const Questions: FC = (): JSX.Element => {
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     const [formData, setFormData] = useState({
         frequency: "",
@@ -15,11 +17,16 @@ const Questions: FC = (): JSX.Element => {
         technicalProblems: "",
         productInformationSatisfaction: "",
         usedSearchFunction: "",
-        searchFunctionEffective: "",
         trackingOrderEase: "",
         recommendStore: "",
         additionalComments: "",
     });
+
+    const [loading, setLoading] = useState(false)
+    const [addOK, setAddOK] = useState<boolean>()
+    const [answeredQuestions, setAnsweredQuestions] = useState(false);
+    const [isFromValid, setIsFromValid] = useState(true);
+
 
     const handleChange = (event: any) => {
         const { name, value } = event.target;
@@ -27,12 +34,73 @@ const Questions: FC = (): JSX.Element => {
             ...formData,
             [name]: value,
         });
+
+        const answered = Object.values(formData).some(value => value !== "");
+        setAnsweredQuestions(answered);
     };
 
-    const handleSubmit = (event: any) => {
+
+    const handleSubmit = async (event: any) => {
         event.preventDefault();
 
-        console.log(JSON.stringify(formData, null, 5))
+        const answered = Object.values(formData).some(value => value !== "");
+        setAnsweredQuestions(answered);
+
+        if (!answeredQuestions) {
+            // Muestra un mensaje y no intenta enviar el formulario
+            setIsFromValid(false)
+            return;
+        }
+        setLoading(true);
+
+        const currentDateTime = new Date();
+        const formattedDate = currentDateTime.toLocaleDateString('es-ES', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+        });
+        const formattedTime = currentDateTime.toLocaleTimeString('es-ES', {
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+        const updatedFormData = {
+            ...formData,
+            fecha: formattedDate,
+            hora: formattedTime,
+        };
+
+        setFormData(updatedFormData);
+
+        try {
+
+            await addDoc(collection(db, 'questions'), updatedFormData);
+            setLoading(false)
+            setAddOK(true)
+            setFormData({
+                frequency: "",
+                navigationEase: "",
+                intuitiveOrganization: "",
+                pageSpeed: "",
+                technicalProblems: "",
+                productInformationSatisfaction: "",
+                usedSearchFunction: "",
+                trackingOrderEase: "",
+                recommendStore: "",
+                additionalComments: "",
+            });
+            onOpen()
+            setIsFromValid(true)
+
+        } catch (error) {
+
+            console.error('Error al agregar el documento: ', error);
+            setLoading(false)
+            setAddOK(false)
+            onOpen()
+            setIsFromValid(true)
+
+        }
+
     };
 
     return (
@@ -40,6 +108,21 @@ const Questions: FC = (): JSX.Element => {
             <Center bg='white' p={[6, 8]} borderRadius='lg' w={['sm', 'md', 'xl', '3xl']}>
                 <VStack spacing={6} w='full'>
                     <Heading>Responder Preguntas</Heading>
+                    <>
+                        <Modal onClose={onClose} isOpen={isOpen} isCentered>
+                            <ModalOverlay />
+                            <ModalContent>
+                                <ModalHeader>{addOK ? 'Guardado correctamente!' : 'Ocurrio un error'}</ModalHeader>
+                                <ModalCloseButton />
+                                <ModalBody>
+                                    {addOK ? 'Sus respuestas fueron enviadas!' : 'Verifique su conexión!'}
+                                </ModalBody>
+                                <ModalFooter>
+                                    <Button onClick={onClose}>Cerrar</Button>
+                                </ModalFooter>
+                            </ModalContent>
+                        </Modal>
+                    </>
                     <form onSubmit={handleSubmit}>
                         <FormControl mb={8}>
                             <FormLabel htmlFor="frequency">1. ¿Con qué frecuencia visitas nuestra tienda en línea de productos de plantas y jardinería?</FormLabel>
@@ -174,10 +257,19 @@ const Questions: FC = (): JSX.Element => {
                             />
                         </FormControl>
                         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <Button type="submit" colorScheme="teal">
-                                Enviar respuestas
-                            </Button>
+                            {loading ? (
+                                <Spinner color='red.500' />
+                            ) : (
+                                <Button type="submit" colorScheme="teal">
+                                    Enviar respuestas
+                                </Button>
+                            )}
                         </Box>
+                        {
+                            isFromValid ? null : <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <Text fontSize='xs' as='b' color='tomato'>Debe responder la encuesta</Text>
+                        </Box>
+                        }
 
                     </form>
                     <Stack spacing={3}>
