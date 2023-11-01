@@ -27,6 +27,7 @@ const PrivacyPolicy = lazy(() => import("@/pages/privacyPolicy/PrivacyPolicy"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const Checkout = lazy(() => import("@/pages/checkout/Checkout"));
 const Faqs = lazy(() => import("@/pages/faqs/index"));
+const Questions = lazy(() => import("@/pages/questions/index"));
 
 // Normal user routes
 const UserProfile = lazy(() => import("@/pages/user/UserProfile"));
@@ -73,6 +74,7 @@ export const App: FC = (): JSX.Element => {
             element={cart.length < 1 ? <Navigate to="/cart" /> : <Checkout />}
           />
           <Route path="/faqs" element={<Faqs />} />
+          <Route path="/questions" element={<Questions />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/login" element={<LoggedUserRedirect />} />
