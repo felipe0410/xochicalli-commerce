@@ -32,7 +32,7 @@ const links = [
   },
   {
     id: 2,
-    text: "Blog",
+    text: "Blog", // aqui es 
     route: "/blog",
     icon: <FiMessageSquare />,
   },

@@ -42,6 +42,11 @@ const links: NavbarItems[] = [
     text: "Encuestas",
     path: "/admin/encuestas",
   },
+  {
+    id: 5,
+    text: "Blog",
+    path: "/admin/blog-create",
+  },
 ];
 
 const selectProducts: NavbarItems[] = [
@@ -56,6 +61,7 @@ const selectProducts: NavbarItems[] = [
     path: "/admin/products",
   },
 ];
+
 
 const Navbar: FC<ActiveUser> = ({ isUser }): JSX.Element => {
   const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
@@ -120,6 +126,7 @@ const Navbar: FC<ActiveUser> = ({ isUser }): JSX.Element => {
                   </Text>
                 </NavLink>
               ))}
+            
               <Select
                 iconColor='#fff'
                 onChange={handleSelectChange}
@@ -137,6 +144,8 @@ const Navbar: FC<ActiveUser> = ({ isUser }): JSX.Element => {
                   </option>
                 ))}
               </Select>
+
+              
             </HStack>
             {isUser && (
               <IconButton
