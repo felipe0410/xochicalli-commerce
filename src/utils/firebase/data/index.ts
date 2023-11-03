@@ -332,6 +332,22 @@ export const addProduct = async (
   }
 };
 
+export const addProductData = async (
+  productData: Record<string, any>
+): Promise<void | FirebaseError> => {
+  try {
+    const prevProduct = await addDoc(collection(db, "products"), productData);
+
+    return await setDoc(
+      doc(db, "products", prevProduct.id),
+      { id: prevProduct.id },
+      { merge: true }
+    );
+  } catch (error) {
+    return error as FirebaseError;
+  }
+};
+
 export const deleteProduct = async (
   id: string,
   image: string

@@ -8,11 +8,22 @@ import {
   InputLeftAddon,
   InputRightAddon,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
+import ButtonComponent from "./ButtonComponent";
 
-const SecondStep = ({ setValue }: { setValue: any }) => {
+const SecondStep = ({
+  setValue,
+  setStep1,
+}: {
+  setValue: any;
+  setStep1: any;
+}) => {
+  const toast = useToast();
 
-  const handle = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handle = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const name = event.target.name;
     const value = event.target.value;
     setValue((prevState: Inputs) => ({
@@ -20,6 +31,45 @@ const SecondStep = ({ setValue }: { setValue: any }) => {
       [name]: value,
     }));
   };
+
+  const showToast = (
+    title: string,
+    description: string,
+    status: "info" | "warning" | "success" | "error"
+  ) => {
+    toast({
+      title,
+      description,
+      status,
+      duration: 3000,
+      isClosable: true,
+    });
+  };
+
+  const handleNextClick = () => {
+    const titleValue = getValue("title");
+    const marcaValue = getValue("marca");
+    const priceValue = getValue("price");
+    const descriptionValue = getValue("description");
+
+    if (!titleValue || !marcaValue || !priceValue || !descriptionValue) {
+      showToast(
+        "Error",
+        "Por favor, completa todos los campos antes de continuar",
+        "error"
+      );
+      return;
+    }
+    setStep1(true);
+  };
+
+  const getValue = (name: string) => {
+    const element = document.querySelector(
+      `[name=${name}]`
+    ) as HTMLInputElement;
+    return element.value.trim();
+  };
+
   return (
     <>
       <Box sx={{ textAlign: "-webkit-center" }}>
@@ -28,11 +78,10 @@ const SecondStep = ({ setValue }: { setValue: any }) => {
         </div>
       </Box>
       <FormControl mb={4}>
-        <FormLabel htmlFor='title'>Nombre de producto</FormLabel>
+        <FormLabel>Nombre de producto</FormLabel>
         <Input
-          name="tile"
+          name='title'
           type='text'
-          id='title'
           borderColor='gray.200'
           placeholder='Planta medicinal'
           onChange={handle}
@@ -71,6 +120,7 @@ const SecondStep = ({ setValue }: { setValue: any }) => {
           onChange={handle}
         />
       </FormControl>
+      <ButtonComponent name='Siguiente' fn={handleNextClick} />
     </>
   );
 };

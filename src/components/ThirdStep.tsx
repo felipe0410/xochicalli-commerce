@@ -10,7 +10,7 @@ import {
   Select,
   VisuallyHiddenInput,
   useToast,
-  Text
+  Text,
 } from "@chakra-ui/react";
 
 import { FaCloudUploadAlt } from "react-icons/fa";
@@ -24,27 +24,30 @@ import "react-tagsinput/react-tagsinput.css";
 import React from "react";
 import { InputData } from "@/pages/admin/addProduct/interface";
 
-
-
-
-
-const ThirdStep = ({ values, setValue }: { values: any, setValue: any }) => {
+const ThirdStep = ({
+  values,
+  setValue,
+  setValidar,
+}: {
+  values: any;
+  setValue: any;
+  setValidar: any;
+}) => {
   const [upload, setUpload] = useState(false);
   const [imageBase64, setImageBase64] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const toast = useToast();
-  const [imageUrl, setImageUrl] = useState<string>("");
-  const data = dataInputs
-  const categories = values?.category ?? 'INSUMOS'
-  const subcategories = values?.subCategory ?? 'Fertilizantes'
+  const data = dataInputs;
+  const categories = values?.category;
+  const subcategories = values?.subCategory;
 
   const handle = (event: any) => {
-    const name = event.target.name
+    const name = event.target.name;
     const value = event.target.value;
     setValue((prevState: any) => ({
       ...prevState,
       [name]: value,
-    }))
+    }));
   };
 
   const uploadImage = (fileRef: RefObject<HTMLInputElement>) => {
@@ -78,10 +81,39 @@ const ThirdStep = ({ values, setValue }: { values: any, setValue: any }) => {
     }
   };
 
+  const showToast = (
+    title: string,
+    description: string,
+    status: "info" | "warning" | "success" | "error"
+  ) => {
+    toast({
+      title,
+      description,
+      status,
+      duration: 3000,
+      isClosable: true,
+    });
+  };
+
+  const handleValidar = () => {
+    if (!values.stock || !values.image) {
+      showToast(
+        "Error",
+        "Por favor, completa los campos requeridos antes de continuar",
+        "error"
+      );
+      return;
+    }
+    setValidar(true);
+  };
+
   const handleCancel = () => {
     setImageBase64("");
-    setImageUrl("");
     setUpload(false);
+    setValue((prevState: any) => ({
+      ...prevState,
+      image: "",
+    }));
   };
 
   const uploadImageToFirebase = (imgRef: any, file: any) => {
@@ -105,7 +137,10 @@ const ThirdStep = ({ values, setValue }: { values: any, setValue: any }) => {
       },
       async () => {
         const url = await getDownloadURL(imgUpload.snapshot.ref);
-        setImageUrl(url);
+        setValue((prevState: any) => ({
+          ...prevState,
+          image: url,
+        }));
       }
     );
   };
@@ -124,7 +159,7 @@ const ThirdStep = ({ values, setValue }: { values: any, setValue: any }) => {
             width={"350px"}
           />
           <Select
-            name="unidad"
+            name='unidad'
             width={"150px"}
             onChange={handle}
             value={values.unidad}
@@ -137,19 +172,15 @@ const ThirdStep = ({ values, setValue }: { values: any, setValue: any }) => {
           </Select>
         </Box>
       </Box>
-    )
-  }
+    );
+  };
 
   const componentSelect = (name: string, data: []) => {
     return (
       <Box>
         <Box mb={4}>
-          <FormLabel >{name}</FormLabel>
-          <Select
-            name={name}
-            onChange={handle}
-            value={values[name]}
-          >
+          <FormLabel>{name}</FormLabel>
+          <Select name={name} onChange={handle} value={values[name]}>
             {data?.map((delivery: string) => (
               <option key={crypto.randomUUID()} value={delivery}>
                 {delivery}
@@ -158,13 +189,13 @@ const ThirdStep = ({ values, setValue }: { values: any, setValue: any }) => {
           </Select>
         </Box>
       </Box>
-    )
-  }
+    );
+  };
 
   const componentInput = (name: string, type: string) => {
     return (
       <Box>
-        <FormLabel >{name}</FormLabel>
+        <FormLabel>{name}</FormLabel>
         <Input
           name={name}
           onChange={handle}
@@ -172,20 +203,22 @@ const ThirdStep = ({ values, setValue }: { values: any, setValue: any }) => {
           borderColor='gray.200'
         />
       </Box>
-    )
-  }
+    );
+  };
 
   const pinInput = (name: string) => {
     return (
       <>
         <Text>{name}</Text>
         <HStack>
-          <PinInput onChange={(e) => {
-            setValue((prevState: any) => ({
-              ...prevState,
-              'Graduacion': e,
-            }))
-          }} >
+          <PinInput
+            onChange={(e) => {
+              setValue((prevState: any) => ({
+                ...prevState,
+                Graduacion: e,
+              }));
+            }}
+          >
             <PinInputField />
             <PinInputField />
             <PinInputField />
@@ -193,44 +226,42 @@ const ThirdStep = ({ values, setValue }: { values: any, setValue: any }) => {
           </PinInput>
         </HStack>
       </>
-    )
-  }
+    );
+  };
 
   const tags = (name: string) => {
     return (
       <>
-        <Text>
-          {name}
-        </Text>
+        <Text>{name}</Text>
         <TagsInput
           value={values?.instrucciones ?? []}
           onChange={(event: any) => {
             setValue((prevState: any) => ({
               ...prevState,
-              'instrucciones': event,
-            }))
+              instrucciones: event,
+            }));
           }}
         />
       </>
-    )
-  }
+    );
+  };
 
   const returnComponent = (input: any) => {
-    const { component, name, type, option } = input
+    const { component, name, type, option } = input;
     switch (component) {
-      case 'select':
-        return componentSelect(name, option)
-      case 'duplex':
-        return duplex(name, option, type)
-      case 'input':
-        return componentInput(name, type)
-      case 'tags':
-        return tags(name)
-      case 'pin':
-        return pinInput(name)
+      case "select":
+        return componentSelect(name, option);
+      case "duplex":
+        return duplex(name, option, type);
+      case "input":
+        return componentInput(name, type);
+      case "tags":
+        return tags(name);
+      case "pin":
+        return pinInput(name);
       default:
     }
-  }
+  };
 
   return (
     <>
@@ -249,17 +280,13 @@ const ThirdStep = ({ values, setValue }: { values: any, setValue: any }) => {
           onChange={handle}
         />
       </FormControl>
-      {
-        data[categories][subcategories].map((input: InputData, index: any) => {
-          return (
-            <React.Fragment key={index}>
-              <>
-                {returnComponent(input)}
-              </>
-            </React.Fragment>
-          )
-        })
-      }
+      {data[categories][subcategories].map((input: InputData, index: any) => {
+        return (
+          <React.Fragment key={index}>
+            <>{returnComponent(input)}</>
+          </React.Fragment>
+        );
+      })}
       <FormControl mb={4}>
         <FormLabel htmlFor='image'>Imagen</FormLabel>
         <Box
@@ -315,19 +342,12 @@ const ThirdStep = ({ values, setValue }: { values: any, setValue: any }) => {
               <Button colorScheme='red' onClick={() => handleCancel()}>
                 Cancelar
               </Button>
+              <Button colorScheme='green' onClick={handleValidar}>
+                Validar
+              </Button>
             </Box>
           </Box>
         )}
-        <Button
-          loadingText='Agregando producto...'
-          colorScheme='blue'
-          width='100%'
-          isDisabled={imageUrl ? false : true}
-          type='submit'
-          mb={2}
-        >
-          Agregar producto
-        </Button>
       </FormControl>
     </>
   );

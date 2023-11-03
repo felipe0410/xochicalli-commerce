@@ -1,38 +1,30 @@
 import useAddProduct from "@/hooks/useAddProduct";
 import ModalCategory from "@/pages/admin/addProduct/modalCategory";
-import {
-  Box,
-  FormControl,
-  FormLabel,
-  Select,
-} from "@chakra-ui/react";
+import { Box, FormControl, FormLabel, Select } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
-const FirstStep = ({setValue}:{setValue:any}) => {
+const FirstStep = ({ setValue }: { setValue: any }) => {
   const { dataCategorias } = useAddProduct();
   const [category, setCategory] = useState("");
   const [arrayTags, setArrayTags] = useState([]);
   const [subCategoryForm, setSubCategoryForm] = useState("");
   const [etiqueta, setEtiqueta] = useState("");
-  const inputValues = localStorage.getItem("dataValues");
-
-
 
   const handle = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const name = event.target.name
+    const name = event.target.name;
     const value = event.target.value;
     setValue((prevState: any) => ({
       ...prevState,
       [name]: value,
-    }))
+    }));
     switch (name) {
-      case 'category':
+      case "category":
         setCategory(value);
         break;
-      case 'subCategory':
+      case "subCategory":
         setSubCategoryForm(value);
         break;
-      case 'tags':
+      case "tags":
         setEtiqueta(value);
         break;
       default:
@@ -55,20 +47,13 @@ const FirstStep = ({setValue}:{setValue:any}) => {
     }
   };
 
-  if (inputValues !== null) {
-    const dataValues = JSON.parse(inputValues);
-    dataValues.category = category;
-    dataValues.subcategory = subCategoryForm;
-    dataValues.tags = etiqueta;
-  } else {
-    localStorage.setItem("dataValues", JSON.stringify({}));
-  }
-
   useEffect(() => {
     const subCaregoryy =
-      dataCategorias[Object.keys(dataCategorias)[0]]?.subCategorys?.subcateogory0?.nameCategory ?? '';
+      dataCategorias[Object.keys(dataCategorias)[0]]?.subCategorys
+        ?.subcateogory0?.nameCategory ?? "";
     const etiquetas =
-      dataCategorias[Object.keys(dataCategorias)[0]]?.subCategorys?.subcateogory0?.subCategorys[0]?.value ?? [];
+      dataCategorias[Object.keys(dataCategorias)[0]]?.subCategorys
+        ?.subcateogory0?.subCategorys[0]?.value ?? [];
     setCategory(Object.keys(dataCategorias)[0]);
     tags(subCategoryForm);
     setSubCategoryForm(subCaregoryy);
@@ -86,11 +71,7 @@ const FirstStep = ({setValue}:{setValue:any}) => {
       <FormControl mb={4}>
         <FormLabel htmlFor='category'>Categoría</FormLabel>
         <Box style={{ display: "flex" }}>
-          <Select
-            name="category"
-            onChange={handle}
-            value={category}
-          >
+          <Select name='category' onChange={handle} value={category}>
             {dataCategorias?.categorias?.map((categoria: string) => (
               <option key={crypto.randomUUID()} value={categoria}>
                 {categoria}
@@ -103,11 +84,7 @@ const FirstStep = ({setValue}:{setValue:any}) => {
         <FormLabel htmlFor='subcategory' style={{ marginTop: "7px" }}>
           Subcategoría
         </FormLabel>
-        <Select
-          value={subCategoryForm}
-          onChange={handle}
-          name="subCategory"
-        >
+        <Select value={subCategoryForm} onChange={handle} name='subCategory'>
           {Object.keys(dataCategorias[category]?.subCategorys ?? "").map(
             (sybcategory: string) => {
               const nameSubCategory =
@@ -126,11 +103,7 @@ const FirstStep = ({setValue}:{setValue:any}) => {
             <FormLabel htmlFor='tags' style={{ marginTop: "7px" }}>
               Subsubcategoría
             </FormLabel>
-            <Select
-              value={etiqueta}
-              onChange={handle}
-              name="tags"
-            >
+            <Select value={etiqueta} onChange={handle} name='tags'>
               {arrayTags?.map((sybcategory: string) => (
                 <option key={sybcategory} value={sybcategory}>
                   {sybcategory}
