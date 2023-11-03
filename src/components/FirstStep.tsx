@@ -1,22 +1,14 @@
 import useAddProduct from "@/hooks/useAddProduct";
-import { Inputs } from "@/interfaces";
 import ModalCategory from "@/pages/admin/addProduct/modalCategory";
 import {
   Box,
   FormControl,
-  FormErrorMessage,
   FormLabel,
   Select,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 
-const FirstStep = () => {
-  const {
-    register,
-    formState: { errors },
-  } = useForm<Inputs>();
-
+const FirstStep = ({setValue}:{setValue:any}) => {
   const { dataCategorias } = useAddProduct();
   const [category, setCategory] = useState("");
   const [arrayTags, setArrayTags] = useState([]);
@@ -24,37 +16,29 @@ const FirstStep = () => {
   const [etiqueta, setEtiqueta] = useState("");
   const inputValues = localStorage.getItem("dataValues");
 
-  console.log(dataCategorias);
 
-  const handleSelectChange = (event: any) => {
-    const category = event.target.value;
-    setCategory(category);
+
+  const handle = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const name = event.target.name
+    const value = event.target.value;
+    setValue((prevState: any) => ({
+      ...prevState,
+      [name]: value,
+    }))
+    switch (name) {
+      case 'category':
+        setCategory(value);
+        break;
+      case 'subCategory':
+        setSubCategoryForm(value);
+        break;
+      case 'tags':
+        setEtiqueta(value);
+        break;
+      default:
+        break;
+    }
   };
-
-  const handleSelectChangeSubCategory = (event: any) => {
-    const subCategoryForm = event.target.value;
-    setSubCategoryForm(subCategoryForm);
-    tags(subCategoryForm);
-  };
-
-  const handleSelectChangeTags = (event: any) => {
-    const etiqueta = event.target.value;
-    setEtiqueta(etiqueta);
-  };
-
-  useEffect(() => {
-    const subCaregoryy =
-      dataCategorias[Object.keys(dataCategorias)[0]].subCategorys.subcateogory0
-        .nameCategory;
-    const etiquetas =
-      dataCategorias[Object.keys(dataCategorias)[0]].subCategorys.subcateogory0
-        .subCategorys[0].value;
-    setCategory(Object.keys(dataCategorias)[0]);
-    tags(subCategoryForm);
-    setSubCategoryForm(subCaregoryy);
-    setArrayTags(etiquetas);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const tags = (subCategoryForm: string) => {
     for (const tags in dataCategorias[category]?.subCategorys) {
@@ -80,6 +64,18 @@ const FirstStep = () => {
     localStorage.setItem("dataValues", JSON.stringify({}));
   }
 
+  useEffect(() => {
+    const subCaregoryy =
+      dataCategorias[Object.keys(dataCategorias)[0]]?.subCategorys?.subcateogory0?.nameCategory ?? '';
+    const etiquetas =
+      dataCategorias[Object.keys(dataCategorias)[0]]?.subCategorys?.subcateogory0?.subCategorys[0]?.value ?? [];
+    setCategory(Object.keys(dataCategorias)[0]);
+    tags(subCategoryForm);
+    setSubCategoryForm(subCaregoryy);
+    setArrayTags(etiquetas);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataCategorias]);
+
   return (
     <>
       <Box sx={{ textAlign: "-webkit-center" }}>
@@ -87,14 +83,13 @@ const FirstStep = () => {
           <strong>Categoria</strong>
         </div>
       </Box>
-      <FormControl isInvalid={!!errors.category} mb={4}>
+      <FormControl mb={4}>
         <FormLabel htmlFor='category'>Categoría</FormLabel>
         <Box style={{ display: "flex" }}>
           <Select
-            {...register("category", {
-              required: true,
-            })}
-            onChange={(e) => handleSelectChange(e)}
+            name="category"
+            onChange={handle}
+            value={category}
           >
             {dataCategorias?.categorias?.map((categoria: string) => (
               <option key={crypto.randomUUID()} value={categoria}>
@@ -109,11 +104,9 @@ const FirstStep = () => {
           Subcategoría
         </FormLabel>
         <Select
-          {...register("subcategory", {
-            required: true,
-          })}
           value={subCategoryForm}
-          onChange={(e) => handleSelectChangeSubCategory(e)}
+          onChange={handle}
+          name="subCategory"
         >
           {Object.keys(dataCategorias[category]?.subCategorys ?? "").map(
             (sybcategory: string) => {
@@ -134,11 +127,9 @@ const FirstStep = () => {
               Subsubcategoría
             </FormLabel>
             <Select
-              {...register("tags", {
-                required: true,
-              })}
               value={etiqueta}
-              onChange={(e) => handleSelectChangeTags(e)}
+              onChange={handle}
+              name="tags"
             >
               {arrayTags?.map((sybcategory: string) => (
                 <option key={sybcategory} value={sybcategory}>
@@ -148,10 +139,6 @@ const FirstStep = () => {
             </Select>
           </Box>
         }
-        {/* _____________________________________________ */}
-        {errors.tags && (
-          <FormErrorMessage>La subsubcategoria es requerida</FormErrorMessage>
-        )}
       </FormControl>
     </>
   );

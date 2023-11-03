@@ -2,39 +2,236 @@ import {
   Box,
   Button,
   FormControl,
-  FormErrorMessage,
   FormLabel,
+  HStack,
   Input,
+  PinInput,
+  PinInputField,
   Select,
   VisuallyHiddenInput,
+  useToast,
+  Text
 } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
-import { Inputs } from "@/interfaces";
-import { FaCloudUploadAlt } from "react-icons/fa";
 
-const ThirdStep = ({
-  upload,
-  fileRef,
-  setUpload,
-  uploadImage,
-  imageBase64,
-  handleAcceptImage,
-  handleCancel,
-}: {
-  upload: boolean;
-  fileRef: any;
-  setUpload: any;
-  uploadImage: any;
-  imageBase64: string;
-  handleAcceptImage: any;
-  handleCancel: any;
-}) => {
-  const {
-    register,
-    formState: { errors },
-  } = useForm<Inputs>();
-  const deliverySelect = ["Bolsa", "Caja"];
-  const contentSelect = ["Gramos", "kilos", "Oz"];
+import { FaCloudUploadAlt } from "react-icons/fa";
+import { useRef, useState, RefObject } from "react";
+import { v4 } from "uuid";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { storage } from "@/firebase";
+import { dataInputs } from "@/pages/admin/addProduct/data";
+import TagsInput from "react-tagsinput";
+import "react-tagsinput/react-tagsinput.css";
+import React from "react";
+import { InputData } from "@/pages/admin/addProduct/interface";
+
+
+
+
+
+const ThirdStep = ({ values, setValue }: { values: any, setValue: any }) => {
+  const [upload, setUpload] = useState(false);
+  const [imageBase64, setImageBase64] = useState("");
+  const fileRef = useRef<HTMLInputElement>(null);
+  const toast = useToast();
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const data = dataInputs
+  const categories = values?.category ?? 'INSUMOS'
+  const subcategories = values?.subCategory ?? 'Fertilizantes'
+
+  const handle = (event: any) => {
+    const name = event.target.name
+    const value = event.target.value;
+    setValue((prevState: any) => ({
+      ...prevState,
+      [name]: value,
+    }))
+  };
+
+  const uploadImage = (fileRef: RefObject<HTMLInputElement>) => {
+    if (fileRef.current?.files?.length) {
+      const file = fileRef.current.files[0];
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64String: any = event?.target?.result;
+        if (base64String) setImageBase64(base64String);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      console.error("No file selected");
+    }
+  };
+
+  const handleAcceptImage = (fileRef: any) => {
+    if (fileRef.current?.files?.length) {
+      const file = fileRef.current.files[0];
+      const fileName = file.name;
+      const imgRef = ref(storage, `products/${v4() + fileName}`);
+
+      uploadImageToFirebase(imgRef, file);
+    } else {
+      toast({
+        title: "No se ha seleccionado ninguna imagen",
+        duration: 2000,
+        status: "error",
+        position: "top-right",
+      });
+    }
+  };
+
+  const handleCancel = () => {
+    setImageBase64("");
+    setImageUrl("");
+    setUpload(false);
+  };
+
+  const uploadImageToFirebase = (imgRef: any, file: any) => {
+    const imgUpload = uploadBytesResumable(imgRef, file);
+    imgUpload.on(
+      "state_changed",
+      ({ state }) => {
+        switch (state) {
+          case "paused":
+            console.log("Upload is paused");
+            break;
+          case "running":
+            console.log("Upload is running");
+            break;
+          default:
+            break;
+        }
+      },
+      (err) => {
+        console.error(err);
+      },
+      async () => {
+        const url = await getDownloadURL(imgUpload.snapshot.ref);
+        setImageUrl(url);
+      }
+    );
+  };
+
+  const duplex = (name: string, data: [], type: string) => {
+    return (
+      <Box>
+        <FormLabel htmlFor='content'>{name}</FormLabel>
+        <Box display={"flex"}>
+          <Input
+            onChange={handle}
+            name={name}
+            type={type}
+            borderColor='gray.200'
+            placeholder='350'
+            width={"350px"}
+          />
+          <Select
+            name="unidad"
+            width={"150px"}
+            onChange={handle}
+            value={values.unidad}
+          >
+            {data?.map((content: string) => (
+              <option key={crypto.randomUUID()} value={content}>
+                {content}
+              </option>
+            ))}
+          </Select>
+        </Box>
+      </Box>
+    )
+  }
+
+  const componentSelect = (name: string, data: []) => {
+    return (
+      <Box>
+        <Box mb={4}>
+          <FormLabel >{name}</FormLabel>
+          <Select
+            name={name}
+            onChange={handle}
+            value={values[name]}
+          >
+            {data?.map((delivery: string) => (
+              <option key={crypto.randomUUID()} value={delivery}>
+                {delivery}
+              </option>
+            ))}
+          </Select>
+        </Box>
+      </Box>
+    )
+  }
+
+  const componentInput = (name: string, type: string) => {
+    return (
+      <Box>
+        <FormLabel >{name}</FormLabel>
+        <Input
+          name={name}
+          onChange={handle}
+          type={type}
+          borderColor='gray.200'
+        />
+      </Box>
+    )
+  }
+
+  const pinInput = (name: string) => {
+    return (
+      <>
+        <Text>{name}</Text>
+        <HStack>
+          <PinInput onChange={(e) => {
+            setValue((prevState: any) => ({
+              ...prevState,
+              'Graduacion': e,
+            }))
+          }} >
+            <PinInputField />
+            <PinInputField />
+            <PinInputField />
+            <PinInputField />
+          </PinInput>
+        </HStack>
+      </>
+    )
+  }
+
+  const tags = (name: string) => {
+    return (
+      <>
+        <Text>
+          {name}
+        </Text>
+        <TagsInput
+          value={values?.instrucciones ?? []}
+          onChange={(event: any) => {
+            setValue((prevState: any) => ({
+              ...prevState,
+              'instrucciones': event,
+            }))
+          }}
+        />
+      </>
+    )
+  }
+
+  const returnComponent = (input: any) => {
+    const { component, name, type, option } = input
+    switch (component) {
+      case 'select':
+        return componentSelect(name, option)
+      case 'duplex':
+        return duplex(name, option, type)
+      case 'input':
+        return componentInput(name, type)
+      case 'tags':
+        return tags(name)
+      case 'pin':
+        return pinInput(name)
+      default:
+    }
+  }
+
   return (
     <>
       <Box sx={{ textAlign: "-webkit-center" }}>
@@ -42,73 +239,28 @@ const ThirdStep = ({
           <strong>Caracteristicas Secundarias</strong>
         </div>
       </Box>
-      <FormControl isInvalid={!!errors.stock} mb={4}>
+      <FormControl mb={4}>
         <FormLabel htmlFor='stock'>Stock</FormLabel>
         <Input
-          id='stock'
+          name='stock'
           type='number'
           borderColor='gray.200'
           placeholder='5'
-          {...register("stock", {
-            required: true,
-            min: 5,
-          })}
+          onChange={handle}
         />
-        {errors.stock && (
-          <FormErrorMessage>El stock de producto es requerido</FormErrorMessage>
-        )}
       </FormControl>
-
-      <Box mb={4}>
-        <FormLabel htmlFor='delivery'>Presentación</FormLabel>
-        <Select
-        // {...register("tags", {
-        //   required: true,
-        // })}
-        // onChange={(e) => handleSelectChangeTags(e)}
-        >
-          {deliverySelect?.map((delivery: string) => (
-            <option key={crypto.randomUUID()} value={delivery}>
-              {delivery}
-            </option>
-          ))}
-        </Select>
-      </Box>
+      {
+        data[categories][subcategories].map((input: InputData, index: any) => {
+          return (
+            <React.Fragment key={index}>
+              <>
+                {returnComponent(input)}
+              </>
+            </React.Fragment>
+          )
+        })
+      }
       <FormControl mb={4}>
-        <FormLabel htmlFor='content'>Contenido</FormLabel>
-        <Box display={"flex"}>
-          <Input
-            type='text'
-            id='content'
-            borderColor='gray.200'
-            placeholder='350'
-            width={"350px"}
-            // {...register("title", {
-            //   required: true,
-            //   minLength: 4,
-            // })}
-          />
-          {/* {errors.title && (
-              <FormErrorMessage>El título es requerido</FormErrorMessage>
-            )} */}
-          <Select
-            width={"150px"}
-            // {...register("tags", {
-            //   required: true,
-            // })}
-            // value={etiqueta}
-            // onChange={(e) => handleSelectChangeTags(e)}
-          >
-            {contentSelect?.map((content: string) => (
-              <option key={crypto.randomUUID()} value={content}>
-                {content}
-              </option>
-            ))}
-          </Select>
-        </Box>
-      </FormControl>
-
-      <FormControl isInvalid={!!errors.image} mb={4}>
         <FormLabel htmlFor='image'>Imagen</FormLabel>
         <Box
           style={{
@@ -166,9 +318,16 @@ const ThirdStep = ({
             </Box>
           </Box>
         )}
-        {errors.image && (
-          <FormErrorMessage>La imagen es requerida</FormErrorMessage>
-        )}
+        <Button
+          loadingText='Agregando producto...'
+          colorScheme='blue'
+          width='100%'
+          isDisabled={imageUrl ? false : true}
+          type='submit'
+          mb={2}
+        >
+          Agregar producto
+        </Button>
       </FormControl>
     </>
   );

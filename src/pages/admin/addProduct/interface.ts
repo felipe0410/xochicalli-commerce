@@ -16,3 +16,14 @@ export interface CreateCategoryState {
         };
     };
 }
+
+export type InputData = {
+    name: string;
+    type: string;
+    component: string;
+    option?: string[];
+};
+
+export type CategoryData = {
+    [key: string]: InputData[];
+};
