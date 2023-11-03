@@ -4,18 +4,18 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import {
   Box,
   Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
+  // FormControl,
+  // FormErrorMessage,
+  // FormLabel,
   Heading,
-  Input,
-  InputGroup,
-  InputLeftAddon,
-  InputRightAddon,
-  Select,
-  Textarea,
+  //Input,
+  // InputGroup,
+  // InputLeftAddon,
+  // InputRightAddon,
+  //Select,
+  // Textarea,
   useToast,
-  VisuallyHiddenInput,
+  //VisuallyHiddenInput,
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
@@ -24,25 +24,29 @@ import { Helmet } from "react-helmet-async";
 import { v4 } from "uuid";
 
 import { Inputs } from "@/interfaces";
-import { addProduct, getCategorias } from "@/utils";
+import { addProduct } from "@/utils";
 import { storage } from "@/firebase";
-import ModalCategory from "./modalCategory";
-import { FaCloudUploadAlt } from "react-icons/fa";
+//import ModalCategory from "./modalCategory";
+//import { FaCloudUploadAlt } from "react-icons/fa";
+import FirstStep from "@/components/FirstStep";
+import SecondStep from "@/components/SecondStep";
+import ThirdStep from "@/components/ThirdStep";
+import useAddProduct from "@/hooks/useAddProduct";
 
 const AddProduct: FC = (): JSX.Element => {
-  const [arrayTags, setArrayTags] = useState([]);
   const [upload, setUpload] = useState(false);
   const [imageBase64, setImageBase64] = useState("");
-  const [category, setCategory] = useState("");
-  const [subCategoryForm, setSubCategoryForm] = useState("");
-  const [etiqueta, setEtiqueta] = useState("");
   const [imageUrl, setImageUrl] = useState<string>("");
   const fileRef = useRef<HTMLInputElement>(null);
-  const [dataCategorias, setDataCategorias] = useState<any>({});
+  const [step1, setStep1] = useState(false);
+  const [step2, setStep2] = useState(false);
+  const { dataCategorias } = useAddProduct();
+  console.log(dataCategorias);
+
   const {
     handleSubmit,
-    register,
-    formState: { errors, isSubmitting },
+    // register,
+    formState: { isSubmitting },
     reset,
   } = useForm<Inputs>();
   const toast = useToast();
@@ -128,21 +132,6 @@ const AddProduct: FC = (): JSX.Element => {
       });
   };
   // ----------- categoria
-  const handleSelectChange = (event: any) => {
-    const category = event.target.value;
-    setCategory(category);
-  };
-
-  const handleSelectChangeSubCategory = (event: any) => {
-    const subCategoryForm = event.target.value;
-    setSubCategoryForm(subCategoryForm);
-    tags(subCategoryForm);
-  };
-
-  const handleSelectChangeTags = (event: any) => {
-    const etiqueta = event.target.value;
-    setEtiqueta(etiqueta);
-  };
 
   const handleCancel = () => {
     setImageBase64("");
@@ -150,39 +139,39 @@ const AddProduct: FC = (): JSX.Element => {
     setUpload(false);
   };
 
-  useEffect(() => {
-    const getDataCategorias = async () => {
-      const dataCategorias = await getCategorias();
-      const subCaregoryy =
-        dataCategorias[Object.keys(dataCategorias)[0]].subCategorys
-          .subcateogory0.nameCategory;
-      const etiquetas =
-        dataCategorias[Object.keys(dataCategorias)[0]].subCategorys
-          .subcateogory0.subCategorys[0].value;
-      setDataCategorias(dataCategorias);
-      setCategory(Object.keys(dataCategorias)[0]);
-      tags(subCategoryForm);
-      setSubCategoryForm(subCaregoryy);
-      setArrayTags(etiquetas);
-    };
-    getDataCategorias();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   const getDataCategorias = async () => {
+  //     const dataCategorias = await getCategorias();
+  //     const subCaregoryy =
+  //       dataCategorias[Object.keys(dataCategorias)[0]].subCategorys
+  //         .subcateogory0.nameCategory;
+  //     const etiquetas =
+  //       dataCategorias[Object.keys(dataCategorias)[0]].subCategorys
+  //         .subcateogory0.subCategorys[0].value;
+  //     setDataCategorias(dataCategorias);
+  //     // setCategory(Object.keys(dataCategorias)[0]);
+  //     // tags(subCategoryForm);
+  //     setSubCategoryForm(subCaregoryy);
+  //     setArrayTags(etiquetas);
+  //   };
+  //   getDataCategorias();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
-  const tags = (subCategoryForm: string) => {
-    for (const tags in dataCategorias[category]?.subCategorys) {
-      if (
-        dataCategorias[category]?.subCategorys[tags].nameCategory ===
-        subCategoryForm
-      ) {
-        setArrayTags(
-          dataCategorias[category]?.subCategorys[tags]?.subCategorys[0]
-            ?.value ?? []
-        );
-        break;
-      }
-    }
-  };
+  // const tags = (subCategoryForm: string) => {
+  //   for (const tags in dataCategorias[category]?.subCategorys) {
+  //     if (
+  //       dataCategorias[category]?.subCategorys[tags].nameCategory ===
+  //       subCategoryForm
+  //     ) {
+  //       setArrayTags(
+  //         dataCategorias[category]?.subCategorys[tags]?.subCategorys[0]
+  //           ?.value ?? []
+  //       );
+  //       break;
+  //     }
+  //   }
+  // };
 
   return (
     <VStack h='auto' paddingBottom={"2%"} bgColor='gray.200' gap={4}>
@@ -198,6 +187,100 @@ const AddProduct: FC = (): JSX.Element => {
           borderRadius='xl'
           boxShadow='xs'
         >
+          {/* <Box sx={{ textAlign: "-webkit-center" }}>
+            <div style={{ textAlign: "center", width: "150px" }}>
+              <strong>Categoria</strong>
+            </div>
+          </Box>
+          <FormControl isInvalid={!!errors.category} mb={4}>
+            <FormLabel htmlFor='category'>Categoría</FormLabel>
+            <Box style={{ display: "flex" }}>
+              <Select
+                {...register("category", {
+                  required: true,
+                })}
+                onChange={(e) => handleSelectChange(e)}
+              >
+                {dataCategorias?.categorias?.map((categoria: string) => (
+                  <option key={crypto.randomUUID()} value={categoria}>
+                    {categoria}
+                  </option>
+                ))}
+              </Select>
+              <ModalCategory propCategory={dataCategorias[category]} />
+            </Box>
+            
+            <FormLabel htmlFor='subcategory' style={{ marginTop: "7px" }}>
+              Subcategoría
+            </FormLabel>
+            <Select
+              {...register("subcategory", {
+                required: true,
+              })}
+              value={subCategoryForm}
+              onChange={(e) => handleSelectChangeSubCategory(e)}
+            >
+              {Object.keys(dataCategorias[category]?.subCategorys ?? "").map(
+                (sybcategory: string) => {
+                  const nameSubCategory =
+                    dataCategorias[category]?.subCategorys[sybcategory]
+                      ?.nameCategory ?? "";
+                  return (
+                    <option key={nameSubCategory} value={nameSubCategory}>
+                      {nameSubCategory}
+                    </option>
+                  );
+                }
+              )}
+            </Select>
+            {
+              <Box display={arrayTags.length > 0 ? "block" : "none"}>
+                <FormLabel htmlFor='tags' style={{ marginTop: "7px" }}>
+                  Subsubcategoría
+                </FormLabel>
+                <Select
+                  {...register("tags", {
+                    required: true,
+                  })}
+                  value={etiqueta}
+                  onChange={(e) => handleSelectChangeTags(e)}
+                >
+                  {arrayTags?.map((sybcategory: string) => (
+                    <option key={sybcategory} value={sybcategory}>
+                      {sybcategory}
+                    </option>
+                  ))}
+                </Select>
+              </Box>
+            }
+            {errors.category && (
+              <FormErrorMessage>La categoría es requerida</FormErrorMessage>
+            )}
+          </FormControl>
+            */}
+
+          {/* <Box sx={{ textAlign: "-webkit-center" }}>
+            <div style={{ textAlign: "center", width: "150px" }}>
+              <strong>Caracteristicas Principales</strong>
+            </div>
+          </Box>
+          <FormControl isInvalid={!!errors.title} mb={4}>
+            <FormLabel htmlFor='marca'>Marca</FormLabel>
+            <Input
+              type='text'
+              id='marca'
+              borderColor='gray.200'
+              placeholder='Xochicalli'
+              // {...register("title", {
+              //   required: true,
+              //   minLength: 4,
+              // })}
+            />
+            {/* {errors.marca && (
+              <FormErrorMessage>La marca es requerida</FormErrorMessage>
+            )} 
+          </FormControl>
+
           <FormControl isInvalid={!!errors.title} mb={4}>
             <FormLabel htmlFor='title'>Nombre de producto</FormLabel>
             <Input
@@ -214,112 +297,6 @@ const AddProduct: FC = (): JSX.Element => {
               <FormErrorMessage>El título es requerido</FormErrorMessage>
             )}
           </FormControl>
-
-          <FormControl isInvalid={!!errors.description} mb={4}>
-            <FormLabel htmlFor='description'>
-              Descripción del producto
-            </FormLabel>
-            <Textarea
-              id='description'
-              borderColor='gray.200'
-              placeholder='Planta con aroma agradable para curar enfermedades'
-              {...register("description", {
-                required: true,
-                minLength: 10,
-              })}
-            />
-            {errors.description && (
-              <FormErrorMessage>La descripción es requerida</FormErrorMessage>
-            )}
-          </FormControl>
-          <Box>
-            <FormControl isInvalid={!!errors.category} mb={4}>
-              <FormLabel htmlFor='category'>Categoría</FormLabel>
-              <Box style={{ display: "flex" }}>
-                <Select
-                  {...register("category", {
-                    required: true,
-                  })}
-                  onChange={(e) => handleSelectChange(e)}
-                >
-                  {dataCategorias?.categorias?.map((categoria: string) => (
-                    <option key={categoria} value={categoria}>
-                      {categoria}
-                    </option>
-                  ))}
-                </Select>
-                <ModalCategory propCategory={dataCategorias[category]} />
-              </Box>
-              {/* _____________________________________________ */}
-              <FormLabel htmlFor='subcategory' style={{ marginTop: "7px" }}>
-                Subcategoría
-              </FormLabel>
-              <Select
-                {...register("subcategory", {
-                  required: true,
-                })}
-                value={subCategoryForm}
-                onChange={(e) => handleSelectChangeSubCategory(e)}
-              >
-                {Object.keys(dataCategorias[category]?.subCategorys ?? "").map(
-                  (sybcategory: string) => {
-                    const nameSubCategory =
-                      dataCategorias[category]?.subCategorys[sybcategory]
-                        ?.nameCategory ?? "";
-                    return (
-                      <option key={nameSubCategory} value={nameSubCategory}>
-                        {nameSubCategory}
-                      </option>
-                    );
-                  }
-                )}
-              </Select>
-              {
-                <Box display={arrayTags.length > 0 ? "block" : "none"}>
-                  <FormLabel htmlFor='tags' style={{ marginTop: "7px" }}>
-                    Etiqueta
-                  </FormLabel>
-                  <Select
-                    {...register("tags", {
-                      required: true,
-                    })}
-                    value={etiqueta}
-                    onChange={(e) => handleSelectChangeTags(e)}
-                  >
-                    {arrayTags?.map((sybcategory: string) => (
-                      <option key={sybcategory} value={sybcategory}>
-                        {sybcategory}
-                      </option>
-                    ))}
-                  </Select>
-                </Box>
-              }
-              {/* _____________________________________________ */}
-              {errors.category && (
-                <FormErrorMessage>La categoría es requerida</FormErrorMessage>
-              )}
-            </FormControl>
-          </Box>
-
-          <FormControl isInvalid={!!errors.stock} mb={4}>
-            <FormLabel htmlFor='stock'>Stock</FormLabel>
-            <Input
-              id='stock'
-              type='number'
-              borderColor='gray.200'
-              placeholder='5'
-              {...register("stock", {
-                required: true,
-                min: 5,
-              })}
-            />
-            {errors.stock && (
-              <FormErrorMessage>
-                El stock de producto es requerido
-              </FormErrorMessage>
-            )}
-          </FormControl>
-
           <FormControl isInvalid={!!errors.price} mb={4}>
             <FormLabel htmlFor='price'>Precio</FormLabel>
             <InputGroup>
@@ -339,6 +316,139 @@ const AddProduct: FC = (): JSX.Element => {
             {errors.price && (
               <FormErrorMessage>El precio es requerido</FormErrorMessage>
             )}
+          </FormControl>
+          <FormControl isInvalid={!!errors.description} mb={4}>
+            <FormLabel htmlFor='description'>
+              Descripción del producto
+            </FormLabel>
+            <Textarea
+              id='description'
+              borderColor='gray.200'
+              placeholder='Planta con aroma agradable para curar enfermedades'
+              {...register("description", {
+                required: true,
+                minLength: 10,
+              })}
+            />
+            {errors.description && (
+              <FormErrorMessage>La descripción es requerida</FormErrorMessage>
+            )}
+          </FormControl> */}
+          {step1 === false ? (
+            <>
+              <FirstStep />
+              <Button onClick={() => setStep1(true)}>Siguiente</Button>
+            </>
+          ) : step2 === false ? (
+            <>
+              <SecondStep />
+              <Button onClick={() => setStep1(false)}>Atrás</Button>
+              <Button onClick={() => setStep2(true)}>Siguiente</Button>
+            </>
+          ) : (
+            <>
+              <ThirdStep
+                upload={upload}
+                fileRef={fileRef}
+                setUpload={setUpload}
+                uploadImage={uploadImage}
+                imageBase64={imageBase64}
+                handleAcceptImage={handleAcceptImage}
+                handleCancel={handleCancel}
+              />
+
+              <Button
+                isLoading={isSubmitting}
+                loadingText='Agregando producto...'
+                colorScheme='blue'
+                width='100%'
+                isDisabled={imageUrl ? false : true}
+                type='submit'
+                mb={2}
+              >
+                Agregar producto
+              </Button>
+              <Button
+                colorScheme='linkedin'
+                width='100%'
+                onClick={handleGoProducts}
+              >
+                Ver productos
+              </Button>
+            </>
+          )}
+
+          {/* <Box sx={{ textAlign: "-webkit-center" }}>
+            <div style={{ textAlign: "center", width: "150px" }}>
+              <strong>Caracteristicas Secundarias</strong>
+            </div>
+          </Box>
+          <FormControl isInvalid={!!errors.stock} mb={4}>
+            <FormLabel htmlFor='stock'>Stock</FormLabel>
+            <Input
+              id='stock'
+              type='number'
+              borderColor='gray.200'
+              placeholder='5'
+              {...register("stock", {
+                required: true,
+                min: 5,
+              })}
+            />
+            {errors.stock && (
+              <FormErrorMessage>
+                El stock de producto es requerido
+              </FormErrorMessage>
+            )}
+          </FormControl>
+
+          <Box mb={4}>
+            <FormLabel htmlFor='delivery'>Presentación</FormLabel>
+            <Select
+            // {...register("tags", {
+            //   required: true,
+            // })}
+            // onChange={(e) => handleSelectChangeTags(e)}
+            >
+              {deliverySelect?.map((delivery: string) => (
+                <option key={crypto.randomUUID()} value={delivery}>
+                  {delivery}
+                </option>
+              ))}
+            </Select>
+          </Box>
+          <FormControl mb={4}>
+            <FormLabel htmlFor='content'>Contenido</FormLabel>
+            <Box display={"flex"}>
+              <Input
+                type='text'
+                id='content'
+                borderColor='gray.200'
+                placeholder='350'
+                width={"350px"}
+                // {...register("title", {
+                //   required: true,
+                //   minLength: 4,
+                // })}
+              />
+            {errors.title && (
+              <FormErrorMessage>El título es requerido</FormErrorMessage>
+            )} 
+              <Select
+                width={"150px"}
+                // {...register("tags", {
+                //   required: true,
+                // })}
+                // value={etiqueta}
+                // onChange={(e) => handleSelectChangeTags(e)}
+              >
+                {contentSelect?.map((content: string) => (
+                  <option key={crypto.randomUUID()} value={content}>
+                    {content}
+                  </option>
+                ))}
+              </Select>
+            </Box>
           </FormControl>
 
           <FormControl isInvalid={!!errors.image} mb={4}>
@@ -421,7 +531,7 @@ const AddProduct: FC = (): JSX.Element => {
             onClick={handleGoProducts}
           >
             Ver productos
-          </Button>
+          </Button> */}
         </Box>
       </form>
     </VStack>

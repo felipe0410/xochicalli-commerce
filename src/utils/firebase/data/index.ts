@@ -190,7 +190,12 @@ export const addComment = async (
   }
 };
 
-export const addOrder = async (items: any, total: number, card: string, uid: string) => {
+export const addOrder = async (
+  items: any,
+  total: number,
+  card: string,
+  uid: string
+) => {
   try {
     const trimmedCard = card.slice(-4);
     const timeStamp = new Date();
