@@ -22,8 +22,11 @@ import {
 import { uploadFile } from "@/firebase";
 import { db } from '@/firebase';
 import { addDoc, collection } from 'firebase/firestore';
+import { useNavigate } from "react-router-dom";
 
 const CreateSection = () => {
+
+  const navigate = useNavigate();
   const [articleData, setArticleData] = useState<{
     title: string;
     subtitle: string;
@@ -102,8 +105,8 @@ const CreateSection = () => {
   return (
     <VStack minH='calc(100vh - 64px)' bgColor='gray.100' p={4}>
       <Box>
-        <Button>CARGAR ARTICULO</Button>
-        <Button>MOSTRAR ARTICULOS</Button>
+        <Button >CARGAR ARTICULO</Button>
+        <Button onClick={() => navigate("/admin/blog-show")}>MOSTRAR ARTICULOS</Button>
       </Box>
       <>
         <Modal onClose={onClose} isOpen={isOpen} isCentered>

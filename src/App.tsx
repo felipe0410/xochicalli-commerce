@@ -29,6 +29,7 @@ const Checkout = lazy(() => import("@/pages/checkout/Checkout"));
 const Faqs = lazy(() => import("@/pages/faqs/index"));
 const Questions = lazy(() => import("@/pages/questions/index"));
 const PublicBlog = lazy(() => import("@/pages/admin/blog/ShowSectionUser"));
+const PublicBlogDescroption = lazy(() => import("@/pages/admin/blog/DescriptionUser"));
 
 // Normal user routes
 const UserProfile = lazy(() => import("@/pages/user/UserProfile"));
@@ -47,6 +48,7 @@ const Comentarios = lazy(() => import("@/pages/admin/comentarios/page"));
 const BlogAdminCreate = lazy(() => import("@/pages/admin/blog/CreateSection"));
 const BlogAdminShow = lazy(() => import("@/pages/admin/blog/ShowSecttionAdmin"));
 const BlogAdminUpdate = lazy(() => import("@/pages/admin/blog/UpdateSection"));
+const BlogAdminDescription = lazy(() => import("@/pages/admin/blog/DescriptionAdmin"));
 
 const NavbarRenderer: FC = (): JSX.Element => {
   const { user, userRole } = useContext(UserContext);
@@ -81,6 +83,7 @@ export const App: FC = (): JSX.Element => {
           <Route path="/faqs" element={<Faqs />} />
           <Route path="/questions" element={<Questions />} />
           <Route path="/blog" element={<PublicBlog />} />
+          <Route path="/blog-description" element={<PublicBlogDescroption />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/login" element={<LoggedUserRedirect />} />
@@ -163,6 +166,14 @@ export const App: FC = (): JSX.Element => {
               element={
                 <PrivateRoute allowedRoles="admin">
                   <BlogAdminUpdate />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="blog-description"
+              element={
+                <PrivateRoute allowedRoles="admin">
+                  <BlogAdminDescription />
                 </PrivateRoute>
               }
             />
