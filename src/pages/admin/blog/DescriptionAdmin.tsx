@@ -23,7 +23,7 @@ import {
   Button,
   CardHeader
 } from '@chakra-ui/react';
-import { DeleteIcon, EditIcon,ArrowBackIcon, CheckIcon } from '@chakra-ui/icons';
+import { DeleteIcon, EditIcon, ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { db } from '@/firebase';
@@ -37,7 +37,6 @@ const DescriptionAdmin = () => {
   const { post } = state;
 
   const [deleteItemId, setDeleteItemId] = useState(null);
-  const [editBool, setEditBool] = useState(false);
 
   const handleConfirmDelete = async () => {
     if (deleteItemId) {
@@ -86,7 +85,7 @@ const DescriptionAdmin = () => {
         <Card key={post.id} maxW='md' borderWidth='2px' borderColor='gray.300'>
           <CardHeader>
             <Box sx={{ display: 'flex', width: '100%' }}>
-            <IconButton
+              <IconButton
                 aria-label='Eliminar'
                 icon={<ArrowBackIcon />}
                 onClick={() => navigate(-1)}
@@ -94,7 +93,7 @@ const DescriptionAdmin = () => {
             </Box>
           </CardHeader>
           <CardBody>
-            <Image src={post.imageURL} alt={post.title} borderRadius='lg' sx={{width:'100%'}}/>
+            <Image src={post.imageURL} alt={post.title} borderRadius='lg' sx={{ width: '100%' }} />
             <Stack mt='6' spacing='3'>
               <Heading size='md'>{post.title}</Heading>
               <Text>{post.description}</Text>
@@ -103,8 +102,7 @@ const DescriptionAdmin = () => {
           <Divider />
           <CardFooter sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Box>
-              {!editBool && <IconButton aria-label='Editar' icon={<EditIcon />} onClick={() => {setEditBool(true)}}/>}
-              {editBool && <IconButton aria-label='Editar' icon={<CheckIcon />} onClick={() => {setEditBool(false)}}/>}
+            <IconButton aria-label='Editar' icon={<EditIcon onClick={() => navigate(`/admin/blog-update`, { state: { post } })}/>} />
               <IconButton aria-label='Eliminar' icon={<DeleteIcon />} onClick={() => handleDelete(post.id)} />
             </Box>
           </CardFooter>

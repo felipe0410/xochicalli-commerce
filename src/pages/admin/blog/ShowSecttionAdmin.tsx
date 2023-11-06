@@ -162,7 +162,7 @@ const ShowSecttionAdmin = () => {
                   Mostrar
                 </Button>
                 <Box>
-                  <IconButton aria-label='Editar' icon={<EditIcon />} />
+                  <IconButton aria-label='Editar' icon={<EditIcon onClick={() => navigate(`/admin/blog-update`, { state: { post } })}/>} />
                   <IconButton aria-label='Eliminar' icon={<DeleteIcon />} onClick={() => handleDelete(post.id)} />
                 </Box>
               </CardFooter>
