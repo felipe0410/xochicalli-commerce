@@ -20,7 +20,7 @@ import {
 import { v4 } from "uuid";
 
 import { db, storage } from "@/firebase";
-import { CommentInfo,  PersonalDataProps, Shipping } from "@/interfaces";
+import { CommentInfo, PersonalDataProps, Shipping } from "@/interfaces";
 import { Value } from "@/pages/admin/addProduct/interface";
 
 export const updateInformation = async (
@@ -168,6 +168,20 @@ export const getProduct = async (
   }
 };
 
+export const getComments = async (): Promise<Comment[] | FirebaseError> => {
+  try {
+    const { docs } = await getDocs(collection(db, "comments"));
+
+    const comments = docs.map((doc: any) => ({
+      ...doc.data(),
+    }));
+
+    return comments;
+  } catch (error) {
+    return error as FirebaseError;
+  }
+};
+
 export const addComment = async (
   values: CommentInfo,
   product: string
@@ -179,6 +193,8 @@ export const addComment = async (
       name: values.name,
       createdAt: new Date().toLocaleDateString("es-ES"),
       product,
+      id: crypto.randomUUID(),
+      checked: false,
     });
 
     return await setDoc(
@@ -308,10 +324,10 @@ export const uploadImage = async (
 
 export const addProduct = async (data: Value) => {
   try {
-    const docRef = await addDoc(collection(db, 'products'), data);
+    const docRef = await addDoc(collection(db, "products"), data);
     return docRef.id; // Devuelve el ID del documento recién creado
   } catch (error) {
-    console.error('Error al agregar el producto:', error);
+    console.error("Error al agregar el producto:", error);
     return false;
   }
 };

@@ -11,7 +11,6 @@ const useAddProduct = () => {
     getDataCategorias();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  // console.log("FUERAA", dataCategorias);
   return { dataCategorias };
 };
 

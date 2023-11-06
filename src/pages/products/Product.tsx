@@ -43,7 +43,7 @@ const Product: FC = (): JSX.Element => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { user } = useContext(UserContext);
+  const { user, userInformation } = useContext(UserContext);
   const { product, loading } = useProduct(id as string);
 
   const { comments, loading: loadingComments } = useComments(
@@ -82,6 +82,8 @@ const Product: FC = (): JSX.Element => {
   });
 
   const onSubmit: SubmitHandler<CommentInfo> = async (values) => {
+    values.name = userInformation?.name;
+    values.fatherSurname = userInformation?.fatherSurname;
     try {
       toast({
         status: "success",
@@ -114,8 +116,9 @@ const Product: FC = (): JSX.Element => {
   return (
     <Box minH='calc(100vh - 72px)' bgColor='gray.100' p={4}>
       <Helmet>
-        <title>{`Producto: ${product?.title === undefined ? "Cargando..." : product.title
-          }`}</title>
+        <title>{`Producto: ${
+          product?.title === undefined ? "Cargando..." : product.title
+        }`}</title>
       </Helmet>
       <Breadcrumb pt={2} pb={6} ml={[0, 0, 16, 24]}>
         {isLargerThan800 && (
@@ -218,7 +221,8 @@ const Product: FC = (): JSX.Element => {
                         justifyContent='space-between'
                         gap={4}
                       >
-                        {(user === null || user === undefined) && (
+                        {(userInformation === null ||
+                          userInformation === undefined) && (
                           <>
                             <FormControl isInvalid={!!errors.name}>
                               <FormLabel htmlFor='Nombre'>Nombre(s)</FormLabel>

@@ -1,14 +1,13 @@
 import React, { FC, useState } from "react";
 
 import { Box, Button, Heading, VStack } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import FirstStep from "@/components/FirstStep";
 import SecondStep from "@/components/SecondStep";
 import ThirdStep from "@/components/ThirdStep";
-import { addProduct, addProductData } from "@/utils";
+import { addProduct } from "@/utils";
 import { useToast } from "@chakra-ui/react";
-import { AllProperties, ProductData, Value } from "./interface";
+import { Value } from "./interface";
 import { v4 } from "uuid";
 
 const AddProduct: FC = (): JSX.Element => {
@@ -33,47 +32,18 @@ const AddProduct: FC = (): JSX.Element => {
   });
 
   console.log("vlaue-2:::>", value);
-  const navigate = useNavigate();
-  const handleGoProducts = () => navigate("/admin/products");
 
   const onSubmit = async (values: Value) => {
     console.log("values::>", values);
-    const nn = await addProduct(values)
-    
+    const nn = await addProduct(values);
+
     toast({
       title: "Producto subido correctamente",
       duration: 2000,
       status: "success",
       position: "top-right",
     });
-    console.log(nn)
-  };
-
-  const handleSubmit = async () => {
-    try {
-      const allProperties: AllProperties = Object.keys(value).map((key) => ({
-        property: key,
-        value: value[key],
-      }));
-      const productData: ProductData = { ...value };
-      allProperties.forEach((property) => {
-        productData[property.property] = property.value;
-      });
-      await addProductData(productData)
-        .then(() => {
-          
-        })
-        .catch(() => {
-          toast({
-            title: "¡Algo salió mal!",
-            duration: 2000,
-            status: "error",
-            position: "top-right",
-          });
-        });
-    } catch (error) {
-      console.error("Error al agregar el producto:", error);
-    }
+    console.log(nn);
   };
 
   return (
@@ -101,11 +71,7 @@ const AddProduct: FC = (): JSX.Element => {
           </>
         ) : (
           <>
-            <ThirdStep
-              values={value}
-              setValue={setValue}
-              setStep2={setStep2}
-            />
+            <ThirdStep values={value} setValue={setValue} setStep2={setStep2} />
             <Button
               loadingText='Agregando producto...'
               colorScheme='blue'
