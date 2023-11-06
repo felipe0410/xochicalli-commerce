@@ -20,7 +20,8 @@ import {
 import { v4 } from "uuid";
 
 import { db, storage } from "@/firebase";
-import { CommentInfo, Inputs, PersonalDataProps, Shipping } from "@/interfaces";
+import { CommentInfo,  PersonalDataProps, Shipping } from "@/interfaces";
+import { Value } from "@/pages/admin/addProduct/interface";
 
 export const updateInformation = async (
   values: PersonalDataProps,
@@ -190,7 +191,12 @@ export const addComment = async (
   }
 };
 
-export const addOrder = async (items: any, total: number, card: string, uid: string) => {
+export const addOrder = async (
+  items: any,
+  total: number,
+  card: string,
+  uid: string
+) => {
   try {
     const trimmedCard = card.slice(-4);
     const timeStamp = new Date();
@@ -300,22 +306,21 @@ export const uploadImage = async (
   }
 };
 
-export const addProduct = async (
-  { title, description, subcategory, price, category, stock, tags }: Inputs,
-  image: string | null
+export const addProduct = async (data: Value) => {
+  try {
+    const docRef = await addDoc(collection(db, 'products'), data);
+    return docRef.id; // Devuelve el ID del documento recién creado
+  } catch (error) {
+    console.error('Error al agregar el producto:', error);
+    return false;
+  }
+};
+
+export const addProductData = async (
+  productData: Record<string, any>
 ): Promise<void | FirebaseError> => {
   try {
-    const prevProduct = await addDoc(collection(db, "products"), {
-      category,
-      description,
-      subcategory,
-      tags,
-      image,
-      price,
-      sold: 0,
-      stock: Number(stock),
-      title,
-    });
+    const prevProduct = await addDoc(collection(db, "products"), productData);
 
     return await setDoc(
       doc(db, "products", prevProduct.id),
