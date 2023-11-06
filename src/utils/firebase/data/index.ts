@@ -20,7 +20,8 @@ import {
 import { v4 } from "uuid";
 
 import { db, storage } from "@/firebase";
-import { CommentInfo, Inputs, PersonalDataProps, Shipping } from "@/interfaces";
+import { CommentInfo,  PersonalDataProps, Shipping } from "@/interfaces";
+import { Value } from "@/pages/admin/addProduct/interface";
 
 export const updateInformation = async (
   values: PersonalDataProps,
@@ -305,30 +306,13 @@ export const uploadImage = async (
   }
 };
 
-export const addProduct = async (
-  { title, description, subcategory, price, category, stock, tags }: Inputs,
-  image: string | null
-): Promise<void | FirebaseError> => {
+export const addProduct = async (data: Value) => {
   try {
-    const prevProduct = await addDoc(collection(db, "products"), {
-      category,
-      description,
-      subcategory,
-      tags,
-      image,
-      price,
-      sold: 0,
-      stock: Number(stock),
-      title,
-    });
-
-    return await setDoc(
-      doc(db, "products", prevProduct.id),
-      { id: prevProduct.id },
-      { merge: true }
-    );
+    const docRef = await addDoc(collection(db, 'products'), data);
+    return docRef.id; // Devuelve el ID del documento recién creado
   } catch (error) {
-    return error as FirebaseError;
+    console.error('Error al agregar el producto:', error);
+    return false;
   }
 };
 

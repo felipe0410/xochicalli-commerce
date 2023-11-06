@@ -6,54 +6,48 @@ import { Helmet } from "react-helmet-async";
 import FirstStep from "@/components/FirstStep";
 import SecondStep from "@/components/SecondStep";
 import ThirdStep from "@/components/ThirdStep";
-import { addProductData } from "@/utils";
+import { addProduct, addProductData } from "@/utils";
 import { useToast } from "@chakra-ui/react";
 import { AllProperties, ProductData, Value } from "./interface";
+import { v4 } from "uuid";
 
 const AddProduct: FC = (): JSX.Element => {
   const [step1, setStep1] = useState(false);
   const [step2, setStep2] = useState(false);
   const toast = useToast();
-  const [validar, setValidar] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [value, setValue] = useState<Value>({
+    id: v4(),
     title: "",
     marca: "",
     price: 0,
     description: "",
     // step-2
     category: "FLORES",
-    subCategory: "SubCategory",
-    tags: "",
+    subCategory: "ROSAS",
+    tags: "De temporada",
     // step-3
     stock: 0,
     image: "",
     instrucciones: [],
   });
+
   console.log("vlaue-2:::>", value);
   const navigate = useNavigate();
   const handleGoProducts = () => navigate("/admin/products");
 
-  // const onSubmit = async (values) => {
-  //   console.log("values::>", values);
-  //   await addProduct(values, imageUrl)
-  //     .then(() => {
-  //       toast({
-  //         title: "Producto subido correctamente",
-  //         duration: 2000,
-  //         status: "success",
-  //         position: "top-right",
-  //       });
-  //       reset();
-  //     })
-  //     .catch(() => {
-  //       toast({
-  //         title: "¡Algo salió mal!",
-  //         duration: 2000,
-  //         status: "error",
-  //         position: "top-right",
-  //       });
-  //     });
-  // };
+  const onSubmit = async (values: Value) => {
+    console.log("values::>", values);
+    const nn = await addProduct(values)
+    
+    toast({
+      title: "Producto subido correctamente",
+      duration: 2000,
+      status: "success",
+      position: "top-right",
+    });
+    console.log(nn)
+  };
 
   const handleSubmit = async () => {
     try {
@@ -61,35 +55,13 @@ const AddProduct: FC = (): JSX.Element => {
         property: key,
         value: value[key],
       }));
-
       const productData: ProductData = { ...value };
-
       allProperties.forEach((property) => {
         productData[property.property] = property.value;
       });
-
-      console.log("productData::>", productData);
-
       await addProductData(productData)
         .then(() => {
-          toast({
-            title: "Producto subido correctamente",
-            duration: 2000,
-            status: "success",
-            position: "top-right",
-          });
-          // setValue({
-          //   title: "",
-          //   marca: "",
-          //   price: 0,
-          //   description: "",
-          //   category: "FLORES",
-          //   subCategory: "SubCategory",
-          //   tags: "",
-          //   stock: 0,
-          //   image: "",
-          //   instrucciones: [],
-          // });
+          
         })
         .catch(() => {
           toast({
@@ -110,53 +82,44 @@ const AddProduct: FC = (): JSX.Element => {
         <title>Agregar producto</title>
       </Helmet>
       <Heading my={4}>Añadir un producto</Heading>
-      <form>
-        <Box
-          w={[350, 450, 550, 650]}
-          bgColor='white'
-          p={5}
-          borderRadius='xl'
-          boxShadow='xs'
-        >
-          {step1 === false ? (
-            <>
-              <SecondStep setValue={setValue} setStep1={setStep1} />
-            </>
-          ) : step2 === false ? (
-            <>
-              <FirstStep setValue={setValue} />
-              <Button onClick={() => setStep1(false)}>{"Atrás"}</Button>
-              <Button onClick={() => setStep2(true)}>{"Siguiente"}</Button>
-            </>
-          ) : (
-            <>
-              <ThirdStep
-                values={value}
-                setValue={setValue}
-                setValidar={setValidar}
-              />
-              <Button
-                loadingText='Agregando producto...'
-                colorScheme='blue'
-                width='100%'
-                isDisabled={validar ? false : true}
-                type='submit'
-                mb={2}
-                onClick={handleSubmit}
-              >
-                Agregar producto
-              </Button>
-              <Button
-                colorScheme='linkedin'
-                width='100%'
-                onClick={handleGoProducts}
-              >
-                Ver productos
-              </Button>
-            </>
-          )}
-        </Box>
-      </form>
+      <Box
+        w={[350, 450, 550, 650]}
+        bgColor='white'
+        p={5}
+        borderRadius='xl'
+        boxShadow='xs'
+      >
+        {step1 === false ? (
+          <>
+            <SecondStep setValue={setValue} setStep1={setStep1} />
+          </>
+        ) : step2 === false ? (
+          <>
+            <FirstStep setValue={setValue} values={value} />
+            <Button onClick={() => setStep1(false)}>{"Atrás"}</Button>
+            <Button onClick={() => setStep2(true)}>{"Siguiente"}</Button>
+          </>
+        ) : (
+          <>
+            <ThirdStep
+              values={value}
+              setValue={setValue}
+              setStep2={setStep2}
+            />
+            <Button
+              loadingText='Agregando producto...'
+              colorScheme='blue'
+              width='100%'
+              isDisabled={!(value.image.length > 0)}
+              type='submit'
+              mb={2}
+              onClick={() => onSubmit(value)}
+            >
+              Agregar producto
+            </Button>
+          </>
+        )}
+      </Box>
     </VStack>
   );
 };

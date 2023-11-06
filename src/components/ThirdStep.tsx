@@ -11,28 +11,30 @@ import {
   VisuallyHiddenInput,
   useToast,
   Text,
+  IconButton,
 } from "@chakra-ui/react";
 
 import { FaCloudUploadAlt } from "react-icons/fa";
-import { useRef, useState, RefObject } from "react";
+import { useRef, useState, RefObject, useEffect } from "react";
 import { v4 } from "uuid";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/firebase";
 import { dataInputs } from "@/pages/admin/addProduct/data";
 import TagsInput from "react-tagsinput";
 import "react-tagsinput/react-tagsinput.css";
-import React from "react";
 import { InputData } from "@/pages/admin/addProduct/interface";
-
+import { SnackbarProvider, enqueueSnackbar } from "notistack";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 const ThirdStep = ({
   values,
   setValue,
-  setValidar,
+  setStep2,
 }: {
   values: any;
   setValue: any;
-  setValidar: any;
+  setStep2: any;
 }) => {
+  const [loading, setLoading] = useState(false)
   const [upload, setUpload] = useState(false);
   const [imageBase64, setImageBase64] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
@@ -40,7 +42,13 @@ const ThirdStep = ({
   const data = dataInputs;
   const categories = values?.category;
   const subcategories = values?.subCategory;
-
+  const blockInputs: any = data[categories][subcategories] === undefined ?
+    [{
+      name: "datos adicionales",
+      type: "text",
+      component: "input",
+    }]
+    : data[categories][subcategories]
   const handle = (event: any) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -65,12 +73,14 @@ const ThirdStep = ({
   };
 
   const handleAcceptImage = (fileRef: any) => {
+    console.log('entro aqui:>')
+    setLoading(true)
     if (fileRef.current?.files?.length) {
       const file = fileRef.current.files[0];
       const fileName = file.name;
       const imgRef = ref(storage, `products/${v4() + fileName}`);
-
       uploadImageToFirebase(imgRef, file);
+      setLoading(false)
     } else {
       toast({
         title: "No se ha seleccionado ninguna imagen",
@@ -78,34 +88,20 @@ const ThirdStep = ({
         status: "error",
         position: "top-right",
       });
+      setLoading(false)
     }
   };
 
-  const showToast = (
-    title: string,
-    description: string,
-    status: "info" | "warning" | "success" | "error"
-  ) => {
-    toast({
-      title,
-      description,
-      status,
-      duration: 3000,
-      isClosable: true,
-    });
-  };
+  // const showToast = (title: string, description: string, status: "success") => {
+  //   toast({
+  //     title,
+  //     description,
+  //     status,
+  //     duration: 3000,
+  //     isClosable: true,
+  //   });
+  // };
 
-  const handleValidar = () => {
-    if (!values.stock || !values.image) {
-      showToast(
-        "Error",
-        "Por favor, completa los campos requeridos antes de continuar",
-        "error"
-      );
-      return;
-    }
-    setValidar(true);
-  };
 
   const handleCancel = () => {
     setImageBase64("");
@@ -260,11 +256,31 @@ const ThirdStep = ({
       case "pin":
         return pinInput(name);
       default:
+        break
     }
   };
 
+  useEffect(() => {
+    if (values.image.length > 0) {
+      enqueueSnackbar('todo fue un exito', {
+        variant: 'success', anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "right",
+        },
+      })
+    }
+  }, [values.image.length])
+
+
   return (
     <>
+      <SnackbarProvider />
+      <IconButton
+        aria-label="back"
+        icon={<ArrowBackIcon />}
+        onClick={() => { setStep2(false) }}
+        w="max-content"
+      />
       <Box sx={{ textAlign: "-webkit-center" }}>
         <div style={{ textAlign: "center", width: "150px" }}>
           <strong>Caracteristicas Secundarias</strong>
@@ -280,11 +296,11 @@ const ThirdStep = ({
           onChange={handle}
         />
       </FormControl>
-      {data[categories][subcategories].map((input: InputData, index: any) => {
+      {blockInputs.map((input: InputData, index: any) => {
         return (
-          <React.Fragment key={index}>
-            <>{returnComponent(input)}</>
-          </React.Fragment>
+          <Box key={index}>
+            {returnComponent(input)}
+          </Box>
         );
       })}
       <FormControl mb={4}>
@@ -328,22 +344,21 @@ const ThirdStep = ({
             <Box
               sx={{
                 width: "90%",
-                display: "flex",
                 justifyContent: "space-evenly",
                 marginY: "10px",
               }}
+              display={values.image.length > 0 ? 'none' : 'flex'}
             >
               <Button
+                isLoading={loading}
+                loadingText='Cargando img'
                 colorScheme='blue'
                 onClick={() => handleAcceptImage(fileRef)}
               >
-                Aceptar imagen
+                Cargar imagen
               </Button>
               <Button colorScheme='red' onClick={() => handleCancel()}>
                 Cancelar
-              </Button>
-              <Button colorScheme='green' onClick={handleValidar}>
-                Validar
               </Button>
             </Box>
           </Box>
