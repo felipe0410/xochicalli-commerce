@@ -10,6 +10,14 @@ import {
   VStack,
   Center,
   Text,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  useDisclosure
 } from '@chakra-ui/react';
 import { uploadFile } from "@/firebase";
 import { db } from '@/firebase';
@@ -33,6 +41,8 @@ const CreateSection = () => {
   const [imagen, setImagen] = useState<File | null>()
   const [imagenName, setImagenName] = useState<string>()
   const [cargando, setCargando] = useState(false)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [addOK, setAddOK] = useState<boolean>()
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -63,11 +73,24 @@ const CreateSection = () => {
         const updatedArticleData = { ...articleData, imageURL: url };
         await addDoc(collection(db, 'blogPost'), updatedArticleData);
         setCargando(false);
-        setCargando(false)
-        console.log('URL de la imagen:', url);
+        setAddOK(true)
+        onOpen()
+
+        setArticleData({
+          title: '',
+          subtitle: '',
+          description: '',
+          category: 'Guía de plantas',
+          imageUrl: '', 
+        });
+        setImagen(null); 
+        setImagenName('');
+
       } catch (error) {
         console.error('Error al cargar la imagen:', error);
         setCargando(false)
+        setAddOK(false)
+        onOpen()
       }
     } else {
       setCargando(false)
@@ -82,7 +105,23 @@ const CreateSection = () => {
         <Button>CARGAR ARTICULO</Button>
         <Button>MOSTRAR ARTICULOS</Button>
       </Box>
+      <>
+        <Modal onClose={onClose} isOpen={isOpen} isCentered>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>{addOK ? 'Publicado correctamente!' : 'Ocurrio un error'}</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              {addOK ? 'Publicado correctamente en su blog!' : 'Ocurrio un error al intentar publicar!'}
+            </ModalBody>
+            <ModalFooter>
+              <Button onClick={onClose}>Cerrar</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </>
       <Center bg='white' p={[6, 8]} borderRadius='lg' w={['sm', 'md', 'xl', '3xl']}>
+
         <form onSubmit={handleSubmit}>
           <VStack spacing={4}>
             <Text fontSize='xl' as='b'>CARGAR ARTICULO</Text>
