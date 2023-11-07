@@ -80,8 +80,8 @@ export interface UserInformation {
 }
 
 export interface CommentInfo {
-  name: string;
-  fatherSurname: string;
+  name: string | undefined;
+  fatherSurname: string | undefined;
   avatar: string;
   comment: string;
   rating?: number;
@@ -151,6 +151,17 @@ export interface Product {
   price: number;
   sold?: number;
   stock?: number;
+  id: string;
+}
+
+export interface Comment {
+  checked: boolean;
+  deleted: boolean;
+  comment: string;
+  createdAt: string;
+  fatherSurname: string;
+  name: string;
+  product: string;
   id: string;
 }
 

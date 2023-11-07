@@ -1,6 +1,5 @@
 import { FC, useState } from "react";
 import { Box, Button, Heading, VStack } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import FirstStep from "@/components/FirstStep";
 import SecondStep from "@/components/SecondStep";
@@ -9,6 +8,7 @@ import { addProduct } from "@/utils";
 import { useToast } from "@chakra-ui/react";
 import { Value } from "./interface";
 import { v4 } from "uuid";
+import { useNavigate } from "react-router-dom";
 
 const AddProduct: FC = (): JSX.Element => {
   const [id, setId] = useState<any>('')
