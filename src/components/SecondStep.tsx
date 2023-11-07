@@ -12,18 +12,9 @@ import {
 } from "@chakra-ui/react";
 import ButtonComponent from "./ButtonComponent";
 
-const SecondStep = ({
-  setValue,
-  setStep1,
-}: {
-  setValue: any;
-  setStep1: any;
-}) => {
+const SecondStep = ({ setValue, setStep1, values }: { setValue: any, setStep1: any, values: any }) => {
   const toast = useToast();
-
-  const handle = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handle = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const name = event.target.name;
     const value = event.target.value;
     setValue((prevState: Inputs) => ({
@@ -32,11 +23,7 @@ const SecondStep = ({
     }));
   };
 
-  const showToast = (
-    title: string,
-    description: string,
-    status: "info" | "warning" | "success" | "error"
-  ) => {
+  const showToast = (title: string, description: string, status: "info" | "warning" | "success" | "error") => {
     toast({
       title,
       description,
@@ -85,6 +72,7 @@ const SecondStep = ({
           borderColor='gray.200'
           placeholder='Planta medicinal'
           onChange={handle}
+          value={values.title}
         />
       </FormControl>
       <FormControl mb={4}>
@@ -95,6 +83,7 @@ const SecondStep = ({
           borderColor='gray.200'
           placeholder='Xochicalli'
           onChange={handle}
+          value={values.marca}
         />
       </FormControl>
       <FormControl mb={4}>
@@ -107,6 +96,7 @@ const SecondStep = ({
             borderColor='gray.200'
             placeholder='12345'
             onChange={handle}
+            value={values.price}
           />
           <InputRightAddon children='MXN' />
         </InputGroup>
@@ -118,6 +108,7 @@ const SecondStep = ({
           borderColor='gray.200'
           placeholder='Planta con aroma agradable para curar enfermedades'
           onChange={handle}
+          value={values.description}
         />
       </FormControl>
       <ButtonComponent name='Siguiente' fn={handleNextClick} />

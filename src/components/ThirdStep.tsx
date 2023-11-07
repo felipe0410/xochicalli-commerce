@@ -3,14 +3,9 @@ import {
   Button,
   FormControl,
   FormLabel,
-  HStack,
   Input,
-  PinInput,
-  PinInputField,
-  Select,
   VisuallyHiddenInput,
   useToast,
-  Text,
   IconButton,
 } from "@chakra-ui/react";
 
@@ -20,11 +15,10 @@ import { v4 } from "uuid";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/firebase";
 import { dataInputs } from "@/pages/admin/addProduct/data";
-import TagsInput from "react-tagsinput";
-import "react-tagsinput/react-tagsinput.css";
 import { InputData } from "@/pages/admin/addProduct/interface";
 import { SnackbarProvider, enqueueSnackbar } from "notistack";
 import { ArrowBackIcon } from "@chakra-ui/icons";
+import { ComponentInput, ComponentPinInput, ComponentSelect, Duplex, Tags } from "@/pages/admin/addProduct/Component";
 const ThirdStep = ({
   values,
   setValue,
@@ -73,7 +67,6 @@ const ThirdStep = ({
   };
 
   const handleAcceptImage = (fileRef: any) => {
-    console.log('entro aqui:>')
     setLoading(true)
     if (fileRef.current?.files?.length) {
       const file = fileRef.current.files[0];
@@ -91,17 +84,6 @@ const ThirdStep = ({
       setLoading(false)
     }
   };
-
-  // const showToast = (title: string, description: string, status: "success") => {
-  //   toast({
-  //     title,
-  //     description,
-  //     status,
-  //     duration: 3000,
-  //     isClosable: true,
-  //   });
-  // };
-
 
   const handleCancel = () => {
     setImageBase64("");
@@ -141,120 +123,20 @@ const ThirdStep = ({
     );
   };
 
-  const duplex = (name: string, data: [], type: string) => {
-    return (
-      <Box>
-        <FormLabel htmlFor='content'>{name}</FormLabel>
-        <Box display={"flex"}>
-          <Input
-            onChange={handle}
-            name={name}
-            type={type}
-            borderColor='gray.200'
-            placeholder='350'
-            width={"350px"}
-          />
-          <Select
-            name='unidad'
-            width={"150px"}
-            onChange={handle}
-            value={values.unidad}
-          >
-            {data?.map((content: string) => (
-              <option key={crypto.randomUUID()} value={content}>
-                {content}
-              </option>
-            ))}
-          </Select>
-        </Box>
-      </Box>
-    );
-  };
-
-  const componentSelect = (name: string, data: []) => {
-    return (
-      <Box>
-        <Box mb={4}>
-          <FormLabel>{name}</FormLabel>
-          <Select name={name} onChange={handle} value={values[name]}>
-            {data?.map((delivery: string) => (
-              <option key={crypto.randomUUID()} value={delivery}>
-                {delivery}
-              </option>
-            ))}
-          </Select>
-        </Box>
-      </Box>
-    );
-  };
-
-  const componentInput = (name: string, type: string) => {
-    return (
-      <Box>
-        <FormLabel>{name}</FormLabel>
-        <Input
-          name={name}
-          onChange={handle}
-          type={type}
-          borderColor='gray.200'
-        />
-      </Box>
-    );
-  };
-
-  const pinInput = (name: string) => {
-    return (
-      <>
-        <Text>{name}</Text>
-        <HStack>
-          <PinInput
-            onChange={(e) => {
-              setValue((prevState: any) => ({
-                ...prevState,
-                Graduacion: e,
-              }));
-            }}
-          >
-            <PinInputField />
-            <PinInputField />
-            <PinInputField />
-            <PinInputField />
-          </PinInput>
-        </HStack>
-      </>
-    );
-  };
-
-  const tags = (name: string) => {
-    return (
-      <>
-        <Text>{name}</Text>
-        <TagsInput
-          value={values?.instrucciones ?? []}
-          onChange={(event: any) => {
-            setValue((prevState: any) => ({
-              ...prevState,
-              instrucciones: event,
-            }));
-          }}
-        />
-      </>
-    );
-  };
 
   const returnComponent = (input: any) => {
     const { component, name, type, option } = input;
     switch (component) {
       case "select":
-        return componentSelect(name, option);
+        return ComponentSelect(name, option, handle, values);
       case "duplex":
-        return duplex(name, option, type);
+        return Duplex(name, option, type, handle,values);
       case "input":
-        return componentInput(name, type);
+        return ComponentInput(name, type, handle);
       case "tags":
-        return tags(name);
+        return Tags(name, handle,values,setValue);
       case "pin":
-        return pinInput(name);
+        return ComponentPinInput(name, setValue);
       default:
         break
     }

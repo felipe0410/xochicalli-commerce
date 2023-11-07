@@ -54,6 +54,11 @@ export const dataInputs: Record<string, CategoryData> = {
                 type: "text",
                 component: "tags",
             },
+            {
+                name: "Recomendaciones",
+                type: "text",
+                component: "tags",
+            },
         ],
         Macetas: [
             {
@@ -114,6 +119,11 @@ export const dataInputs: Record<string, CategoryData> = {
                 type: "text",
                 component: "tags",
             },
+            {
+                name: "Recomendaciones",
+                type: "text",
+                component: "tags",
+            },
         ],
         Herramientas: [
             {
@@ -152,7 +162,7 @@ export const dataInputs: Record<string, CategoryData> = {
         ],
     },
     FLORES: {
-        SubCategory: [
+        Rosas: [
             {
                 name: "Especie",
                 type: "text",
@@ -201,9 +211,220 @@ export const dataInputs: Record<string, CategoryData> = {
                 component: "tags",
             },
         ],
+        Petalos: [
+            {
+                name: "Especie",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Aroma",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Disponibilidad",
+                type: "text",
+                component: "select",
+                option: ["Por temporada", "Aromática", "Exóticas"],
+            },
+            {
+                name: "Floración",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Tiempo de vida",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Estado",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Altura",
+                type: "number",
+                component: "duplex",
+                option: ["Cm", "Mm"],
+            },
+            {
+                name: "Presentación",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "instrucciones",
+                type: "text",
+                component: "tags",
+            },
+        ],
+        Claveles: [
+            {
+                name: "Especie",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Aroma",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Disponibilidad",
+                type: "text",
+                component: "select",
+                option: ["Por temporada", "Aromática", "Exóticas"],
+            },
+            {
+                name: "Floración",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Tiempo de vida",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Estado",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Altura",
+                type: "number",
+                component: "duplex",
+                option: ["Cm", "Mm"],
+            },
+            {
+                name: "Presentación",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "instrucciones",
+                type: "text",
+                component: "tags",
+            },
+        ]
     },
     PLANTAS: {
-        SubCategory: [
+        Arbustos: [
+            {
+                name: "Especie",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Variedad",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Floración",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Edad",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Estado",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Altura",
+                type: "number",
+                component: "duplex",
+                option: ["Cm", "Mm"],
+            },
+            {
+                name: "Ancho",
+                type: "number",
+                component: "duplex",
+                option: ["Cm", "Mm"],
+            },
+            {
+                name: "Presentación",
+                type: "text",
+                component: "select",
+                option: [
+                    "Maceta #1",
+                    "Maceta #2",
+                    "Maceta #3",
+                    "Maceta #4",
+                    "Maceta #5",
+                ],
+            },
+            {
+                name: "Recomendaciones",
+                type: "text",
+                component: "tags",
+            },
+            
+        ],
+        Arboles: [
+            {
+                name: "Especie",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Variedad",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Floración",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Edad",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Estado",
+                type: "text",
+                component: "input",
+            },
+            {
+                name: "Altura",
+                type: "number",
+                component: "duplex",
+                option: ["Cm", "Mm"],
+            },
+            {
+                name: "Ancho",
+                type: "number",
+                component: "duplex",
+                option: ["Cm", "Mm"],
+            },
+            {
+                name: "Presentación",
+                type: "text",
+                component: "select",
+                option: [
+                    "Maceta #1",
+                    "Maceta #2",
+                    "Maceta #3",
+                    "Maceta #4",
+                    "Maceta #5",
+                ],
+            },
+            {
+                name: "Recomendaciones",
+                type: "text",
+                component: "tags",
+            },
+        ],
+        Orquídeas: [
             {
                 name: "Especie",
                 type: "text",
@@ -261,7 +482,7 @@ export const dataInputs: Record<string, CategoryData> = {
         ],
     },
     SEMILLAS: {
-        SubCategory: [
+        Semilla: [
             {
                 name: "Especie",
                 type: "text",
@@ -292,3 +513,5 @@ export const dataInputs: Record<string, CategoryData> = {
         ],
     },
 };
+
+
