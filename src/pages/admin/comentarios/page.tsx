@@ -28,8 +28,6 @@ const Comentarios = () => {
       return comment;
     });
     setComments(updatedComments);
-
-    // Actualiza el comentario en Firebase
     try {
       const docComments = query(collection(db, "comments"));
 
@@ -58,7 +56,7 @@ const Comentarios = () => {
 
   useEffect(() => {
     const fetchComments = async () => {
-      const data = await getComments();
+      const data: Comment[] | any = await getComments();
       setComments(data);
     };
 
@@ -66,39 +64,42 @@ const Comentarios = () => {
   }, []);
 
   return (
-    <Box
-      style={{
-        display: "flex",
-        width: "100%",
-        flexWrap: "wrap",
-        justifyContent: "space-around",
-      }}
-    >
-      {comments?.map((comment) => (
-        <Box
-          key={comment.id}
-          p={4}
-          marginY={"20px"}
-          borderRadius='md'
-          bgColor='gray.100'
-          minWidth={["full", 350]}
-          maxWidth={["full", 350]}
-        >
-          <Stack direction='row' alignItems='center'>
-            <Avatar src={"" as string} name={"commentInfo?.name" as string} />
-            <Text fontWeight={600}>
-              {comment.name} {comment.fatherSurname}
+    <Box style={{ minHeight: '72.7vh' }} id='container comments'>
+      <Text fontSize="lg">Comentarios</Text>
+      <Box
+        style={{
+          display: "flex",
+          width: "100%",
+          flexWrap: "wrap",
+          justifyContent: "space-around",
+        }}
+      >
+        {comments?.map((comment) => (
+          <Box
+            key={comment.id}
+            p={4}
+            marginY={"20px"}
+            borderRadius='md'
+            bgColor='gray.100'
+            minWidth={["full", 350]}
+            maxWidth={["full", 350]}
+          >
+            <Stack direction='row' alignItems='center'>
+              <Avatar src={"" as string} name={"commentInfo?.name" as string} />
+              <Text fontWeight={600}>
+                {comment.name} {comment.fatherSurname}
+              </Text>
+            </Stack>
+            <Text noOfLines={3} my={2}>
+              {comment.comment}
             </Text>
-          </Stack>
-          <Text noOfLines={3} my={2}>
-            {comment.comment}
-          </Text>
-          <Text fontWeight={600}>Fecha: {new Date().toLocaleDateString()}</Text>
-          <Button onClick={() => handleChecked(comment.id)}>
-            {comment.checked === false ? "Agregar" : "Cancelar"}
-          </Button>
-        </Box>
-      ))}
+            <Text fontWeight={600}>Fecha: {new Date().toLocaleDateString()}</Text>
+            <Button onClick={() => handleChecked(comment.id)}>
+              {comment.checked === false ? "Agregar" : "Cancelar"}
+            </Button>
+          </Box>
+        ))}
+      </Box>
     </Box>
   );
 };
