@@ -156,6 +156,7 @@ export interface Product {
 
 export interface Comment {
   checked: boolean;
+  deleted: boolean;
   comment: string;
   createdAt: string;
   fatherSurname: string;
