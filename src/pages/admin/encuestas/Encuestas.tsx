@@ -34,11 +34,11 @@ const Encuestas = () => {
             question: '2. ¿Cómo calificarías la facilidad de navegación en nuestra plataforma?',
             key: 'navigationEase',
             responses: [
-                'Muy fácil',
-                'Fácil',
+                'Muy facil',
+                'Facil',
                 'Neutral',
-                'Difícil',
-                'Muy difícil',
+                'Dificil',
+                'Muy dificil',
             ],
         },
         {
