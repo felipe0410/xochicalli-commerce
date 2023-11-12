@@ -45,7 +45,6 @@ const Product: FC = (): JSX.Element => {
 
   const { user, userInformation } = useContext(UserContext);
   const { product, loading } = useProduct(id as string);
-
   const { comments, loading: loadingComments } = useComments(
     product?.title as string
   );
@@ -116,8 +115,7 @@ const Product: FC = (): JSX.Element => {
   return (
     <Box minH='calc(100vh - 72px)' bgColor='gray.100' p={4}>
       <Helmet>
-        <title>{`Producto: ${product?.title === undefined ? "Cargando..." : product.title
-          }`}</title>
+        <title>{`Producto: ${product?.title === undefined ? "Cargando..." : product.title}`}</title>
       </Helmet>
       <Breadcrumb pt={2} pb={6} ml={[0, 0, 16, 24]}>
         {isLargerThan800 && (
@@ -141,7 +139,7 @@ const Product: FC = (): JSX.Element => {
         </BreadcrumbItem>
         <BreadcrumbItem>
           <BreadcrumbLink as={Link} to={`/products/${id}`}>
-            {id}
+            {product?.title ?? 'product'}
           </BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>
@@ -159,13 +157,14 @@ const Product: FC = (): JSX.Element => {
             >
               <Suspense fallback={<ProductSkeleton />}>
                 <ProductView
+                  productt={product}
                   id={id as string}
                   category={product?.category as string}
                   description={product?.description as string}
                   image={product?.image as string}
                   price={product?.price as number}
                   title={product?.title as string}
-                  subcategory={product?.subcategory as string}
+                  subCategory={product?.subCategory as string}
                   tags={product?.tags as string}
                   stock={product?.stock as number}
                 />
@@ -222,41 +221,41 @@ const Product: FC = (): JSX.Element => {
                       >
                         {(userInformation === null ||
                           userInformation === undefined) && (
-                          <>
-                            <FormControl isInvalid={!!errors.name}>
-                              <FormLabel htmlFor='Nombre'>Nombre(s)</FormLabel>
-                              <Input
-                                placeholder='Nombre'
-                                id='name'
-                                type='text'
-                                maxLength={35}
-                                {...register("name")}
-                              />
-                              {errors.name && (
-                                <FormErrorMessage>
-                                  {errors.name.message}
-                                </FormErrorMessage>
-                              )}
-                            </FormControl>
-                            <FormControl isInvalid={!!errors.fatherSurname}>
-                              <FormLabel htmlFor='Apellido'>
-                                Apellido(s)
-                              </FormLabel>
-                              <Input
-                                placeholder='Apellido'
-                                id='fatherSurname'
-                                type='text'
-                                max={50}
-                                {...register("fatherSurname")}
-                              />
-                              {errors.fatherSurname && (
-                                <FormErrorMessage>
-                                  {errors.fatherSurname.message}
-                                </FormErrorMessage>
-                              )}
-                            </FormControl>
-                          </>
-                        )}
+                            <>
+                              <FormControl isInvalid={!!errors.name}>
+                                <FormLabel htmlFor='Nombre'>Nombre(s)</FormLabel>
+                                <Input
+                                  placeholder='Nombre'
+                                  id='name'
+                                  type='text'
+                                  maxLength={35}
+                                  {...register("name")}
+                                />
+                                {errors.name && (
+                                  <FormErrorMessage>
+                                    {errors.name.message}
+                                  </FormErrorMessage>
+                                )}
+                              </FormControl>
+                              <FormControl isInvalid={!!errors.fatherSurname}>
+                                <FormLabel htmlFor='Apellido'>
+                                  Apellido(s)
+                                </FormLabel>
+                                <Input
+                                  placeholder='Apellido'
+                                  id='fatherSurname'
+                                  type='text'
+                                  max={50}
+                                  {...register("fatherSurname")}
+                                />
+                                {errors.fatherSurname && (
+                                  <FormErrorMessage>
+                                    {errors.fatherSurname.message}
+                                  </FormErrorMessage>
+                                )}
+                              </FormControl>
+                            </>
+                          )}
                       </Stack>
                       <FormControl isInvalid={!!errors.comment}>
                         <FormLabel htmlFor='Comentario'>Comentario</FormLabel>

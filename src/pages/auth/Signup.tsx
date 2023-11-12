@@ -29,7 +29,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { FiEye, FiEyeOff, FiPhone } from "react-icons/fi";
-
+import { signUpWithEmail } from '@/utils'
 import { RegisterInputs } from "@/interfaces";
 import { ProviderButtons } from "@/components";
 import { validationSchema } from "./data";
@@ -65,7 +65,18 @@ const Signup: FC = (): JSX.Element => {
     values: RegisterInputs
   ) => {
     console.log("values:::>", values);
+    const { birthday, fatherSurname, motherSurname, gender, name, phoneNumber, securitySelect } = values;
     try {
+      const user = await signUpWithEmail(values.email, values.password, {
+        birthday,
+        fatherSurname,
+        motherSurname,
+        gender,
+        name,
+        phoneNumber,
+        securitySelect,
+        securityQuestion
+      })
       toast({
         status: "success",
         duration: 1500,
@@ -75,7 +86,7 @@ const Signup: FC = (): JSX.Element => {
         description: `¡Hola, ${values.name}! Revisa tu email para verificar la cuenta.`,
       });
       reset();
-      navigate(`/products`);
+      navigate(`/products?=${user?.uid}`);
     } catch (message: any) {
       toast({
         status: "error",
@@ -146,7 +157,7 @@ const Signup: FC = (): JSX.Element => {
                           borderColor='gray.200'
                           placeholder='Antonio'
                           {...register("name")}
-                          onChange={(e) => {}}
+                          onChange={(e) => { }}
                         />
                         {errors.name && (
                           <FormErrorMessage>
