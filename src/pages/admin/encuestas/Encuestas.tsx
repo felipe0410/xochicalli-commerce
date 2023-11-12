@@ -14,17 +14,10 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/firebase';
 
 
-
 const Encuestas = () => {
 
     const [questions, setQuestions] = useState([]);
     const [loading, setLoading] = useState(true);
-
-    const questionTen = {
-        question: '10. ¿Tienes alguna sugerencia o comentario adicional sobre la usabilidad de nuestra plataforma que nos ayude a mejorar?',
-        key: 'additionalComments',
-    }
-
 
     const questionMappings = [
         {
@@ -122,7 +115,7 @@ const Encuestas = () => {
 
     useEffect(() => {
         const fetchQuestions = async () => {
-            const questionDocs = [];
+            const questionDocs : any = [];
             const querySnapshot = await getDocs(collection(db, 'questions'));
             querySnapshot.forEach((doc) => {
                 questionDocs.push(doc.data());
@@ -156,7 +149,7 @@ const Encuestas = () => {
         </Stack>
     }
 
-    const groupedAnswers = {};
+    const groupedAnswers: any = {};
 
     questions.forEach((question, index) => {
         Object.entries(question).forEach(([key, value]) => {
@@ -170,7 +163,7 @@ const Encuestas = () => {
         });
     });
 
-    const countResponses = (question, response) => {
+    const countResponses = (question : any, response: any) => {
         return questions.filter(answer => answer[question.key] === response).length;
     };
 
@@ -192,7 +185,7 @@ const Encuestas = () => {
                             <AccordionPanel>
                                 <List style={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap' }}>
                                     {question.key === 'additionalComments' ? (
-                                        questions.map((response, index) => (
+                                        questions.map((response : any, index) => (
                                             <ListItem key={index}>
                                                 {index + 1} - {response.additionalComments}
                                             </ListItem>

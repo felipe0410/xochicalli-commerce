@@ -72,7 +72,7 @@ const Login: FC = (): JSX.Element => {
       });
       reset();
       navigate(-1);
-    } catch ({ message }) {
+    } catch (message) {
       toast({
         status: "error",
         duration: 1500,
@@ -85,41 +85,41 @@ const Login: FC = (): JSX.Element => {
   };
 
   return (
-    <Box bgColor="gray.100" minHeight="100vh">
+    <Box bgColor='gray.100' minHeight='100vh'>
       <Helmet>
         <title>Iniciar sesión</title>
       </Helmet>
       <Container
-        maxW="lg"
+        maxW='lg'
         py={{ base: "12", md: "24" }}
         px={{ base: "0", sm: "8" }}
       >
-        <Stack spacing="8">
-          <Stack spacing="6">
+        <Stack spacing='8'>
+          <Stack spacing='6'>
             {isLargerThan800 && (
               <Image
                 src={
                   import.meta.env.VITE_ADMIN_LOGIN_IMAGE ??
                   "https://firebasestorage.googleapis.com/v0/b/xochicalli-commerce.appspot.com/o/assets%2Flogo.png?alt=media&token=b5a9e3c5-d9f1-469c-9c9d-9af0c5f1cfd9"
                 }
-                alt="Top Image"
-                objectFit="cover"
-                fallbackSrc="https://via.placeholder.com/256"
-                loading="lazy"
-                width="128px"
-                borderRadius="lg"
-                mx="auto"
+                alt='Top Image'
+                objectFit='cover'
+                fallbackSrc='https://via.placeholder.com/256'
+                loading='lazy'
+                width='128px'
+                borderRadius='lg'
+                mx='auto'
               />
             )}
-            <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
+            <Stack spacing={{ base: "2", md: "3" }} textAlign='center'>
               <Heading size={{ base: "xl", md: "lg" }}>Iniciar sesión</Heading>
-              <HStack spacing="1" justify="center">
-                <Text color="muted">¿No tienes cuenta?</Text>
+              <HStack spacing='1' justify='center'>
+                <Text color='muted'>¿No tienes cuenta?</Text>
                 <Button
-                  variant="link"
+                  variant='link'
                   as={Link}
-                  to="/signup"
-                  colorScheme="blue"
+                  to='/signup'
+                  colorScheme='blue'
                 >
                   Registrarme
                 </Button>
@@ -133,17 +133,17 @@ const Login: FC = (): JSX.Element => {
             boxShadow={{ base: "none", sm: "md" }}
             borderRadius={{ base: "none", sm: "xl" }}
           >
-            <Stack spacing="6">
+            <Stack spacing='6'>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <FormControl isInvalid={!!errors.email}>
-                  <FormLabel htmlFor="email">Correo electrónico</FormLabel>
+                  <FormLabel htmlFor='email'>Correo electrónico</FormLabel>
                   <Input
-                    autoComplete="false"
-                    type="email"
-                    id="email"
+                    autoComplete='false'
+                    type='email'
+                    id='email'
                     bgColor={["white", "transparent"]}
-                    placeholder="correo@electronico.com"
-                    borderColor="gray.200"
+                    placeholder='correo@electronico.com'
+                    borderColor='gray.200'
                     {...register("email")}
                   />
                   {errors.email && (
@@ -152,23 +152,23 @@ const Login: FC = (): JSX.Element => {
                 </FormControl>
 
                 <FormControl isInvalid={!!errors.password} mt={4}>
-                  <FormLabel htmlFor="password">Contraseña</FormLabel>
+                  <FormLabel htmlFor='password'>Contraseña</FormLabel>
                   <InputGroup>
                     <InputRightElement>
                       <IconButton
-                        variant="link"
-                        aria-label="Show password"
+                        variant='link'
+                        aria-label='Show password'
                         icon={show ? <FiEye /> : <FiEyeOff />}
                         onClick={() => setShow(!show)}
                       />
                     </InputRightElement>
                     <Input
-                      autoComplete="false"
+                      autoComplete='false'
                       type={show ? "password" : "text"}
-                      id="password"
+                      id='password'
                       bgColor={["white", "transparent"]}
-                      placeholder="********"
-                      borderColor="gray.200"
+                      placeholder='********'
+                      borderColor='gray.200'
                       {...register("password")}
                     />
                   </InputGroup>
@@ -179,22 +179,22 @@ const Login: FC = (): JSX.Element => {
                   )}
                 </FormControl>
                 <HStack
-                  alignItems="right"
+                  alignItems='right'
                   mt={4}
                   mb={1}
-                  justifyContent="flex-end"
+                  justifyContent='flex-end'
                 >
                   <ForgotPassword />
                 </HStack>
-                <ButtonGroup pt={4} width="100%" colorScheme="green">
-                  <Button type="submit" isLoading={isSubmitting} width="100%">
+                <ButtonGroup pt={4} width='100%' colorScheme='green'>
+                  <Button type='submit' isLoading={isSubmitting} width='100%'>
                     Iniciar sesión
                   </Button>
                 </ButtonGroup>
               </form>
               <HStack>
                 <Divider borderColor={["gray.400", "gray.200"]} />
-                <Text fontSize="sm" whiteSpace="nowrap" color="muted">
+                <Text fontSize='sm' whiteSpace='nowrap' color='muted'>
                   O ingresa con:
                 </Text>
                 <Divider borderColor={["gray.400", "gray.200"]} />
