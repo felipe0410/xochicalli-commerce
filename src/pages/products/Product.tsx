@@ -95,7 +95,7 @@ const Product: FC = (): JSX.Element => {
       user
         ? await addComment(values, product?.title as string)
         : await addComment(values, product?.title as string);
-    } catch ({ message }) {
+    } catch (message) {
       toast({
         status: "error",
         duration: 1500,
@@ -114,9 +114,8 @@ const Product: FC = (): JSX.Element => {
   return (
     <Box minH='calc(100vh - 72px)' bgColor='gray.100' p={4}>
       <Helmet>
-        <title>{`Producto: ${
-          product?.title === undefined ? "Cargando..." : product.title
-        }`}</title>
+        <title>{`Producto: ${product?.title === undefined ? "Cargando..." : product.title
+          }`}</title>
       </Helmet>
       <Breadcrumb pt={2} pb={6} ml={[0, 0, 16, 24]}>
         {isLargerThan800 && (
