@@ -12,8 +12,8 @@ const FAQ = () => {
 
     return (
         <VStack>
-            <Container maxW='550px' bg='green.400' color='white'>
-                <Card>
+            <Container maxW='550px' color='white'>
+                <Card marginY={16}>
                     <CardHeader>
                         <Heading size='md'>Preguntas y dudas frecuentes</Heading>
                     </CardHeader>
