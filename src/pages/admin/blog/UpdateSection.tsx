@@ -31,13 +31,11 @@ const UpdateSection = () => {
   const { post } = state;
   const [articleData, setArticleData] = useState<{
     title: string;
-    subtitle: string;
     description: string;
     category: string;
     imageUrl: string;
   }>({
     title: post.title,
-    subtitle: post.subtitle,
     description: post.description,
     category: post.category,
     imageUrl: post.imageURL,
@@ -85,7 +83,6 @@ const UpdateSection = () => {
 
       setArticleData({
         title: '',
-        subtitle: '',
         description: '',
         category: 'Guía de plantas',
         imageUrl: '',
@@ -148,27 +145,16 @@ const UpdateSection = () => {
                 name="title"
                 value={articleData.title}
                 onChange={handleInputChange}
-                
-              />
-            </FormControl>
-            <FormControl style={{ margin: '10px 0' }}>
-              <FormLabel>Subtítulo</FormLabel>
-              <Input
-                type="text"
-                name="subtitle"
-                value={articleData.subtitle}
-                onChange={handleInputChange}
-                
-              />
-            </FormControl>
 
+              />
+            </FormControl>
             <FormControl style={{ margin: '10px 0' }}>
               <FormLabel>Descripción</FormLabel>
               <Textarea
                 name="description"
                 value={articleData.description}
                 onChange={handleInputChange}
-                
+
               />
             </FormControl>
 
@@ -181,6 +167,7 @@ const UpdateSection = () => {
                 onChange={handleImageChange}
               />
             </FormControl>
+            
             {
               cargando
                 ? <Text fontSize='xl' as='b'>Cargando...</Text>

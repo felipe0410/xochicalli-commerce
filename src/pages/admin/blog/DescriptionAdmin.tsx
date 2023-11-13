@@ -93,7 +93,7 @@ const DescriptionAdmin = () => {
             </Box>
           </CardHeader>
           <CardBody>
-            <Image src={post.imageURL} alt={post.title} borderRadius='lg' sx={{ width: '100%' }} />
+            <Image src={post.imageURL ? post.imageURL : post.imageUrlMiniatura} alt={post.title} borderRadius='lg' sx={{ width: '100%' }} />
             <Stack mt='6' spacing='3'>
               <Heading size='md'>{post.title}</Heading>
               <Text>{post.description}</Text>
