@@ -27,6 +27,7 @@
     "react-hook-form": "^7.43.2",
     "react-icons": "^4.11.0",
     "react-lazy-load-image-component": "^1.5.6",
+    "react-player": "^2.13.0",
     "react-router-dom": "^6.9.0",
     "react-simple-image-slider": "^2.4.1",
     "react-tagsinput": "^3.20.3",
