@@ -95,6 +95,7 @@ export const signUpWithEmail = async (email: string, password: string,
     }
 }
 
+
 export const updateEmailAddress = async (email: string): Promise<boolean | void> => {
     try {
         if (!currentUser || !currentUser.uid) {
