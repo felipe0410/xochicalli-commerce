@@ -18,7 +18,8 @@ import {
   Button,
   UnorderedList,
   ListItem,
-  OrderedList
+  OrderedList,
+
 } from '@chakra-ui/react';
 import { DeleteIcon, EditIcon, ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
@@ -112,7 +113,9 @@ const DescriptionAdmin = () => {
         <Box sx={{ display: 'flex', width: '100%', flexDirection: 'column', padding: 16 }}>
 
           <Box sx={{ display: 'flex', width: '100%', marginBottom: 8 }}>
-            <Text fontSize='2xl'>Blog / {post.category} / {post.title}</Text>
+            <Button variant="ghost" onClick={() => navigate(`/admin/blog-create`)}>Blog /</Button>
+            <Button variant="ghost" onClick={() => navigate(-1)}> {post.category} /</Button>
+            <Button variant="ghost"> {post.title}</Button>
           </Box>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
