@@ -8,7 +8,8 @@ import {
   IconButton,
   UnorderedList,
   ListItem,
-  OrderedList
+  OrderedList,
+  Button
 } from '@chakra-ui/react';
 import ReactPlayer from 'react-player';
 import { ArrowBackIcon } from '@chakra-ui/icons';
@@ -64,9 +65,11 @@ const DescriptionUser = () => {
 
       <Box sx={{ display: 'flex', width: '100%', flexDirection: 'column', padding: 16 }}>
 
-        <Box sx={{ display: 'flex', width: '100%', marginBottom: 8 }}>
-          <Text fontSize='2xl'>Blog / {post.category} / {post.title}</Text>
-        </Box>
+      <Box sx={{ display: 'flex', width: '100%', marginBottom: 8 }}>
+            <Button variant="ghost"onClick={() => navigate(-1)}>Blog /</Button>
+            <Button variant="ghost" onClick={() => navigate(-1)}> {post.category} /</Button>
+            <Button variant="ghost"> {post.title}</Button>
+          </Box>
 
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
           <Card key={post.id} borderWidth='2px' borderColor='gray.300'>
