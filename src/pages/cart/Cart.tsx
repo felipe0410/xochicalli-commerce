@@ -71,6 +71,7 @@ const Cart: FC = (): JSX.Element => {
                     category={item.category}
                     subcategory={item?.subcategory ?? ""}
                     tags={item?.tags ?? ""}
+                    subCategory={""}
                   />
                   <Divider my={6} />
                 </React.Fragment>
