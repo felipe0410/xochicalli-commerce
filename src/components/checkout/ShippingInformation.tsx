@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "@/context";
+import { CartContext, UserContext } from "@/context";
 import PaymentForm from "./PaymentInformation";
 import axios from "axios";
 import { guardarDireccion, queryUser } from "@/utils/firebase";
@@ -39,6 +39,23 @@ interface UserProfile {
 interface Address { }
 
 const ShippingInformation: FC = (): JSX.Element => {
+  const { cart } = useContext(CartContext);
+  const arrayStripe: { price_data: { product_data: { name: any; }; currency: string; unit_amount: any; }; quantity: any; }[] = []
+  // eslint-disable-next-line array-callback-return
+  cart.map((element) => {
+    const obj = {
+      price_data: {
+        product_data: {
+          name: element.title,
+        },
+        currency: "MXN",
+        unit_amount: Number(element.price,)
+      },
+      quantity: element.quantity,
+    }
+    arrayStripe.push(obj)
+  })
+
   const { userInformation } = useContext(UserContext);
   const [dataCard, setDataCard] = useState({
     name: "",
@@ -143,6 +160,7 @@ const ShippingInformation: FC = (): JSX.Element => {
       }
     };
     getDataUser();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -264,7 +282,19 @@ const ShippingInformation: FC = (): JSX.Element => {
                 isDisabled={validation()}
                 onClick={() => {
                   guardarDireccion(uid, dataCard);
-                  setPayment(true);
+                  // setPayment(true);
+                  axios.post('https://app-gbt7czzzeq-uc.a.run.app/create-checkout-session', arrayStripe)
+                    .then(response => {
+                      console.log(response.data);
+                      if (response.data.url) {
+                        window.open(response.data.url);
+                      } else {
+                        console.error('La respuesta no contiene una URL.');
+                      }
+                    })
+                    .catch(error => {
+                      console.error('ocurrio un error', error);
+                    });
                 }}
               >
                 Continuar

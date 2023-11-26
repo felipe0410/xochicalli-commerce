@@ -152,6 +152,7 @@ export interface Product {
   sold?: number;
   stock?: number;
   id: string;
+  subcategory: any
 }
 
 export interface Comment {

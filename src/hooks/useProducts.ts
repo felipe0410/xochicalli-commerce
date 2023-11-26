@@ -16,6 +16,7 @@ export const useProducts = () => {
       description: "",
       image: "",
       category: "",
+      subCategory: ''
     },
   ]);
 
