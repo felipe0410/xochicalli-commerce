@@ -209,3 +209,37 @@ export const logOut = async (): Promise<void> => {
         console.error(error)
     }
 }
+
+
+export const saveShopping = async (data: any, total: any, user: any) => {
+    try {
+        const timestamp = new Date().toISOString();
+        const formattedTimestamp = timestamp.substring(0, 16).replace('T', ' ');
+        await setDoc(doc(db, "shopping", formattedTimestamp), {
+            products: data,
+            total,
+            user
+        });
+        console.log('exito')
+    } catch (error) {
+        console.error("Error al guardar información en /user: ", error);
+        return null;
+    }
+}
+
+// export const saveShopping = async (uid: any, userData: any, total: any) => {
+//     try {
+//         const userCollectionRef = collection(db, "user");
+//         const userDocRef = doc(userCollectionRef, uid);
+//         await setDoc(userDocRef, {
+//             uid: uid,
+//             data: userData,
+//             total
+//         });
+//         console.log("Documento guardado con ID: ", uid);
+//         return uid;
+//     } catch (error) {
+//         console.error("Error al guardar información en /user: ", error);
+//         return null;
+//     }
+// };

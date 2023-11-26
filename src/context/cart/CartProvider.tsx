@@ -14,7 +14,6 @@ export const CartProvider: FC<ContextProps> = ({ children }) => {
 
   const addToCart = (product: Product) => {
     const existingItem = cart.find((item) => item.id === product.id);
-    
     if (existingItem) {
       setCart(
         cart.map((item) =>

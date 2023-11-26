@@ -13,9 +13,8 @@ import { CartContext } from "@/context";
 
 const OrderSummary: FC = () => {
   const id = useId();
-
   const { cart, total } = useContext(CartContext);
-
+  
   return (
     <Stack spacing={{ base: "6", md: "10" }}>
       <Heading size='lg'>Resumen de la compra</Heading>
@@ -37,6 +36,7 @@ const OrderSummary: FC = () => {
                 category={product.category}
                 subcategory={product.subcategory}
                 tags={product.tags}
+                subCategory={""}
               />
               <Divider />
             </React.Fragment>

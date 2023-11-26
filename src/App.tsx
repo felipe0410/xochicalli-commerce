@@ -20,6 +20,8 @@ const Footer = lazy(() => import("@/components/Footer"));
 // Public routes
 const Home = lazy(() => import("@/pages/home/Home"));
 const Products = lazy(() => import("@/pages/products/Products"));
+const Payment = lazy(() => import("@/pages/Succes/page"));
+// src/pages/Succes/page.tsx
 const Product = lazy(() => import("@/pages/products/Product"));
 const Cart = lazy(() => import("@/pages/cart/Cart"));
 const Contact = lazy(() => import("@/pages/contact/Contact"));
@@ -74,6 +76,7 @@ export const App: FC = (): JSX.Element => {
         <Routes>
           <Route index element={<Home />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/successPayment" element={<Payment />} />
           <Route path="/products/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
           <Route
