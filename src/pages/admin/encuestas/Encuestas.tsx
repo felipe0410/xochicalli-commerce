@@ -20,91 +20,33 @@ const Encuestas = () => {
     const [loading, setLoading] = useState(true);
 
     const questionMappings = [
+        
         {
-            question: '1. ¿Con qué frecuencia visitas nuestra tienda en línea de productos de plantas y jardinería?',
-            key: 'frequency',
-            responses: [
-                'Diariamente',
-                'Semanalmente',
-                'Mensualmente',
-                'Ocasionalmente',
-            ],
-        },
-        {
-            question: '2. ¿Cómo calificarías la facilidad de navegación en nuestra plataforma?',
+            question: '1. ¿Te resulto fácil realizar una compra?',
             key: 'navigationEase',
             responses: [
-                'Muy fácil',
-                'Fácil',
-                'Neutral',
-                'Difícil',
-                'Muy difícil',
+                'Sí',
+                'No',
             ],
         },
         {
-            question: '3. ¿Has encontrado que la organización de las categorías y productos es intuitiva?',
-            key: 'intuitiveOrganization',
-            responses: ['Sí', 'No'],
-        },
-        {
-            question: '4. ¿Cuál es tu opinión sobre la velocidad de carga de la página?',
-            key: 'pageSpeed',
-            responses: [
-                'Excelente',
-                'Buena',
-                'Aceptable',
-                'Lenta',
-                'Muy lenta',
-            ],
-        },
-        {
-            question: '5. ¿Experimentaste problemas técnicos al realizar una compra, como errores de pago o procesamiento?',
+            question: '2. ¿Experimentaste problemas técnicos al realizar una compra, como errores de pago o procesamiento aun habiendo realizado la compra de manera exitosa?',
             key: 'technicalProblems',
             responses: ['Sí', 'No'],
         },
         {
-            question: '6. ¿Qué tan satisfecho estás con la información proporcionada sobre los productos, como descripciones, imágenes y precios?',
+            question: '3. ¿Qué tan satisfecho estás con la información proporcionada sobre los productos, como descripciones, imágenes y precios?',
             key: 'productInformationSatisfaction',
             responses: [
-                'Muy satisfecho',
-                'Satisfecho',
-                'Neutral',
-                'Insatisfecho',
                 'Muy insatisfecho',
+                'Insatisfecho',
+                'Neutral',
+                'Satisfecho',
+                'Muy satisfecho',                  
             ],
         },
         {
-            question: '7. ¿Has utilizado la función de búsqueda en la plataforma? Si es así, ¿fue efectiva?',
-            key: 'usedSearchFunction',
-            responses: [
-                'Sí, fue efectiva',
-                'Sí, pero no fue efectiva',
-                'No, no la utilicé',
-            ],
-        },
-        {
-            question: '8. ¿Te resultó fácil realizar un seguimiento de tu pedido, recibir notificaciones y acceder a información de envío?',
-            key: 'trackingOrderEase',
-            responses: [
-                'Sí, fue muy fácil',
-                'Sí, pero podría mejorar',
-                'No, fue complicado',
-            ],
-        },
-        {
-            question: '9. ¿Recomendarías nuestra tienda en línea a otras personas interesadas en productos de plantas y jardinería?',
-            key: 'recommendStore',
-            responses: [
-                'Definitivamente',
-                'Probablemente',
-                'No estoy seguro',
-                'Probablemente no',
-                'Definitivamente no',
-            ],
-
-        },
-        {
-            question: '10. ¿Tienes alguna sugerencia o comentario adicional sobre la usabilidad de nuestra plataforma que nos ayude a mejorar?',
+            question: '4. ¿Tienes alguna sugerencia o comentario adicional sobre la usabilidad de nuestra plataforma que nos ayude a mejorar?',
             key: 'additionalComments',
             responses: [''],
         },

@@ -17,8 +17,12 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  useDisclosure
+  useDisclosure,
+  InputLeftElement,
+  InputGroup
 } from '@chakra-ui/react';
+
+import { AddIcon, LinkIcon } from '@chakra-ui/icons';
 import { uploadFile } from "@/firebase";
 import { db } from '@/firebase';
 import { addDoc, collection } from 'firebase/firestore';
@@ -29,23 +33,49 @@ const CreateSection = () => {
   const navigate = useNavigate();
   const [articleData, setArticleData] = useState<{
     title: string;
-    subtitle: string;
     description: string;
     category: string;
-    imageUrl: string;
+    imageUrlMiniatura: string;
+    imageUrlPrincipal: string;
+    youtubeLink: string;
   }>({
     title: '',
-    subtitle: '',
     description: '',
     category: 'Guía de plantas',
-    imageUrl: '',
+    imageUrlMiniatura: '',
+    imageUrlPrincipal: '',
+    youtubeLink: ''
   });
 
-  const [imagen, setImagen] = useState<File | null>()
-  const [imagenName, setImagenName] = useState<string>()
+  const [imagenMiniatura, setImagenMiniatura] = useState<File | null>()
+  const [imagenNameMiniatura, setImagenNameMiniatura] = useState<string>()
+  const [imagenPrincipal, setImagenPrincipal] = useState<File | null>()
+  const [imagenNamePrincipal, setImagenNamePrincipal] = useState<string>()
   const [cargando, setCargando] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [addOK, setAddOK] = useState<boolean>()
+  const [contenidos, setContenidos] = useState([
+    { subtitulo: '', detalle: [''] },
+  ]);
+
+
+  const handleAgregarDetalle = (index: number) => {
+    const nuevosDetalles = [...contenidos];
+    nuevosDetalles[index].detalle = [...(nuevosDetalles[index].detalle || []), ''];
+    setContenidos(nuevosDetalles);
+  };
+
+  const handleDetalleChange = (contenidoIndex: number, detalleIndex: number, value: string) => {
+    const nuevosDetalles = [...contenidos];
+    nuevosDetalles[contenidoIndex].detalle[detalleIndex] = value;
+    setContenidos(nuevosDetalles);
+  };
+
+  const handleContenidoChange = (index: number, key: string, value: string) => {
+    const updatedContenidos: any = [...contenidos];
+    updatedContenidos[index][key] = value;
+    setContenidos(updatedContenidos);
+  };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -59,9 +89,17 @@ const CreateSection = () => {
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const imageFile = event.target.files ? event.target.files[0] : null;
     if (imageFile) {
-      setImagen(imageFile)
+      setImagenMiniatura(imageFile)
       const imageName = imageFile.name;
-      setImagenName(imageName);
+      setImagenNameMiniatura(imageName);
+    }
+  };
+  const handleImageChangePrincipal = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const imageFile = event.target.files ? event.target.files[0] : null;
+    if (imageFile) {
+      setImagenPrincipal(imageFile)
+      const imageName = imageFile.name;
+      setImagenNamePrincipal(imageName);
     }
   };
 
@@ -69,11 +107,18 @@ const CreateSection = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setCargando(true)
+    console.log(JSON.stringify(contenidos, null, 5))
 
-    if (imagen) {
+    if (imagenMiniatura && imagenPrincipal) {
       try {
-        const url = await uploadFile(imagen, imagenName, 'blogFolder')
-        const updatedArticleData = { ...articleData, imageURL: url };
+        const url = await uploadFile(imagenMiniatura, imagenNameMiniatura, 'blogFolder')
+        const url2 = await uploadFile(imagenPrincipal, imagenNamePrincipal, 'blogFolder')
+        const updatedArticleData = {
+          ...articleData,
+          contenidos: contenidos,
+          imageUrlMiniatura: url,
+          imageUrlPrincipal: url2
+        };
         await addDoc(collection(db, 'blogPost'), updatedArticleData);
         setCargando(false);
         setAddOK(true)
@@ -81,13 +126,17 @@ const CreateSection = () => {
 
         setArticleData({
           title: '',
-          subtitle: '',
           description: '',
           category: 'Guía de plantas',
-          imageUrl: '', 
+          imageUrlMiniatura: '',
+          imageUrlPrincipal: '',
+          youtubeLink: ''
         });
-        setImagen(null); 
-        setImagenName('');
+        setContenidos([{ subtitulo: '', detalle: [''] }]);
+        setImagenMiniatura(null);
+        setImagenNameMiniatura('');
+        setImagenPrincipal(null);
+        setImagenNamePrincipal('');
 
       } catch (error) {
         console.error('Error al cargar la imagen:', error);
@@ -152,17 +201,6 @@ const CreateSection = () => {
               />
             </FormControl>
             <FormControl style={{ margin: '10px 0' }}>
-              <FormLabel>Subtítulo</FormLabel>
-              <Input
-                type="text"
-                name="subtitle"
-                value={articleData.subtitle}
-                onChange={handleInputChange}
-                required
-              />
-            </FormControl>
-
-            <FormControl style={{ margin: '10px 0' }}>
               <FormLabel>Descripción</FormLabel>
               <Textarea
                 name="description"
@@ -171,17 +209,80 @@ const CreateSection = () => {
                 required
               />
             </FormControl>
-
             <FormControl style={{ margin: '10px 0' }}>
-              <FormLabel>Seleccionar imagen</FormLabel>
+              <FormLabel>Seleccionar imagen miniatura</FormLabel>
               <Input
                 type="file"
-                name="image"
+                name="imagenMiniatura"
                 accept=".jpg, .jpeg, .png"
                 onChange={handleImageChange}
                 required
               />
             </FormControl>
+            <FormControl style={{ margin: '10px 0' }}>
+              <FormLabel>Seleccionar imagen principal</FormLabel>
+              <Input
+                type="file"
+                name="imagenPrincipal"
+                accept=".jpg, .jpeg, .png"
+                onChange={handleImageChangePrincipal}
+                required
+              />
+            </FormControl>
+            {contenidos.map((contenido, contenidoIndex) => (
+              <Box key={contenidoIndex} width="100%" borderWidth="1px" borderRadius="md" p="4">
+                <FormControl style={{ margin: '10px 0' }}>
+                  <FormLabel>Subtítulo</FormLabel>
+                  <Input
+                    type="text"
+                    value={contenido.subtitulo}
+                    onChange={(e) => handleContenidoChange(contenidoIndex, 'subtitulo', e.target.value)}
+                  />
+                </FormControl>
+                {(contenido.detalle || []).map((detalle, detalleIndex) => (
+                  <FormControl key={detalleIndex}>
+                    <FormLabel>Detalle</FormLabel>
+                    <Input
+                      type="text"
+                      value={detalle}
+                      onChange={(e) => handleDetalleChange(contenidoIndex, detalleIndex, e.target.value)}
+                    />
+                  </FormControl>
+                ))}
+                <Button
+                  leftIcon={<AddIcon />}
+                  colorScheme='gray'
+                  variant='outline'
+                  sx={{ width: '100%' }}
+                  onClick={() => handleAgregarDetalle(contenidoIndex)}
+                >
+                  Agregar detalle
+                </Button>
+              </Box>
+            ))}
+            <Button
+              leftIcon={<AddIcon />}
+              colorScheme='teal'
+              variant='outline'
+              onClick={() => setContenidos([...contenidos, { subtitulo: '', detalle: [''] }])}
+              sx={{ width: '100%' }} >
+              Agregar contenido
+            </Button>
+            <FormControl style={{ margin: '20px 0', marginTop: '30px' }}>
+              <FormLabel>Link de video de youtube</FormLabel>
+              <InputGroup>
+                <InputLeftElement pointerEvents='none'>
+                  <LinkIcon color='black' />
+                </InputLeftElement>
+                <Input
+                  type="text"
+                  name="youtubeLink"
+                  value={articleData.youtubeLink}
+                  onChange={handleInputChange}
+                />
+              </InputGroup>
+            </FormControl>
+
             {
               cargando
                 ? <Text fontSize='xl' as='b'>Cargando...</Text>

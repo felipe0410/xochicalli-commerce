@@ -150,7 +150,7 @@ const ShowSecttionAdmin = () => {
           {filteredBlogPosts.map((post: any) => (
             <Card key={post.id} maxW='sm' borderWidth='2px' borderColor='gray.300'>
               <CardBody>
-                <Image src={post.imageURL} alt={post.title} borderRadius='lg' sx={{width:'100%', height:'200px'}}/>
+                <Image src={post.imageURL ? post.imageURL : post.imageUrlMiniatura} alt={post.title} borderRadius='lg' sx={{width:'100%', height:'200px'}}/>
                 <Stack mt='6' spacing='3'>
                   <Heading size='md'>{post.title}</Heading>
                   <Text>{truncateText(post.description, 100)}</Text>

@@ -1,6 +1,10 @@
 import { FC, useState } from 'react'
 
-import { Box, Center, Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Spinner, Stack, Text, VStack, useDisclosure } from '@chakra-ui/react'
+import {
+    Box, Center, Heading, Modal, ModalBody, ModalCloseButton,
+    ModalContent, ModalFooter, ModalHeader, ModalOverlay, Radio, RadioGroup,
+    Spinner, Stack, Text, VStack, useDisclosure
+} from '@chakra-ui/react'
 
 import { Button, FormControl, FormLabel, Textarea, } from "@chakra-ui/react";
 import { db } from '@/firebase';
@@ -10,15 +14,9 @@ const Questions: FC = (): JSX.Element => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const [formData, setFormData] = useState({
-        frequency: "",
         navigationEase: "",
-        intuitiveOrganization: "",
-        pageSpeed: "",
         technicalProblems: "",
         productInformationSatisfaction: "",
-        usedSearchFunction: "",
-        trackingOrderEase: "",
-        recommendStore: "",
         additionalComments: "",
     });
 
@@ -27,16 +25,18 @@ const Questions: FC = (): JSX.Element => {
     const [answeredQuestions, setAnsweredQuestions] = useState(false);
     const [isFromValid, setIsFromValid] = useState(true);
 
-
-    const handleChange = (event: any) => {
-        const { name, value } = event.target;
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = event.target as HTMLInputElement;
         setFormData({
             ...formData,
             [name]: value,
         });
 
-        const answered = Object.values(formData).some(value => value !== "");
+        const answered = Object.values(formData).some((value) => value !== "");
         setAnsweredQuestions(answered);
+
+        // Muestra los valores seleccionados en el console.log
+        console.log(`Pregunta ${name}: ${value}`);
     };
 
 
@@ -77,15 +77,9 @@ const Questions: FC = (): JSX.Element => {
             setLoading(false)
             setAddOK(true)
             setFormData({
-                frequency: "",
                 navigationEase: "",
-                intuitiveOrganization: "",
-                pageSpeed: "",
                 technicalProblems: "",
                 productInformationSatisfaction: "",
-                usedSearchFunction: "",
-                trackingOrderEase: "",
-                recommendStore: "",
                 additionalComments: "",
             });
             onOpen()
@@ -125,130 +119,62 @@ const Questions: FC = (): JSX.Element => {
                     </>
                     <form onSubmit={handleSubmit}>
                         <FormControl mb={8}>
-                            <FormLabel htmlFor="frequency">1. ¿Con qué frecuencia visitas nuestra tienda en línea de productos de plantas y jardinería?</FormLabel>
-                            <Select
-                                name="frequency"
-                                value={formData.frequency}
-                                onChange={handleChange}
-                                placeholder='Elija una opción'>
-                                <option value="Diariamente">Diariamente</option>
-                                <option value="Semanalmente">Semanalmente</option>
-                                <option value="Mensualmente">Mensualmente</option>
-                                <option value="Ocasionalmente">Ocasionalmente</option>
-                            </Select>
-                        </FormControl>
-                        <FormControl mb={8}>
-                            <FormLabel htmlFor="navigationEase">2. ¿Cómo calificarías la facilidad de navegación en nuestra plataforma?</FormLabel>
-                            <Select
+                            <FormLabel htmlFor="navigationEase">1. ¿Te resulto fácil realizar una compra?</FormLabel>
+                            <RadioGroup
                                 name="navigationEase"
-                                value={formData.navigationEase}
-                                onChange={handleChange}
-                                placeholder='Elija una opción'>
-                                <option value="Muy facil">Muy facil</option>
-                                <option value="Facil">Facil</option>
-                                <option value="Neutral">Neutral</option>
-                                <option value="Dificil">Dificil</option>
-                                <option value="Muy dificil">Muy dificil</option>
-                            </Select>
-                        </FormControl>
-                        <FormControl mb={8}>
-                            <FormLabel htmlFor="intuitiveOrganization">3. ¿Has encontrado que la organización de las categorías y productos es intuitiva?</FormLabel>
-                            <Select
-                                name="intuitiveOrganization"
-                                value={formData.intuitiveOrganization}
-                                onChange={handleChange}
-                                placeholder='Elija una opción'
-                            >
-                                <option value="Sí">Sí</option>
-                                <option value="No">No</option>
-                            </Select>
-                        </FormControl>
-                        <FormControl mb={8}>
-                            <FormLabel htmlFor="pageSpeed">4. ¿Cuál es tu opinión sobre la velocidad de carga de la página?</FormLabel>
-                            <Select
-                                name="pageSpeed"
-                                value={formData.pageSpeed}
-                                onChange={handleChange}
-                                placeholder='Elija una opción'
-                            >
-                                <option value="Excelente">Excelente</option>
-                                <option value="Buena">Buena</option>
-                                <option value="Aceptable">Aceptable</option>
-                                <option value="Lenta">Lenta</option>
-                                <option value="Muy lenta">Muy lenta</option>
-                            </Select>
-                        </FormControl>
-                        <FormControl mb={8}>
-                            <FormLabel htmlFor="technicalProblems">5. ¿Experimentaste problemas técnicos al realizar una compra, como errores de pago o procesamiento?</FormLabel>
-                            <Select
-                                name="technicalProblems"
-                                value={formData.technicalProblems}
-                                onChange={handleChange}
-                                placeholder='Elija una opción'
-                            >
-                                <option value="Sí">Sí</option>
-                                <option value="No">No</option>
-                            </Select>
-                        </FormControl>
-                        <FormControl mb={8}>
-                            <FormLabel htmlFor="productInformationSatisfaction">6. ¿Qué tan satisfecho estás con la información proporcionada sobre los productos, como descripciones, imágenes y precios?</FormLabel>
-                            <Select
-                                name="productInformationSatisfaction"
-                                value={formData.productInformationSatisfaction}
-                                onChange={handleChange}
-                                placeholder='Elija una opción'
-                            >
-                                <option value="Muy satisfecho">Muy satisfecho</option>
-                                <option value="Satisfecho">Satisfecho</option>
-                                <option value="Neutral">Neutral</option>
-                                <option value="Insatisfecho">Insatisfecho</option>
-                                <option value="Muy insatisfecho">Muy insatisfecho</option>
-                            </Select>
-                        </FormControl>
-                        <FormControl mb={8}>
-                            <FormLabel htmlFor="usedSearchFunction">7. ¿Has utilizado la función de búsqueda en la plataforma? Si es así, ¿fue efectiva?</FormLabel>
-                            <Select
-                                name="usedSearchFunction"
-                                value={formData.usedSearchFunction}
-                                onChange={handleChange}
-                                placeholder='Elija una opción'
-                            >
-                                <option value="Sí, fue efectiva">Sí, fue efectiva</option>
-                                <option value="Sí, pero no fue efectiva">Sí, pero no fue efectiva</option>
-                                <option value="No, no la utilicé">No, no la utilicé</option>
-                            </Select>
-                        </FormControl>
-                        <FormControl mb={8}>
-                            <FormLabel htmlFor="trackingOrderEase">8. ¿Te resultó fácil realizar un seguimiento de tu pedido, recibir notificaciones y acceder a información de envío?</FormLabel>
-                            <Select
-                                name="trackingOrderEase"
-                                value={formData.trackingOrderEase}
-                                onChange={handleChange}
-                                placeholder='Elija una opción'
-                            >
-                                <option value="Sí, fue muy fácil">Sí, fue muy fácil</option>
-                                <option value="Sí, pero podría mejorar">Sí, pero podría mejorar</option>
-                                <option value="No, fue complicado">No, fue complicado</option>
-                            </Select>
-                        </FormControl>
+                                onChange={(value) =>
+                                    handleChange({ target: { name: "navigationEase", value } } as React.ChangeEvent<HTMLInputElement>)
+                                }
 
-                        <FormControl mb={8}>
-                            <FormLabel htmlFor="recommendStore">9. ¿Recomendarías nuestra tienda en línea a otras personas interesadas en productos de plantas y jardinería?</FormLabel>
-                            <Select
-                                name="recommendStore"
-                                value={formData.recommendStore}
-                                onChange={handleChange}
-                                placeholder='Elija una opción'
+                                value={formData.navigationEase}
                             >
-                                <option value="Definitivamente">Definitivamente</option>
-                                <option value="Probablemente">Probablemente</option>
-                                <option value="No estoy seguro">No estoy seguro</option>
-                                <option value="Probablemente no">Probablemente no</option>
-                                <option value="Definitivamente no">Definitivamente no</option>
-                            </Select>
+                                <Stack spacing={5} direction="row">
+                                    <Radio size="md" value="Sí" colorScheme="green">
+                                        Sí
+                                    </Radio>
+                                    <Radio size="md" value="No" colorScheme="green">
+                                        No
+                                    </Radio>
+                                </Stack>
+                            </RadioGroup>
                         </FormControl>
                         <FormControl mb={8}>
-                            <FormLabel htmlFor="additionalComments">10. ¿Tienes alguna sugerencia o comentario adicional sobre la usabilidad de nuestra plataforma que nos ayude a mejorar?</FormLabel>
+                            <FormLabel htmlFor="technicalProblems">2. ¿Experimentaste problemas técnicos al realizar una compra, como errores de pago o procesamiento aun habiendo realizado la compra de manera exitosa?</FormLabel>
+                            <RadioGroup
+                                name="technicalProblems"
+                                onChange={(value) =>
+                                    handleChange({ target: { name: "technicalProblems", value } } as React.ChangeEvent<HTMLInputElement>)
+                                }
+
+                                value={formData.technicalProblems}
+                            >
+                                <Stack spacing={5} direction='row'>
+                                    <Radio size='md' value='Sí' colorScheme='green'>Sí</Radio>
+                                    <Radio size='md' value='No' colorScheme='green'>No</Radio>
+                                </Stack>
+                            </RadioGroup>
+                        </FormControl>
+                        <FormControl mb={8}>
+                            <FormLabel htmlFor="productInformationSatisfaction">3. ¿Qué tan satisfecho estás con la información proporcionada sobre los productos, como descripciones, imágenes y precios?</FormLabel>
+                            <RadioGroup
+                                name="productInformationSatisfaction"
+                                onChange={(value) =>
+                                    handleChange({ target: { name: "productInformationSatisfaction", value } } as React.ChangeEvent<HTMLInputElement>)
+                                }
+
+                                value={formData.productInformationSatisfaction}
+                            >
+                                <Stack direction='column'>
+                                    <Radio size='md' value='Muy insatisfecho' colorScheme='green'>Muy insatisfecho</Radio>
+                                    <Radio size='md' value='Insatisfecho' colorScheme='green'>Insatisfecho</Radio>
+                                    <Radio size='md' value='Neutral' colorScheme='green'>Neutral</Radio>
+                                    <Radio size='md' value='Satisfecho' colorScheme='green'>Satisfecho</Radio>
+                                    <Radio size='md' value='Muy satisfecho' colorScheme='green'>Muy satisfecho</Radio>
+                                </Stack>
+                            </RadioGroup>
+                        </FormControl>
+                        <FormControl mb={8}>
+                            <FormLabel htmlFor="additionalComments">4. ¿Algun comentario que desees agregar? - OPCIONAL </FormLabel>
                             <Textarea
                                 name="additionalComments"
                                 value={formData.additionalComments}
@@ -267,8 +193,8 @@ const Questions: FC = (): JSX.Element => {
                         </Box>
                         {
                             isFromValid ? null : <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <Text fontSize='xs' as='b' color='tomato'>Debe responder la encuesta</Text>
-                        </Box>
+                                <Text fontSize='xs' as='b' color='tomato'>Debe responder la encuesta</Text>
+                            </Box>
                         }
 
                     </form>
