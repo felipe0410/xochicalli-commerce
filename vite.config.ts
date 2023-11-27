@@ -1,10 +1,11 @@
 import { defineConfig } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa'
 import react from '@vitejs/plugin-react-swc';
 import eslint from 'vite-plugin-eslint';
 import path from 'path'
 
 export default defineConfig({
-  plugins: [react(), eslint()],
+  plugins: [react(), eslint(),VitePWA({ registerType: 'autoUpdate' })],
   server: {
     watch: {
       usePolling: true,
