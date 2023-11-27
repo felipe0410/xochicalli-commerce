@@ -5,7 +5,16 @@ import eslint from 'vite-plugin-eslint';
 import path from 'path'
 
 export default defineConfig({
-  plugins: [react(), eslint(),VitePWA({ registerType: 'autoUpdate' })],
+  plugins: [react(), eslint(),
+  VitePWA(
+    {
+      registerType: 'autoUpdate',
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+      }
+    }
+  )
+  ],
   server: {
     watch: {
       usePolling: true,
