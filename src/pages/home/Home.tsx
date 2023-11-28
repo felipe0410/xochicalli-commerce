@@ -2,14 +2,15 @@ import { FC, useState } from "react";
 
 import {
   Box,
-  Center,
+  // Center,
   CloseButton,
-  Heading,
-  HStack,
+  // Heading,
+  // HStack,
   Link,
   Stack,
   Text,
-  VStack,
+  // VStack,
+  useBreakpointValue
 } from "@chakra-ui/react";
 import { Link as RLink } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
@@ -42,6 +43,10 @@ const images = [
 
 const Home: FC = (): JSX.Element => {
   const [closeBanner, setCloseBanner] = useState<boolean>(true);
+  // Utiliza useBreakpointValue para obtener el valor del breakpoint actual
+  const imageHeight = useBreakpointValue({ sm: 200, md: 512 }) || 200;
+
+
 
   return (
     <Box overflowX="hidden">
@@ -50,15 +55,20 @@ const Home: FC = (): JSX.Element => {
       </Helmet>
       <ImageSlider
         width="100%"
-        height={512}
-        style={{ backgroundPosition: "center" }}
+        height={imageHeight}
+        
+          style={{ backgroundPosition: "center" }}
+      
         autoPlay
         images={images}
         slideDuration={1}
         showBullets
         showNavs
       />
-      <HStack
+      <Box>
+
+      </Box>
+      {/* <HStack
         justifyContent="center"
         py={28}
         px={[8, 0]}
@@ -82,7 +92,10 @@ const Home: FC = (): JSX.Element => {
             </Text>
           </VStack>
         </Center>
-      </HStack>
+      </HStack> */}
+      <Box>
+        wjnerfnweoj
+      </Box>
       {closeBanner && (
         <Box
           bg="green.500"
