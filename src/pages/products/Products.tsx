@@ -1,4 +1,4 @@
-import { FC, lazy, Suspense, useEffect } from "react";
+import { FC, lazy, Suspense, useEffect, useState } from "react";
 
 import {
   Center,
@@ -23,7 +23,6 @@ import {
 import { Link } from "react-router-dom";
 import { FiSearch, FiX } from "react-icons/fi";
 import { Helmet } from "react-helmet-async";
-
 import { useFilter, useProducts } from "@/hooks";
 import { Spinner as LazySpinner } from "@/components/loading";
 
@@ -31,7 +30,7 @@ const ProductCard = lazy(() => import("@/components/products/ProductCard"));
 
 const Products: FC = (): JSX.Element => {
   const { loading, products, setProducts } = useProducts();
-
+  const [productsLocal, setProductsLocal] = useState([])
   const {
     searchInput,
     sortedProducts,
@@ -46,6 +45,7 @@ const Products: FC = (): JSX.Element => {
       const storedProducts = localStorage.getItem('products');
       if (storedProducts) {
         setProducts(JSON.parse(storedProducts));
+        setProductsLocal(JSON.parse(storedProducts))
       }
     } else {
       localStorage.setItem('products', JSON.stringify(products));
