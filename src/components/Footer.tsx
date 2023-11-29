@@ -56,12 +56,15 @@ const Footer: FC = (): JSX.Element => {
               borderRadius="lg"
             />
           </HStack>
-          <Box sx={{ display:'flex', flexDirection: 'column' }}>
-            <Button sx={{ color: 'black', marginBottom:2 }} variant='link' onClick={() => navigate("/faqs")}>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Button sx={{ color: 'black', marginBottom: 2 }} variant='link' onClick={() => navigate("/faqs")}>
               Preguntas frecuentes
             </Button>
-            <Button sx={{ color: 'black' }} variant='link' onClick={() => navigate("/questions")}>
+            <Button sx={{ color: 'black', marginBottom: 2 }} variant='link' onClick={() => navigate("/questions")}>
               Encuesta de satisfacción
+            </Button>
+            <Button sx={{ color: 'black' }} variant='link' onClick={() => navigate("/privacy-policy")}>
+              Políticas de privacidad
             </Button>
           </Box>
           <HStack>

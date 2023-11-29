@@ -13,6 +13,7 @@ const LoggedUserRedirect = lazy(
   () => import("@/components/auth/LoggedUserRedirect")
 );
 const WhatsAppButton = lazy(() => import("@/components/WhatsAppButton"));
+const FloatButton = lazy(() => import("@/components/Floatbutton"));
 const LoggedUserNavbar = lazy(() => import("@/components/ui/LoggedUserNavbar"));
 const ModNavbar = lazy(() => import("@/components/ui/ModNavbar"));
 const Footer = lazy(() => import("@/components/Footer"));
@@ -227,7 +228,11 @@ export const App: FC = (): JSX.Element => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Box>
-      {pathname !== "/checkout" && <WhatsAppButton />}
+      {pathname !== "/checkout" && <Box>
+        <WhatsAppButton />
+        <FloatButton />
+      </Box>
+      }
       {pathname !== "/login" &&
         pathname !== "/signup" &&
         pathname !== "/checkout" && <Footer />}
