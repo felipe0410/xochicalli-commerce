@@ -1,4 +1,4 @@
-import { FC, lazy, Suspense } from "react";
+import { FC, lazy, Suspense, useEffect } from "react";
 
 import {
   Center,
@@ -30,7 +30,7 @@ import { Spinner as LazySpinner } from "@/components/loading";
 const ProductCard = lazy(() => import("@/components/products/ProductCard"));
 
 const Products: FC = (): JSX.Element => {
-  const { loading, products } = useProducts();
+  const { loading, products, setProducts } = useProducts();
 
   const {
     searchInput,
@@ -40,6 +40,18 @@ const Products: FC = (): JSX.Element => {
     onSearchInputChange,
     handleSortChange,
   } = useFilter();
+
+  useEffect(() => {
+    if (products.length === 0) {
+      const storedProducts = localStorage.getItem('products');
+      if (storedProducts) {
+        setProducts(JSON.parse(storedProducts));
+      }
+    } else {
+      localStorage.setItem('products', JSON.stringify(products));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [products]);
 
   return (
     <VStack minH='calc(100vh - 64px)' bgColor='gray.100' p={4}>
@@ -148,9 +160,9 @@ const Products: FC = (): JSX.Element => {
                             image={image}
                             price={price}
                             title={title}
-                            stock={stock} 
-                            subCategory={""}                          
-                            />
+                            stock={stock}
+                            subCategory={""}
+                          />
                         </GridItem>
                       </Suspense>
                     );
