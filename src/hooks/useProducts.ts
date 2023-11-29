@@ -49,5 +49,6 @@ export const useProducts = () => {
     loading,
     more,
     products,
+    setProducts,
   };
 };

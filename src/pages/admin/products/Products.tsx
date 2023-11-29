@@ -20,9 +20,8 @@ import { useProducts } from "@/hooks";
 const ProductCard = lazy(() => import("@/components/admin/ProductCard"));
 
 const Products: FC = (): JSX.Element => {
-  const { handleNextProd, handlePrevProd, loading, more, products } =
-    useProducts();
-
+  const { handleNextProd, handlePrevProd, loading, more, products } = useProducts();
+  console.log('products:::>', products)
   return (
     <VStack h='calc(100vh - 64px)' bgColor='gray.200' gap={4}>
       <Helmet>
