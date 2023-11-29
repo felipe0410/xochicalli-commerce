@@ -35,12 +35,24 @@ export const useProducts = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
-      const data = await getProducts();
-      setProducts(data as Product[]);
+      const data: any = await getProducts();
+      console.log('data::>', data)
+      if (data.length === 0) {
+        const storedProducts = localStorage.getItem('products');
+        if (storedProducts) {
+          console.log('ingrese a true')
+          setProducts(JSON.parse(storedProducts));
+        }
+      } else {
+        console.log('ingrese a false')
+        setProducts(data as Product[]);
+        localStorage.setItem('products', JSON.stringify(products));
+      }
       setLoading(false);
     };
 
     fetchProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {
