@@ -10,7 +10,7 @@ export default defineConfig({
     {
       registerType: 'autoUpdate',
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        globPatterns: ['**/*.{js,html,ico,png,svg}'],
         runtimeCaching: [
           {
             urlPattern: /\.(?:png|jpg|jpeg|gif|svg)$/,
