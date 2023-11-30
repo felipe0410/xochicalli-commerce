@@ -6,23 +6,23 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [react(), eslint(),
-  // VitePWA(
-  //   {
-  //     registerType: 'autoUpdate',
-  //     workbox: {
-  //       globPatterns: [
-  //         '**/*.{js,ico,png,svg}',
-  //         'https://firebasestorage.googleapis.com/**',
-  //       ],
-  //       runtimeCaching: [
-  //         {
-  //           urlPattern: /\.(?:png|jpg|jpeg|gif|svg)$/,
-  //           handler: 'CacheFirst',
-  //         },
-  //       ],
-  //     }
-  //   }
-  // )
+  VitePWA(
+    {
+      registerType: 'autoUpdate',
+      workbox: {
+        globPatterns: [
+          '**/*.{js,ico,png,svg}',
+          'https://firebasestorage.googleapis.com/**',
+        ],
+        runtimeCaching: [
+          {
+            urlPattern: /\.(?:png|jpg|jpeg|gif|svg)$/,
+            handler: 'CacheFirst',
+          },
+        ],
+      }
+    }
+  )
   ],
   server: {
     watch: {
