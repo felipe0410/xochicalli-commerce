@@ -10,7 +10,10 @@ export default defineConfig({
     {
       registerType: 'autoUpdate',
       workbox: {
-        globPatterns: ['**/*.{js,html,ico,png,svg}'],
+        globPatterns: [
+          '**/*.{js,html,ico,png,svg}',
+          'https://firebasestorage.googleapis.com/**',
+        ],
         runtimeCaching: [
           {
             urlPattern: /\.(?:png|jpg|jpeg|gif|svg)$/,
