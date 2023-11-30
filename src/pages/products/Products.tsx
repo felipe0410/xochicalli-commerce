@@ -1,4 +1,4 @@
-import { FC, lazy, Suspense, useEffect, useState } from "react";
+import { FC, lazy, Suspense } from "react";
 
 import {
   Center,
@@ -29,8 +29,7 @@ import { Spinner as LazySpinner } from "@/components/loading";
 const ProductCard = lazy(() => import("@/components/products/ProductCard"));
 
 const Products: FC = (): JSX.Element => {
-  const { loading, products, setProducts } = useProducts();
-  const [productsLocal, setProductsLocal] = useState([])
+  const { loading, products } = useProducts();
   const {
     searchInput,
     sortedProducts,
@@ -39,19 +38,6 @@ const Products: FC = (): JSX.Element => {
     onSearchInputChange,
     handleSortChange,
   } = useFilter();
-
-  useEffect(() => {
-    if (products.length === 0) {
-      const storedProducts = localStorage.getItem('products');
-      if (storedProducts) {
-        setProducts(JSON.parse(storedProducts));
-        setProductsLocal(JSON.parse(storedProducts))
-      }
-    } else {
-      localStorage.setItem('products', JSON.stringify(products));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [products]);
 
   return (
     <VStack minH='calc(100vh - 64px)' bgColor='gray.100' p={4}>
