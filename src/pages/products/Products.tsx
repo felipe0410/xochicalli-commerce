@@ -38,7 +38,7 @@ const Products: FC = (): JSX.Element => {
     onSearchInputChange,
     handleSortChange,
   } = useFilter();
-
+  console.log('index-products', products)
   return (
     <VStack minH='calc(100vh - 64px)' bgColor='gray.100' p={4}>
       <Helmet>
