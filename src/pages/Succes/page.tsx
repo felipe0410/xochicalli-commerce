@@ -7,7 +7,7 @@ import { CartContext } from "@/context";
 import { saveShopping } from "@/utils";
 
 const Loading = () => {
-    const [send, setSend] = useState(true)
+    const [send, setSend] = useState(false)
     const { cart, total, clearCart } = useContext(CartContext);
     const uid = localStorage.getItem("uid");
     const [displayedText, setDisplayedText] = useState("");
