@@ -12,7 +12,9 @@ import {
   HStack,
   Image,
 } from "@chakra-ui/react";
-import ImageSlider from "react-simple-image-slider";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { Helmet } from "react-helmet-async";
 import { useFilter, useProducts } from "@/hooks";
 import { Spinner as LazySpinner } from "@/components/loading";
@@ -26,7 +28,7 @@ const images = [
     url:
       import.meta.env.VITE_BANNER1 ??
       "https://firebasestorage.googleapis.com/v0/b/xochicalli-commerce.appspot.com/o/assets%2Fbanner%2F1.jpg?alt=media&token=9565fa1c-4f3b-47f6-ad4e-083f8b17912b",
-      
+
   },
   {
     url:
@@ -47,37 +49,43 @@ const images = [
 
 const Home: FC = (): JSX.Element => {
   const { loading, products } = useProducts();
+  // const [sliderIndex, setSliderIndex] = useState(0);
 
   const {
     sortedProducts,
   } = useFilter();
 
-  const imageHeight = useBreakpointValue({ sm: 200, md: 512 }) || 200;
   const imageHeight2 = useBreakpointValue({ sm: 256, md: 512 }) || 256;
   const textW = useBreakpointValue({ sm: 8, md: 48 }) || 8;
   const gridColumnCount = useBreakpointValue({ base: 1, sm: 3 });
 
   return (
     <Box overflowX="hidden"
-      bgGradient="linear(to-b, white, gray.100)"
-    >
+      bgGradient="linear(to-b, white, gray.100)" >
       <Helmet>
         <title>Xochicalli Commerce</title>
       </Helmet>
-      <ImageSlider
-        width="100%"
-        height={imageHeight}
-        style={{ backgroundPosition: "center", objectFit:'fill' }}
-        autoPlay
-        images={images}
-        slideDuration={1}
-        showBullets
-        showNavs
-      />
+      <Slider
+        dots
+        infinite
+        speed={100}
+        slidesToShow={1}
+        slidesToScroll={1}
+        autoplay  // Agrega esta propiedad para habilitar el autoplay
+        autoplaySpeed={2000}  // Ajusta el tiempo en milisegundos (en este caso, 1000 ms = 1 segundo)
+        // afterChange={(index: any) => setSliderIndex(index)}
+      >
+        {images.map((image, index) => (
+          <Box key={index}>
+            <Image src={image.url} alt={`Banner ${index + 1}`} />
+          </Box>
+        ))}
+      </Slider>
+
+
       <HStack
         justifyContent="center"
         py={8}
-      // px={[8, 0]}
       >
         <Center>
           <VStack>
@@ -293,63 +301,3 @@ const Home: FC = (): JSX.Element => {
 };
 
 export default Home;
-
-
-// {closeBanner && (
-//   <Box
-//     bg="green.500"
-//     color="white"
-//     as={motion.div}
-//     initial={{
-//       y: 100,
-//       opacity: 0,
-//     }}
-//     animate={{
-//       transition: {
-//         duration: 1.05,
-//         ease: "easeInOut",
-//       },
-//       y: 0,
-//       opacity: 1,
-//       filter: "blur",
-//     }}
-//     p={{ base: "4", md: "3" }}
-//     py={{ base: "3", md: "5" }}
-//     position="fixed"
-//     bottom={2}
-//     left={["5%", "12.5%"]}
-//     width={["90vw", "75vw"]}
-//     borderRadius="xl"
-//     zIndex={999}
-//   >
-//     <Stack
-//       direction={{ base: "column", md: "row" }}
-//       justify="center"
-//       spacing={{ base: "0.5", md: "1.5" }}
-//       pe={{ base: "4", sm: "0" }}
-//       textAlign="center"
-//     >
-//       <Text fontWeight="medium">
-//         Al usar nuestra tienda, estás aceptando nuestras políticas de
-//         privacidad.
-//       </Text>
-//       <Text color="on-accent-muted">
-//         <Link
-//           display="flex"
-//           alignItems="center"
-//           gap={1}
-//           as={RLink}
-//           to="/privacy-policy"
-//         >
-//           Ir a nuestras políticas de privacidad <FiExternalLink />
-//         </Link>
-//       </Text>
-//     </Stack>
-//     <CloseButton
-//       onClick={() => setCloseBanner(!closeBanner)}
-//       position="absolute"
-//       right="2"
-//       top={{ base: "2", md: "4" }}
-//     />
-//   </Box>
-// )}

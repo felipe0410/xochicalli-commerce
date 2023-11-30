@@ -1,5 +1,5 @@
 import {
-    FC, useEffect
+    FC
 } from 'react'
 
 import {
@@ -24,11 +24,7 @@ const ProductsHome: FC<Product> = (product): JSX.Element => {
         }
         return text;
       }
-
-      useEffect(() => {
-        console.log(JSON.stringify(product, null, 5))
-      }, [])
-      
+ 
 
     return (
         <Box h='450px' w='300px'  onClick={toProduct} border='2px solid #e2e8f0' borderRadius='md' overflow='hidden'>
