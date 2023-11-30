@@ -46,12 +46,15 @@ export const useProducts = () => {
         if (storedProducts) {
           console.log('ingrese a true')
           setProducts(JSON.parse(storedProducts));
+          setLoading(false);
         }
       } else {
         setCount((e) => e + 1)
         console.log('ingrese a false')
         setProducts(data as Product[]);
         localStorage.setItem('products', JSON.stringify(products));
+        setLoading(false);
+
       }
       setLoading(false);
     };

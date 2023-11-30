@@ -30,6 +30,7 @@ const ProductCard = lazy(() => import("@/components/products/ProductCard"));
 
 const Products: FC = (): JSX.Element => {
   const { loading, products } = useProducts();
+  console.log('%cloading::>', 'color:red', loading)
   const {
     searchInput,
     sortedProducts,
