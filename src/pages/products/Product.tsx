@@ -186,7 +186,7 @@ const Product: FC = (): JSX.Element => {
                 >
                   {loadingComments ? (
                     <Heading>Cargando...</Heading>
-                  ) : comments && comments.length === 0 ? (
+                  ) : comments && comments?.length === 0 ? (
                     <Text
                       fontWeight={500}
                       fontSize='xl'

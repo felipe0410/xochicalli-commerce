@@ -145,7 +145,7 @@ const ProductView: FC<Product | any> = ({
                   }
 
                   if (element === 'Graduacion') {
-                    const longitudGrupo = Math.ceil(contentProduct?.length / 3);
+                    const longitudGrupo = Math.ceil((contentProduct?.length ?? 3) / 3);
                     const newData = [contentProduct.substring(0, longitudGrupo), contentProduct.substring(longitudGrupo, longitudGrupo * 2), contentProduct.substring(longitudGrupo * 2)]
                     return (
                       <Box>
