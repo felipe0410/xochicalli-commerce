@@ -49,8 +49,6 @@ const images = [
 
 const Home: FC = (): JSX.Element => {
   const { loading, products } = useProducts();
-  // const [sliderIndex, setSliderIndex] = useState(0);
-
   const {
     sortedProducts,
   } = useFilter();
@@ -71,9 +69,8 @@ const Home: FC = (): JSX.Element => {
         speed={100}
         slidesToShow={1}
         slidesToScroll={1}
-        autoplay  // Agrega esta propiedad para habilitar el autoplay
-        autoplaySpeed={2000}  // Ajusta el tiempo en milisegundos (en este caso, 1000 ms = 1 segundo)
-        // afterChange={(index: any) => setSliderIndex(index)}
+        autoplay  
+        autoplaySpeed={2000}
       >
         {images.map((image, index) => (
           <Box key={index}>
