@@ -21,8 +21,6 @@ export const useProduct = (id: string) => {
             setLoading(true)
             try {
                 const data = await getProduct('products', id)
-                console.log('%cdata::>', 'color:red', data)
-                console.log('%cdata::>', 'color:red', Object.keys("FirebaseError: Failed to get document because the client is offline.")?.length)
                 if (Object.keys(data)?.length === 0 ) {
                     const getData = getProductById(localData, id)
                     setProductData(getData as Product)
