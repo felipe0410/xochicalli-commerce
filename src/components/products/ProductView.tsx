@@ -145,7 +145,7 @@ const ProductView: FC<Product | any> = ({
                   }
 
                   if (element === 'Graduacion') {
-                    const longitudGrupo = Math.ceil(contentProduct.length / 3);
+                    const longitudGrupo = Math.ceil(contentProduct?.length / 3);
                     const newData = [contentProduct.substring(0, longitudGrupo), contentProduct.substring(longitudGrupo, longitudGrupo * 2), contentProduct.substring(longitudGrupo * 2)]
                     return (
                       <Box>
@@ -160,7 +160,7 @@ const ProductView: FC<Product | any> = ({
                     )
 
                   }
-                  if (element.includes('unidad') || contentProduct.length === 0 || element === 'id' || sectionsExclude.includes(element)) return null
+                  if (element.includes('unidad') || contentProduct?.length === 0 || element === 'id' || sectionsExclude.includes(element)) return null
                   if (Array.isArray(contentProduct)) {
                     return (
                       <Box>
