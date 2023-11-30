@@ -20,8 +20,7 @@ export const useProduct = (id: string) => {
 
             setLoading(true)
             try {
-                // const data = await getProduct('products', id)
-                const data = {}
+                const data = await getProduct('products', id)
                 if (Object.keys(data).length === 0) {
                     const getData = getProductById(localData, id)
                     setProductData(getData as Product)
