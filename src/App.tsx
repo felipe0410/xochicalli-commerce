@@ -75,27 +75,22 @@ export const App: FC = (): JSX.Element => {
       <NavbarRenderer />
       <Box id="router">
         <Routes>
-          <Route index element={<Home />} />
+          <Route index element={<Home />} />          
+          <Route path="/login" element={<LoggedUserRedirect />} /> 
+          <Route path="/signup" element={<LoggedUserRedirect />} />
           <Route path="/products" element={<Products />} />
           <Route path="/successPayment" element={<Payment />} />
           <Route path="/products/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
-          <Route
-            path="/checkout"
-            element={cart.length < 1 ? <Navigate to="/cart" /> : <Checkout />}
-          />
           <Route path="/faqs" element={<Faqs />} />
           <Route path="/questions" element={<Questions />} />
           <Route path="/blog" element={<PublicBlog />} />
           <Route path="/blog-description" element={<PublicBlogDescroption />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/login" element={<LoggedUserRedirect />} />
-          <Route path="/signup" element={<LoggedUserRedirect />} />
-
-          <Route
-            path="/user/profile"
-            element={
+          <Route path="/checkout" element={cart.length < 1 ? <Navigate to="/cart" /> : <Checkout />}/>
+          
+          <Route path="/user/profile" element={
               <PrivateRoute allowedRoles="user">
                 <Outlet />
               </PrivateRoute>
@@ -233,9 +228,8 @@ export const App: FC = (): JSX.Element => {
         <FloatButton />
       </Box>
       }
-      {pathname !== "/login" &&
-        pathname !== "/signup" &&
-        pathname !== "/checkout" && <Footer />}
+      {pathname !== "/checkout" && <Footer />}
+        
     </>
   );
 };
