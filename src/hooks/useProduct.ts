@@ -8,7 +8,6 @@ export const useProduct = (id: string) => {
     const [product, setProductData] = useState<Product>()
 
     const getProductById = (products: any[], id: any) => {
-        console.log('entro aqui:::>')
         const tt = products.find(product => product.id === id);
         return tt
     }
