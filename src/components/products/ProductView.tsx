@@ -130,7 +130,7 @@ const ProductView: FC<Product | any> = ({
                 </AccordionButton>
               </h2>
               <AccordionPanel>
-                {Object.keys(productt).map((element, index) => {
+                {Object.keys(productt ?? {}).map((element, index) => {
                   const unidad = productt[`unidad-${element}`]
                   const contentProduct = productt[element]
                   const sectionsExclude = ['category', 'description', 'price', 'tags', 'stock', 'title', 'image', 'subCategory']
