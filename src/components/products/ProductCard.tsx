@@ -88,7 +88,7 @@ const ProductCard: FC<Product> = (product): JSX.Element => {
 
         fetchImage();
         test()
-    }, []);
+    }, [product.image]);
     function truncateText(text: any, maxLength: any) {
         if (text.length > maxLength) {
           return text.slice(0, maxLength);
