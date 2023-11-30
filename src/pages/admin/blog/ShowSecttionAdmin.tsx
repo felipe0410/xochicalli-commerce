@@ -146,14 +146,22 @@ const ShowSecttionAdmin = () => {
 
         <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing={4}>
           {filteredBlogPosts.map((post: any) => (
-
-            <Box h='420px' w='256px' key={post.id} maxW='sm' borderWidth='2px' borderColor='gray.300' onClick={() => navigate(`/admin/blog-description`, { state: { post } })}>
+            <Box
+              h='476px'
+              w='256px'
+              key={post.id}
+              maxW='sm'
+              borderWidth='2px'
+              borderColor='gray.300'
+              onClick={() => navigate(`/admin/blog-description`, { state: { post } })}
+            >
               <Box>
                 <Image
                   src={post.imageURL ? post.imageURL : post.imageUrlMiniatura}
                   alt={post.title}
+
                   borderRadius='lg'
-                  sx={{ width: '100%', height: '200px' }}
+                  sx={{ width: '100%', height: '256' }}
                 />
               </Box>
               <Box px={2}>
