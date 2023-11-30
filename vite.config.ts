@@ -12,7 +12,7 @@ export default defineConfig({
       workbox: {
         globPatterns: [
           '**/*.{js,ico,png,svg}',
-          'https://firebasestorage.googleapis.com/**',
+          'https://firebasestorage.googleapis.com/v0/b/xochicalli-commerce.appspot.com/**',
         ],
         runtimeCaching: [
           {
