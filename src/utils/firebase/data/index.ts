@@ -161,10 +161,10 @@ export const getProduct = async (
   try {
     const docRef = doc(db, collectionName, id);
     const docSnap = await getDoc(docRef);
-
     return docSnap.exists() && { ...docSnap.data(), id: docSnap.id };
   } catch (error) {
-    return error as FirebaseError;
+    console.log('getProduct::>', error)
+    return {};
   }
 };
 
