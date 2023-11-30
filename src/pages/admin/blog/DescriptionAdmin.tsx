@@ -18,7 +18,7 @@ import {
   Button,
   UnorderedList,
   ListItem,
-  OrderedList,
+  List,
 
 } from '@chakra-ui/react';
 import { DeleteIcon, EditIcon, ArrowBackIcon } from '@chakra-ui/icons';
@@ -96,11 +96,11 @@ const DescriptionAdmin = () => {
             height: '500px',
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundImage: `url('${post.imageUrlPrincipal}')`, // Reemplaza 'url_de_la_imagen' con la URL de tu imagen
+            backgroundImage: `url('${post.imageUrlPrincipal}')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            color: 'white', // Puedes cambiar el color del texto para que sea legible sobre la imagen
+            color: 'white',
             textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)', // Agrega sombra al texto para mejorar la legibilidad
           }}
         >
@@ -110,9 +110,9 @@ const DescriptionAdmin = () => {
             backgroundColor='rgba(220, 220, 220, 0.5)' color='#196F3D' >{post.title}</Text>
         </Box>
 
-        <Box sx={{ display: 'flex', width: '100%', flexDirection: 'column', padding: 16 }}>
+        <Box sx={{ display: 'flex', width: '100%', flexDirection: 'column', padding: { sm: 4, md: 16 } }}>
 
-          <Box sx={{ display: 'flex', width: '100%', marginBottom: 8 }}>
+          <Box sx={{ display: { sm: 'none', md: 'flex' }, width: '100%', marginBottom: 8 }}>
             <Button variant="ghost" onClick={() => navigate(`/admin/blog-create`)}>Blog /</Button>
             <Button variant="ghost" onClick={() => navigate(-1)}> {post.category} /</Button>
             <Button variant="ghost"> {post.title}</Button>
@@ -124,10 +124,10 @@ const DescriptionAdmin = () => {
                 <Stack mt='6' spacing='3'>
                   <Heading size='md'>Contenido</Heading>
                   {post.contenidos.map((contenido: any, index: any) => (
-                    <Box key={index} sx={{ paddingX: 8 }}>
-                      <OrderedList>
-                        <ListItem>{contenido.subtitulo}</ListItem>
-                      </OrderedList>
+                    <Box key={index} sx={{ paddingX: { sm: 1, md: 8 } }}>
+                      <List>
+                        <ListItem>{index+1} - {contenido.subtitulo}</ListItem>
+                      </List>
                     </Box>
                   ))}
                 </Stack>
@@ -142,7 +142,7 @@ const DescriptionAdmin = () => {
           <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
             <Stack mt='6' spacing='3'>
               {post.contenidos.map((contenido: any, index: any) => (
-                <Box key={index} sx={{ paddingX: 8 }}>
+                <Box key={index} sx={{ paddingX: { sm: 1, md: 8 } }}>
                   <Text fontSize='4xl'>{contenido.subtitulo}</Text>
                   <UnorderedList spacing={2}>
                     {contenido.detalle.map((detalle: any, detalleIndex: any) => (

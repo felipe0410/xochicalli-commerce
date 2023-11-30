@@ -23,7 +23,7 @@ const Products: FC = (): JSX.Element => {
   const { handleNextProd, handlePrevProd, loading, more, products } = useProducts();
   console.log('products:::>', products)
   return (
-    <VStack h='calc(100vh - 64px)' bgColor='gray.200' gap={4}>
+    <VStack  bgColor='gray.200' gap={4} mb={4}>
       <Helmet>
         <title>Productos</title>
       </Helmet>
@@ -66,7 +66,7 @@ const Products: FC = (): JSX.Element => {
                 )}
             </HStack>
             {products.length >= 4 && (
-              <ButtonGroup mt={8}>
+              <ButtonGroup mt={8} mb={8}>
                 <Button
                   onClick={handlePrevProd}
                   colorScheme='blue'

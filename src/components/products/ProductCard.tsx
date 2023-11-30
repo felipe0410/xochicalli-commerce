@@ -1,7 +1,11 @@
 import { FC, useContext, useEffect, useState } from 'react'
 
-import { Button, ButtonGroup, Card, CardBody, Divider, Heading, HStack, Stack, Tag, Text, useMediaQuery, useToast } from '@chakra-ui/react'
-import { LazyLoadImage } from 'react-lazy-load-image-component';
+import {
+    Box,
+    Button, 
+     Text,
+    useMediaQuery, useToast
+} from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom';
 import { FiShoppingCart } from 'react-icons/fi';
 
@@ -85,41 +89,49 @@ const ProductCard: FC<Product> = (product): JSX.Element => {
         fetchImage();
         test()
     }, []);
+    function truncateText(text: any, maxLength: any) {
+        if (text.length > maxLength) {
+          return text.slice(0, maxLength);
+        }
+        return text;
+      }
 
     return (
-        <Card maxW={['xs', 'sm']} h='490px' borderRadius='xl'>
-            <CardBody>
-                <LazyLoadImage
-                    src={product.image}
-                    alt={`${product.title}-${product.id}`}
-                    effect='blur'
-                    style={{
-                        borderRadius: '8px',
-                        objectFit: 'cover',
-                        height: '256px',
-                        width: '512px',
-                    }}
-                />
-                <Stack spacing='3' my='3'>
-                    <HStack alignItems='center' justifyContent='space-between'>
-                        <Heading noOfLines={1} size={['lg', 'md', 'lg']}>{product.title}</Heading>
-                        <Text fontSize={['xl', 'xl', '2xl']} fontWeight='medium'>{newPrice}</Text>
-                    </HStack>
-                    <Tag width='max-content'>{product.category}</Tag>
-                    <Text noOfLines={1}>{product.description}</Text>
-                </Stack>
-                <Divider my={2} />
-                <ButtonGroup mt='3' justifyContent='space-between' width='100%'>
-                    <Button variant='link' colorScheme='blue' fontSize={16} onClick={toProduct}>Ver más</Button>
-                    <Button
+        <Box h='375px' w='256px'  onClick={toProduct} border='2px solid #e2e8f0' borderRadius='md' overflow='hidden'>
+            <Box
+                sx={{
+                    display: 'flex',
+                    width: '256px',
+                    height: '256px',
+                    backgroundImage: `url('${product.image}')`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                    justifyContent: 'flex-end',
+                    alignItems: 'flex-end',
+                }}
+                
+            > 
+           
+            </Box>
+            <Box>
+                <Box px={1}>
+                    <Text fontSize='2xl' as='b'>{truncateText(product.title, 20)}</Text>
+                </Box>
+                <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between' }} px={1}>
+                    <Text fontSize='md' >{truncateText(product.description, 20)}</Text>
+                    <Text fontSize='2xl' as='b'>{newPrice}</Text>
+                </Box>
+                <Box p={1} sx={{display:'flex', width:'100%', justifyContent:'center'}}>
+                    <Button 
+                        sx={{width:'80%'}}
+                        leftIcon={<FiShoppingCart/>} 
                         onClick={addItemToCart}
-                        leftIcon={<FiShoppingCart />}
-                        colorScheme='purple'
-                        isDisabled={!product?.stock}
-                    >Añadir al carrito</Button>
-                </ButtonGroup>
-            </CardBody>
-        </Card>
+                        colorScheme='purple'></Button>
+                </Box>
+            </Box>
+        </Box>
+
     )
 }
 

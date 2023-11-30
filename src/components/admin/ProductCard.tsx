@@ -60,7 +60,7 @@ const ProductCard: FC<Product> = ({
   return (
     <>
       <Card maxW={["xs", "sm"]} borderRadius='xl'>
-        <CardBody>
+        <CardBody onClick={toProduct}>
           <Image
             src={image}
             alt={`${title}-${id}`}
@@ -104,9 +104,9 @@ const ProductCard: FC<Product> = ({
               <Button onClick={onOpen} colorScheme='red'>
                 Eliminar
               </Button>
-              <Button onClick={toProduct} variant='link' colorScheme='telegram'>
+              {/* <Button onClick={toProduct} variant='link' colorScheme='telegram'>
                 Ver más
-              </Button>
+              </Button> */}
             </ButtonGroup>
             <Text fontSize='xl' fontWeight='medium'>
               {newPrice}

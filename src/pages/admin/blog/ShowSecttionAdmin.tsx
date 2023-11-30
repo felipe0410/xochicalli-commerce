@@ -1,15 +1,11 @@
 import { useEffect, useState } from 'react';
 import {
-  Card,
-  CardBody,
-  CardFooter,
   Image,
   Stack,
   Heading,
   Text,
   Button,
   Center,
-  Divider,
   VStack,
   SimpleGrid,
   IconButton,
@@ -59,7 +55,7 @@ const ShowSecttionAdmin = () => {
     console.log(questionDocs);
     setLoading(false);
   };
-  useEffect(() => {   
+  useEffect(() => {
     fetchQuestions();
   }, []);
 
@@ -116,7 +112,8 @@ const ShowSecttionAdmin = () => {
         </Button>
         <Button onClick={() => setFilter('')}>MOSTRAR ARTICULOS</Button>
       </Box>
-      <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-evenly' }}>
+
+      <Box sx={{ display: { sm: 'none', md: 'flex' }, width: '100%', justifyContent: 'space-evenly' }}>
         <Button bg="white" onClick={() => setFilter("Guía de plantas")}>
           Guía de plantas
         </Button>
@@ -130,6 +127,7 @@ const ShowSecttionAdmin = () => {
           Conocimientos sobre plantas
         </Button>
       </Box>
+
       <Center>
         <Modal isOpen={isOpen} onClose={onClose} isCentered>
           <ModalOverlay />
@@ -148,25 +146,26 @@ const ShowSecttionAdmin = () => {
 
         <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing={4}>
           {filteredBlogPosts.map((post: any) => (
-            <Card key={post.id} maxW='sm' borderWidth='2px' borderColor='gray.300'>
-              <CardBody>
-                <Image src={post.imageURL ? post.imageURL : post.imageUrlMiniatura} alt={post.title} borderRadius='lg' sx={{width:'100%', height:'200px'}}/>
+           
+            <Box h='420px' w='256px' key={post.id} maxW='sm' borderWidth='2px' borderColor='gray.300' onClick={() => navigate(`/admin/blog-description`, { state: { post } })}>
+              <Box>
+                <Image
+                  src={post.imageURL ? post.imageURL : post.imageUrlMiniatura}
+                  alt={post.title}
+                  borderRadius='lg'
+                  sx={{ width: '100%', height:'200px'}} />
+              </Box>
+              <Box px={2}>
                 <Stack mt='6' spacing='3'>
-                  <Heading size='md'>{post.title}</Heading>
+                  <Heading size='md'>{truncateText(post.title, 40)}</Heading>
                   <Text>{truncateText(post.description, 100)}</Text>
                 </Stack>
-              </CardBody>
-              <Divider />
-              <CardFooter sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Button variant='solid' colorScheme='green' onClick={() => navigate(`/admin/blog-description`, { state: { post } })}>
-                  Mostrar
-                </Button>
-                <Box>
-                  <IconButton aria-label='Editar' icon={<EditIcon onClick={() => navigate(`/admin/blog-update`, { state: { post } })}/>} />
-                  <IconButton aria-label='Eliminar' icon={<DeleteIcon />} onClick={() => handleDelete(post.id)} />
-                </Box>
-              </CardFooter>
-            </Card>
+              </Box>
+              <Box px={2}>
+                <IconButton aria-label='Editar' icon={<EditIcon onClick={() => navigate(`/admin/blog-update`, { state: { post } })} />} />
+                <IconButton aria-label='Eliminar' icon={<DeleteIcon />} onClick={() => handleDelete(post.id)} />
+              </Box>
+            </Box>
           ))}
         </SimpleGrid>
       </Center>

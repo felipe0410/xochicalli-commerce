@@ -1,15 +1,11 @@
 import { useEffect, useState } from 'react';
 import {
-  Card,
-  CardBody,
-  CardFooter,
   Image,
   Stack,
   Heading,
   Text,
   Button,
   Center,
-  Divider,
   VStack,
   SimpleGrid,
   Box,
@@ -82,7 +78,7 @@ const ShowSectionUser = () => {
 
   return (
     <VStack spacing={4} p={4}>
-      <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-evenly' }}>
+      <Box sx={{ display:  {sm: 'none', md: 'flex'}, width: '100%', justifyContent: 'space-evenly' }}>
         <Button bg="white" onClick={() => setFilter("Guía de plantas")}>
           Guía de plantas
         </Button>
@@ -99,21 +95,21 @@ const ShowSectionUser = () => {
       <Center>       
         <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} spacing={4}>
           {filteredBlogPosts.map((post: any) => (
-            <Card key={post.id} maxW='sm' borderWidth='2px' borderColor='gray.300'>
-              <CardBody>
-                <Image src={post.imageURL ? post.imageURL : post.imageUrlMiniatura} alt={post.title} borderRadius='lg' sx={{width:'100%', height:'200px'}}/>
-                <Stack mt='6' spacing='3'>
-                  <Heading size='md'>{post.title}</Heading>
-                  <Text>{truncateText(post.description, 100)}</Text>
-                </Stack>
-              </CardBody>
-              <Divider />
-              <CardFooter sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Button variant='solid' colorScheme='green' onClick={() => navigate(`/blog-description`, { state: { post } })}>
-                  Mostrar
-                </Button>
-              </CardFooter>
-            </Card>
+            <Box h='400px' w='256px' key={post.id} maxW='sm' borderWidth='2px' borderColor='gray.300' onClick={() => navigate(`/blog-description`, { state: { post } })}>
+            <Box>
+              <Image
+                src={post.imageURL ? post.imageURL : post.imageUrlMiniatura}
+                alt={post.title}
+                borderRadius='lg'
+                sx={{ width: '100%', height:'200px'}} />
+            </Box>
+            <Box px={2}>
+              <Stack mt='6' spacing='3'>
+                <Heading size='md'>{truncateText(post.title, 40)}</Heading>
+                <Text>{truncateText(post.description, 100)}</Text>
+              </Stack>
+            </Box>
+          </Box>
           ))}
         </SimpleGrid>
       </Center>
