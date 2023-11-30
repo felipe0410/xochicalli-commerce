@@ -6,6 +6,7 @@ import { Product } from "@/interfaces";
 export const useProducts = () => {
   const [more, setMore] = useState<number>(3);
   const [loading, setLoading] = useState<boolean>(true);
+  const [count, setCount] = useState(0)
   const [products, setProducts] = useState<Product[]>([
     {
       id: "",
@@ -36,14 +37,18 @@ export const useProducts = () => {
     const fetchProducts = async () => {
       setLoading(true);
       const data: any = await getProducts();
+      // const data: any = [];
       console.log('data::>', data)
+      console.log('data::>', data.length)
       if (data.length === 0) {
         const storedProducts = localStorage.getItem('products');
+        console.log('storedProducts::>', storedProducts)
         if (storedProducts) {
           console.log('ingrese a true')
           setProducts(JSON.parse(storedProducts));
         }
       } else {
+        setCount((e) => e + 1)
         console.log('ingrese a false')
         setProducts(data as Product[]);
         localStorage.setItem('products', JSON.stringify(products));
@@ -51,9 +56,9 @@ export const useProducts = () => {
       setLoading(false);
     };
 
-    fetchProducts();
+    count < 3 && fetchProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [products]);
 
   return {
     handleNextProd,
