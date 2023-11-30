@@ -9,6 +9,7 @@ export const useProduct = (id: string) => {
     const [product, setProductData] = useState<Product>()
 
     const getProductById = (products: any[], id: any) => {
+        console.log('entro aqui:::>')
         const tt = products.find(product => product.id === id);
         return tt
     }
@@ -22,6 +23,7 @@ export const useProduct = (id: string) => {
             try {
                 const data = await getProduct('products', id)
                 console.log('%cdata::>', 'color:red', data)
+                console.log('%cdata::>', 'color:red', Object.keys("FirebaseError: Failed to get document because the client is offline.")?.length)
                 if (Object.keys(data)?.length === 0) {
                     const getData = getProductById(localData, id)
                     setProductData(getData as Product)
