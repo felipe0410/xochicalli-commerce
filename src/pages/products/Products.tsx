@@ -59,7 +59,7 @@ const Products: FC = (): JSX.Element => {
         </BreadcrumbItem>
       </Breadcrumb>
       <Center pt={4} pb={8}>
-        {loading ? (
+        {(loading && products.length === 0) ? (
           <Spinner size='xl' mt={4} />
         ) : products.length !== 0 ? (
           <VStack gap={6}>
