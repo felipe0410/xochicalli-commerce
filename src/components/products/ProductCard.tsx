@@ -1,7 +1,4 @@
-import {
-    FC,
-    useContext
-} from 'react'
+import { FC, useContext, useEffect, useState } from 'react'
 
 import {
     Box,
@@ -55,6 +52,43 @@ const ProductCard: FC<Product> = (product): JSX.Element => {
         }
     }
 
+    const [offlineSrc, setOfflineSrc] = useState<any>(null);
+    console.log('offlineSrc::>', offlineSrc)
+
+    useEffect(() => {
+
+        const test = async () => {
+            const cacheResponse = await caches.match(product.image);
+            console.log('%ccacheResponse', 'color:red', cacheResponse)
+            if (cacheResponse) {
+                const blob = await cacheResponse.blob();
+                const offlineSrc = URL.createObjectURL(blob);
+                console.log('offlineSrc2::>', offlineSrc)
+                setOfflineSrc(offlineSrc);
+            }
+
+        }
+        const fetchImage = async () => {
+            try {
+                const response = await fetch(product.image);
+                const blob = await response.blob();
+                const offlineSrc = URL.createObjectURL(blob);
+                setOfflineSrc(offlineSrc);
+            } catch (error) {
+                // Manejar errores al cargar la imagen, por ejemplo, cargar la imagen de la caché
+                const cacheResponse = await caches.match(product.image);
+                if (cacheResponse) {
+                    const blob = await cacheResponse.blob();
+                    const offlineSrc = URL.createObjectURL(blob);
+                    console.log('offlineSrc2::>', offlineSrc)
+                    setOfflineSrc(offlineSrc);
+                }
+            }
+        };
+
+        fetchImage();
+        test()
+    }, []);
     function truncateText(text: any, maxLength: any) {
         if (text.length > maxLength) {
           return text.slice(0, maxLength);
