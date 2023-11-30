@@ -49,6 +49,8 @@ const Product: FC = (): JSX.Element => {
     product?.title as string
   );
 
+  console.log('%croduct:::>', 'color:purple', product)
+
   const guestSchema = yup.object().shape({
     name: yup
       .string()
