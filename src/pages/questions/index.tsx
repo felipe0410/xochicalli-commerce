@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { useState } from 'react'
 
 import {
     Box, Center, Heading, Modal, ModalBody, ModalCloseButton,
@@ -10,7 +10,7 @@ import { Button, FormControl, FormLabel, Textarea, } from "@chakra-ui/react";
 import { db } from '@/firebase';
 import { addDoc, collection } from 'firebase/firestore';
 
-const Questions: FC = (): JSX.Element => {
+const Questions: any = ({ set }: { set: any }): JSX.Element => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const [formData, setFormData] = useState({
@@ -84,15 +84,20 @@ const Questions: FC = (): JSX.Element => {
             });
             onOpen()
             setIsFromValid(true)
-
+            if (set) {
+                console.log('entro aqui')
+                set(true)
+            }
         } catch (error) {
-
             console.error('Error al agregar el documento: ', error);
             setLoading(false)
             setAddOK(false)
             onOpen()
             setIsFromValid(true)
-
+            if (set) {
+                console.log('entro aqui')
+                set(true)
+            }
         }
 
     };
