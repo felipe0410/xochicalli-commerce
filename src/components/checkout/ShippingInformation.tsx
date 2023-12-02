@@ -296,9 +296,8 @@ const ShippingInformation: FC = (): JSX.Element => {
                 isDisabled={validation()}
                 onClick={() => {
                   guardarDireccion(uid, dataCard);
-                  axios.post('https://app-gbt7czzzeq-uc.a.run.app/create-checkout-sessiony', arrayStripe)
+                  axios.post('https://app-gbt7czzzeq-uc.a.run.app/create-checkout-session', arrayStripe)
                     .then(response => {
-                      console.log(response.data);
                       if (response.data.url) {
                         window.location.href = response.data.url;
                       } else {
