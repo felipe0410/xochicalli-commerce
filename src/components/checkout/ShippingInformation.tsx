@@ -166,19 +166,6 @@ const ShippingInformation: FC = (): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const generarNumeros = () => {
-    // Los dos primeros números son 72
-    var numero1 = 72;
-    var numero2 = 72;
-
-    // Los dos siguientes números son aleatorios entre 1 y 100 (puedes ajustar este rango según tus necesidades)
-    var numero3 = Math.floor(Math.random() * 100) + 1;
-    var numero4 = Math.floor(Math.random() * 100) + 1;
-
-    // Devolver los cuatro números en un arreglo
-    return [numero1, numero2, numero3, numero4];
-  }
-
   return (
     <Stack spacing={{ base: "6", md: "8" }}>
       <Stack direction="row" spacing={8}>
