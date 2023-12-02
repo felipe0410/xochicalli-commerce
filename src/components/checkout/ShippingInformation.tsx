@@ -65,6 +65,7 @@ const ShippingInformation: FC = (): JSX.Element => {
     city: "Acajete",
     email: "",
   });
+  console.log('dataCard::>', dataCard)
   const uid: string | any = localStorage.getItem("uid");
   const navigate = useNavigate();
   const [data, setData] = useState<any>([]);
@@ -110,6 +111,7 @@ const ShippingInformation: FC = (): JSX.Element => {
   ];
 
   const getCityPostalCodes = async (stateName: string) => {
+    console.log('entro aqui', stateName)
     try {
       const response = await axios.get(
         `https://api.opencagedata.com/geocode/v1/json?q=${stateName},+${dataCard.state},+Mexico&key=f299b88cb2724371afc4605625880341`
@@ -124,14 +126,14 @@ const ShippingInformation: FC = (): JSX.Element => {
       }
     } catch (error) {
       console.error("Error al obtener ciudades y códigos postales:", error);
-      return null;
+      return 7211;
     }
   };
 
   useEffect(() => {
     getCityPostalCodes(dataCard.city);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataCard.city]);
+  }, []);
 
   const validation = () => {
     const validation = Object.values(dataCard).some(value => value === "")
@@ -164,6 +166,18 @@ const ShippingInformation: FC = (): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const generarNumeros = () => {
+    // Los dos primeros números son 72
+    var numero1 = 72;
+    var numero2 = 72;
+
+    // Los dos siguientes números son aleatorios entre 1 y 100 (puedes ajustar este rango según tus necesidades)
+    var numero3 = Math.floor(Math.random() * 100) + 1;
+    var numero4 = Math.floor(Math.random() * 100) + 1;
+
+    // Devolver los cuatro números en un arreglo
+    return [numero1, numero2, numero3, numero4];
+  }
 
   return (
     <Stack spacing={{ base: "6", md: "8" }}>
@@ -247,7 +261,7 @@ const ShippingInformation: FC = (): JSX.Element => {
                 {"ciudad"}
               </FormLabel>
               <Select
-                value={dataCard.city}
+                // value={dataCard.city}
                 onChange={(e) => {
                   setDataCard({ ...dataCard, city: e.target.value });
                   getCityPostalCodes(e.target.value);
@@ -269,7 +283,7 @@ const ShippingInformation: FC = (): JSX.Element => {
                   {"Codigo Postal"}
                 </FormLabel>
                 <Input
-                  name={dataCard.code}
+                  name={'dataCard.code'}
                   value={dataCard.code}
                   placeholder={"Codigo Postal"}
                   focusBorderColor={useColorModeValue("blue.500", "blue.200")}
