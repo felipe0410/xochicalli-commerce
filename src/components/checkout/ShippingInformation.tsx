@@ -49,7 +49,7 @@ const ShippingInformation: FC = (): JSX.Element => {
           name: element.title,
         },
         currency: "MXN",
-        unit_amount: Number(element.price,)
+        unit_amount: Number(element.price,)*100
       },
       quantity: element.quantity,
     }
