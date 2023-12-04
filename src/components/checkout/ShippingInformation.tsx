@@ -11,6 +11,7 @@ import {
   Stack,
   useColorModeValue,
   Text,
+  Box,
 } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router-dom";
@@ -49,7 +50,7 @@ const ShippingInformation: FC = (): JSX.Element => {
           name: element.title,
         },
         currency: "MXN",
-        unit_amount: Number(element.price,)*100
+        unit_amount: Number(element.price,) * 100
       },
       quantity: element.quantity,
     }
@@ -59,8 +60,11 @@ const ShippingInformation: FC = (): JSX.Element => {
   const { userInformation } = useContext(UserContext);
   const [dataCard, setDataCard] = useState({
     name: "",
-    address: "",
+    colonia: "",
+    calle: "",
+    numero: "",
     code: "",
+    Complemento: "",
     state: "Puebla",
     city: "Acajete",
     email: "",
@@ -92,13 +96,6 @@ const ShippingInformation: FC = (): JSX.Element => {
       validation: () => dataCard.name.trim().length > 0,
     },
     {
-      FormLabel: "Dirección completa",
-      name: "address",
-      placeholder: "123 Ejemplo St",
-      value: dataCard.address,
-      validation: () => dataCard.address.trim().length > 0,
-    },
-    {
       FormLabel: "Correo electrónico",
       name: "email",
       placeholder: "you@exmaple.com",
@@ -107,6 +104,34 @@ const ShippingInformation: FC = (): JSX.Element => {
         const regularExpression = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return regularExpression.test(dataCard.email);
       },
+    },
+    {
+      FormLabel: "Colonia",
+      name: "colonia",
+      placeholder: "El Rodeo",
+      value: dataCard.colonia,
+      validation: () => dataCard.colonia.trim().length > 0,
+    },
+    {
+      FormLabel: "Calle",
+      name: "calle",
+      placeholder: "el sol",
+      value: dataCard.calle,
+      validation: () => dataCard.calle.trim().length > 0,
+    },
+    {
+      FormLabel: "#",
+      name: "numero",
+      placeholder: "14A",
+      value: dataCard.numero,
+      validation: () => dataCard.numero.trim().length > 0,
+    },
+    {
+      FormLabel: "Complemento",
+      name: "Complemento",
+      placeholder: "conjunto San Maria",
+      value: dataCard.Complemento,
+      validation: () => dataCard.Complemento.trim().length > 0,
     },
   ];
 
@@ -188,10 +213,11 @@ const ShippingInformation: FC = (): JSX.Element => {
               Agrega una dirección primero
             </Button>
           ) : (
-            <>
+            <Box style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
               {data1.map((input, index) => {
+                const validation = ['Colonia', 'Calle', '#', 'Complemento']
                 return (
-                  <FormControl key={index} id={input.name}>
+                  <FormControl style={{ width: validation.includes(input.FormLabel) ? '45%' : '100%' }} key={index} id={input.name}>
                     <FormLabel
                       style={{ fontWeight: 600 }}
                       color={useColorModeValue("gray.700", "gray.200")}
@@ -199,6 +225,7 @@ const ShippingInformation: FC = (): JSX.Element => {
                       {input.FormLabel}
                     </FormLabel>
                     <Input
+                      type={input.FormLabel === '#' ? "number" : 'text'}
                       value={input.value}
                       onChange={(e) => {
                         setDataCard((prevDataCard) => ({
@@ -222,7 +249,7 @@ const ShippingInformation: FC = (): JSX.Element => {
                 );
               })}
               <FormLabel
-                style={{ fontWeight: 600 }}
+                style={{ fontWeight: 600, width: '100%' }}
                 color={useColorModeValue("gray.700", "gray.200")}
               >
                 {"Estado"}
@@ -278,6 +305,7 @@ const ShippingInformation: FC = (): JSX.Element => {
               </FormControl>
 
               <Button
+                style={{ width: '100%', marginTop: '20px' }}
                 background={validation() ? "gray.300" : "blue.500"}
                 color={validation() ? '' : "#fff"}
                 isDisabled={validation()}
@@ -298,7 +326,7 @@ const ShippingInformation: FC = (): JSX.Element => {
               >
                 Continuar
               </Button>
-            </>
+            </Box>
           )}
         </Stack>
       ) : (
